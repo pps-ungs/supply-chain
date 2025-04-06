@@ -1,0 +1,126 @@
+import psycopg
+import subprocess
+import os
+import csv
+
+def create_supply_chain_database() -> None:
+    try:
+        with psycopg.connect("dbname=postgres user=postgres") as conn:
+            print("[okay] Connection to postgres established")
+            conn.autocommit = True
+            with conn.cursor() as cur:
+                # Delete this line in production
+                cur.execute("drop database if exists supply_chain;")
+
+                cur.execute("""
+                    create database supply_chain;
+                """)
+
+                print("[okay] Database supply_chain created")
+    except (psycopg.DatabaseError, Exception) as e:
+        print(f"?error creating database: {e}")
+    finally:
+        conn.close()
+        print("[okay] Connection to postgres closed")
+
+def get_connection(config : dict) -> psycopg.Connection:
+    try:
+        conn = psycopg.connect(**config)
+        print("[okay] Connection established")
+        return conn
+    except (psycopg.DatabaseError, Exception) as e:
+        print(f"?error loading configuration: {e}")
+        return None
+
+def create_tables(conn: psycopg.Connection) -> None:
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                create table usuarie (
+                    id serial primary key,
+                    nombre text,
+                    apellido text);
+
+                create table escenario (
+                    id serial primary key,
+                    nombre text,
+                    data text)
+                """)
+            conn.commit()
+            print("[okay] Tables created")
+    except (psycopg.DatabaseError, Exception) as e:
+        print(f"?error creating tables: {e}")
+
+def insert_data_from_csv(conn: psycopg.Connection, insert_statement: str, csv_file: str) -> None:
+    try:
+        with conn.cursor() as cur:
+            with open(csv_file, 'r') as file:
+                reader = csv.reader(file)
+                next(reader)  # Skip the header row
+                for row in reader:
+                    cur.execute(insert_statement, row)
+            conn.commit()
+            print(f"[okay] Data inserted from {csv_file}")
+    except (psycopg.DatabaseError, Exception) as e:
+        print(f"?error inserting data: {e}")
+
+def dump() -> None:
+    if os.name == 'posix':
+        command = f"pg_dump -U postgres supply_chain"
+    elif os.name == 'nt': # Windows?
+        command = f"pg_dump -U postgres supply_chain" # Windows command?
+    else:
+        raise Exception("?unsupported operating system")
+
+    try:
+        database_dump = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
+        with open("supply_chain.sql", "w") as f:
+            f.write(database_dump.stdout)
+    except subprocess.CalledProcessError as e:
+        print(f"?error executing command: {e}")
+        print(e.stderr)
+    finally:
+        print("[okay] database dumped")
+
+def restore() -> None:
+    create_supply_chain_database()
+
+    if os.name == 'posix':
+        command = f"psql -U postgres supply_chain < supply_chain.sql"
+    elif os.name == 'nt': # Windows?
+        command = f"psql -U postgres supply_chain < supply_chain.sql" # Windows command?
+    else:
+        raise Exception("?unsupported operating system")
+
+    try:
+        subprocess.run(command, shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"?error executing command: {e}")
+        print(e.stderr)
+    finally:
+        print("[okay] database restored")
+
+"""
+if __name__ == "__main__":
+    create_supply_chain_database()
+
+    config = load_config()
+    conn = get_connection(config)
+
+    create_tables(conn)
+
+    csv_file = "usuaries.csv"  # Replace with your CSV file path
+
+    insert_statement = "insert into usuarie (id, nombre, apellido) values (%s, %s, %s)"
+    insert_data_from_csv(conn, csv_file, insert_statement)
+    # Add more insert statements for other tables as needed
+
+    conn.close()
+    print("[okay] Connection closed")
+
+    a = input("Do you want to dump (backup to a file) the database? (y/n): ")
+    dump()
+
+    a = input("Do you want to restore the database from the dump file? (y/n): ")
+    restore()
+"""
