@@ -3,6 +3,7 @@ import subprocess
 import os
 import csv
 
+
 def create_supply_chain_database() -> None:
     try:
         with psycopg.connect("dbname=postgres user=postgres") as conn:
@@ -23,7 +24,8 @@ def create_supply_chain_database() -> None:
         conn.close()
         print("[okay] Connection to postgres closed")
 
-def get_connection(config : dict) -> psycopg.Connection:
+
+def get_connection(config: dict) -> psycopg.Connection:
     try:
         conn = psycopg.connect(**config)
         print("[okay] Connection established")
@@ -31,6 +33,7 @@ def get_connection(config : dict) -> psycopg.Connection:
     except (psycopg.DatabaseError, Exception) as e:
         print(f"?error loading configuration: {e}")
         return None
+
 
 def create_tables(conn: psycopg.Connection) -> None:
     try:
@@ -51,6 +54,7 @@ def create_tables(conn: psycopg.Connection) -> None:
     except (psycopg.DatabaseError, Exception) as e:
         print(f"?error creating tables: {e}")
 
+
 def insert_data_from_csv(conn: psycopg.Connection, insert_statement: str, csv_file: str) -> None:
     try:
         with conn.cursor() as cur:
@@ -64,16 +68,18 @@ def insert_data_from_csv(conn: psycopg.Connection, insert_statement: str, csv_fi
     except (psycopg.DatabaseError, Exception) as e:
         print(f"?error inserting data: {e}")
 
+
 def dump() -> None:
     if os.name == 'posix':
         command = f"pg_dump -U postgres supply_chain"
-    elif os.name == 'nt': # Windows?
-        command = f"pg_dump -U postgres supply_chain" # Windows command?
+    elif os.name == 'nt':  # Windows?
+        command = f"pg_dump -U postgres supply_chain"  # Windows command?
     else:
         raise Exception("?unsupported operating system")
 
     try:
-        database_dump = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
+        database_dump = subprocess.run(
+            command, shell=True, check=True, capture_output=True, text=True)
         with open("supply_chain.sql", "w") as f:
             f.write(database_dump.stdout)
     except subprocess.CalledProcessError as e:
@@ -82,13 +88,14 @@ def dump() -> None:
     finally:
         print("[okay] database dumped")
 
+
 def restore() -> None:
     create_supply_chain_database()
 
     if os.name == 'posix':
         command = f"psql -U postgres supply_chain < supply_chain.sql"
-    elif os.name == 'nt': # Windows?
-        command = f"psql -U postgres supply_chain < supply_chain.sql" # Windows command?
+    elif os.name == 'nt':  # Windows?
+        command = f"psql -U postgres supply_chain < supply_chain.sql"  # Windows command?
     else:
         raise Exception("?unsupported operating system")
 
@@ -99,28 +106,3 @@ def restore() -> None:
         print(e.stderr)
     finally:
         print("[okay] database restored")
-
-"""
-if __name__ == "__main__":
-    create_supply_chain_database()
-
-    config = load_config()
-    conn = get_connection(config)
-
-    create_tables(conn)
-
-    csv_file = "usuaries.csv"  # Replace with your CSV file path
-
-    insert_statement = "insert into usuarie (id, nombre, apellido) values (%s, %s, %s)"
-    insert_data_from_csv(conn, csv_file, insert_statement)
-    # Add more insert statements for other tables as needed
-
-    conn.close()
-    print("[okay] Connection closed")
-
-    a = input("Do you want to dump (backup to a file) the database? (y/n): ")
-    dump()
-
-    a = input("Do you want to restore the database from the dump file? (y/n): ")
-    restore()
-"""

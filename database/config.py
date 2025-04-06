@@ -1,12 +1,14 @@
 from configparser import ConfigParser
 
-def load_config(file_path='database.ini', section='postgresql') -> dict:
+
+def load_config(file_path: str, section: str) -> dict:
     parser = ConfigParser()
     parser.read(file_path)
 
     if not parser.has_section(section):
-        raise Exception(f'?section {section} not found in the {file_path} file')
-    
+        raise Exception(
+            f'?section {section} not found in the {file_path} file')
+
     parameters = parser.items(section)
     config = {}
 
@@ -14,6 +16,7 @@ def load_config(file_path='database.ini', section='postgresql') -> dict:
         config[p[0]] = p[1]
 
     return config
+
 
 if __name__ == "__main__":
     config = load_config()
