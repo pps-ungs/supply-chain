@@ -1,9 +1,9 @@
+""""
 import psycopg
 from config import load_config
 
 def get_connection(config : dict) -> psycopg.Connection:
     try:
-
         conn = psycopg.connect(**config)
         print("[okay] Connection established")
         return conn
@@ -16,3 +16,5 @@ if __name__ == "__main__":
     conn = get_connection(config)
     conn.close()
     print("[okay] Connection closed")
+
+""""
