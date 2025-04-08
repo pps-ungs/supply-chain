@@ -69,7 +69,7 @@ def insert_data_from_csv(conn: psycopg.Connection, insert_statement: str, csv_fi
         print(f"?error inserting data: {e}")
 
 
-def dump() -> None:
+def dump(filepath: str) -> None:
     if os.name == 'posix':
         command = f"pg_dump -U postgres supply_chain"
     elif os.name == 'nt':  # Windows?
@@ -78,9 +78,9 @@ def dump() -> None:
         raise Exception("?unsupported operating system")
 
     try:
-        database_dump = subprocess.run(
-            command, shell=True, check=True, capture_output=True, text=True)
-        with open("supply_chain.sql", "w") as f:
+        database_dump = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
+        print(database_dump.stdout)
+        with open(filepath, "w") as f:
             f.write(database_dump.stdout)
     except subprocess.CalledProcessError as e:
         print(f"?error executing command: {e}")
@@ -89,13 +89,13 @@ def dump() -> None:
         print("[okay] database dumped")
 
 
-def restore() -> None:
+def restore(filepath: str) -> None:
     create_supply_chain_database()
 
     if os.name == 'posix':
-        command = f"psql -U postgres supply_chain < supply_chain.sql"
+        command = f"psql -U postgres supply_chain < {filepath}"
     elif os.name == 'nt':  # Windows?
-        command = f"psql -U postgres supply_chain < supply_chain.sql"  # Windows command?
+        command = f"psql -U postgres supply_chain < {filepath}"  # Windows command?
     else:
         raise Exception("?unsupported operating system")
 

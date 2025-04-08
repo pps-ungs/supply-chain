@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from database.config import load_config
-from database.db import *
+from db.config import load_config
+from db.database import *
 
 ########################################################################
 # WIP
@@ -30,20 +30,20 @@ print(maximizar(z))
 
 create_supply_chain_database()
 
-config = load_config('database/database.ini', 'postgresql')
+config = load_config('db/database.ini', 'postgresql')
 conn = get_connection(config)
 
 create_tables(conn)
 
 usuaries_insert_statement = "insert into usuarie (id, nombre, apellido) values (%s, %s, %s)"
-usuaries_csv_file = "database/data/usuaries.csv"
+usuaries_csv_file = "db/data/usuaries.csv"
 insert_data_from_csv(conn, usuaries_insert_statement, usuaries_csv_file)
 
 conn.close()
 print("[okay] Connection closed")
 
 a = input("Do you want to dump (backup to a file) the database? (y/n): ")
-dump()
+dump("db/data/supply_chain_dump.sql")
 
 a = input("Do you want to restore the database from the dump file? (y/n): ")
-restore()
+restore("db/data/supply_chain_dump.sql")
