@@ -9,9 +9,13 @@ import random
 # Conjuntos de datos
 # ------------------
 
-# Conjunto de $kF$ centros de fabricación del producto
+# Conjunto de $kF$ centros de fabricación
+# ---------------------------------------
+#
 # F = {f_1, f_2, ..., f_i, ..., f_kF}
 # F = list()
+#
+# i → centros de fabricación
 
 # Agrega un centro de fabricación a la lista F.
 def add_fabrication_center(F: list, fabrication_center: str) -> None:
@@ -33,9 +37,13 @@ def print_fabrication_centers(F: list) -> None:
     print(", ".join(sorted(F)) + " ]")
     return None
 
-# Conjunto de $kS$ centros de distribución del producto
+# Conjunto de $kS$ centros de distribución
+# ----------------------------------------
+#
 # S = {s_1, s_2, ..., s_j, ..., s_kS}
 # S = list()
+#
+# j → centros de distribución
 
 # Agrega un centro de distribución a la lista S.
 def add_distribution_center(S: list, distribution_center: str) -> None:
@@ -57,9 +65,13 @@ def print_distribution_centers(S: list) -> None:
     print(", ".join(sorted(S)) + " ]")
     return None
 
-# Conjunto de $kP$ puntos de venta del producto
+# Conjunto de $kP$ puntos de venta
+# --------------------------------
+#
 # P = {p_1, p_2, ..., p_k, ..., p_kP}
 # P = list()
+#
+# k → puntos de venta
 
 # Agrega un punto de venta a la lista P.
 def add_point_of_sale(P: list, point_of_sale: str) -> None:
@@ -82,8 +94,12 @@ def print_points_of_sale(P: list) -> None:
     return None
 
 # Conjunto de $kE$ escenarios de demanda posibles
+# -----------------------------------------------
+#
 # E = {e_1, e_2, ..., e_l, ..., e_kE}
 # E = [][]
+#
+# l → escenarios
 
 # Imprime los escenarios de demanda en el conjunto E.
 def print_demand_scenarios(E: list) -> None:
