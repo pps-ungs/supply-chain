@@ -1,4 +1,4 @@
-import random
+import numpy as np
 
 ########################################################################
 # Modelo de Cadena de Distribución Básica
@@ -121,7 +121,7 @@ def generate_demand_scenarios_with_monte_carlo(E: list, kE: int, P: list, min_de
     for l in range(kE):
         E.append([])
         for k in P:
-            demand = random.randint(min_demand, max_demand)
+            demand = np.random.uniform(min_demand, max_demand)
             E[l].append((k, demand))
     return None
 #
