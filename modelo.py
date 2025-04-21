@@ -1,3 +1,4 @@
+import random
 import numpy as np
 
 ########################################################################
@@ -131,32 +132,37 @@ def generate_demand_scenarios_with_monte_carlo(E: list, kE: int, P: list, min_de
 # Variables de decisión
 # ---------------------
 
-# Conjunto de variables de decisión que representan la cantidad de
-# producto a producir en el centro de fabricación $i$
+# Conjunto de variables de decisión que representan la cantidad de producto a producir en el centro de fabricación $i$
 # X = {x_1, x_2, ..., x_i, ..., x_kF}
-X = set()
+def generar_produccion_por_centro(X: dict, F: list, cantidad: int):
+    # Esto deberia salir de la heuristica
+    for i in range(len(F)):
+        X[i] = cantidad
+    return None
 
-# Conjunto de variables de decisión que representan la cantidad de
-# producto sobrante en el punto de venta $k$ para el escenario $l$
+# Conjunto de variables de decisión que representan la cantidad de producto sobrante en el punto de venta $k$ para el escenario $l$
 # Y = {y_1, y_2, ..., y_kl, ..., y_kPkE}
-Y = set()
+Y = dict()
 
-# Conjunto de variables de decisión que representan la cantidad de
-# producto demandada que no pudo ser astisfecha en el punto de venta $k$
-# para el escenario $l$
+# Conjunto de variables de decisión que representan la cantidad de producto demandada que no pudo ser astisfecha en el punto de venta $k$ para el escenario $l$
 # Z = {z_11, z_12, ..., z_kl, ..., z_kPkE}
-Z = set()
 
-# Conjunto de variables de decisión que representan la cantidad de
-# producto enviado del centro de fabricación $i$ al centro de
-# distribución $j$
+# Conjunto de variables de decisión que representan la cantidad de producto enviado del centro de fabricación $i$ al centro de distribución $j$
 # wDS = {wds_11, wds_12, ..., wds_ij, ..., wds_kFkS}
-wDS = set()
+def generar_wds(wDS: dict, F: list, S: list, cantidad: int):
+    for i in range(len(F)):
+        for j in range(len(S)):
+            wDS[i, j] = cantidad
+    return None
 
-# Conjunto de variables de decisión que representan la cantidad de
-# producto enviado del centro de distribución $j$ al punto de venta $k$
+
+# Conjunto de variables de decisión que representan la cantidad de producto enviado del centro de distribución $j$ al punto de venta $k$
 # wDP = {wdp_11, wdp_12, ..., wdp_jk, ..., wdp_kSkP}
-wDP = set()
+def generar_wdp(wDP: dict, S: list, P: list, cantidad: int):
+    for i in range(len(S)):
+        for j in range(len(P)):
+            wDP[i, j] = cantidad
+    return None
 
 #
 ########################################################################
@@ -167,6 +173,20 @@ wDP = set()
 
 #Xime TODO
 
+# cf : F × S → R cf_{i,j} indica la proporcion de la cantidad de productos fabricados en i se deben enviar al centro de distribucion j.
+def crear_curva_fabricacion_distribucion(F, S, cf, curva_fabricacion_distribucion):
+    for i in range(len(F)):
+            for j in range(len(S)):
+                cf[i, j] = curva_fabricacion_distribucion
+    return None
+
+# cp : S × P → R cp_{j,k} curva de distribucion de los productos entregados en los centros de distribucion que se deben enviar a los puntos de venta.
+def crear_curva_distribucion_venta(S, P, cp, curva_distribucion_venta):
+    for j in range(len(S)):
+            for k in range(len(P)):
+                cp[j, k] = curva_distribucion_venta
+    return None
+
 #
 ########################################################################
 
@@ -174,12 +194,43 @@ wDP = set()
 # Restricciones
 # -------------
 
-#Lu TODO
+# La cantidad producida se debe distribuir desde los centros de fabricación a los centros de distribución según la curva de distribución establecida. Surge de X.
+    # F centros de fabricacion
+    # S centros de distribucion
+    # X cantidad de producto a producir en el centro de fabricación $i$
+    # cf curva de distribucion Fabrica-Centro de distribucion
+    # wDS_{i, j} cantidad de producto que se transporta desde el centro de fabricacion i al centro de distribucion j.
+def distribuye_a_centros_de_distribucion_segun_curva(F, S, X, cf, wDS):
+    return all(X[i] * cf[i, j] == wDS[i, j] for i in range(len(F)) for j in range(len(S)))
+
+# La cantidad producida se debe distribuir a los puntos de venta desde los centros de distribución según la curva de distribución establecida.
+    # F centros de fabricacion
+    # S centros de distribucion
+    # P puntos de venta
+    # cp curva de distribucion Centro de distribucion-Punto de venta
+    # wDS_{i, j} cantidad de producto que se transporta desde el centro de fabricacion i al centro de distribucion j.
+    # wDP_{j, k} cantidad de producto que se transporta desde el centro de distribucion j al punto de venta k.
+def distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP):
+    return all(suma := sum(wDS[i, j] for i in range(len(F))) * cp[j, k] == wDP[j, k] 
+           for j in range(len(S)) for k in range(len(P)))
+
+# Para determinar el stock al final del período de comercialización en cada punto de venta para cada uno de los escenarios se debe cumplir que:
+    # Si la demanda supera a lo que recibió el punto de venta, el stock al final del periodo vale 0.
+    # Si no, el stock sobrante se calcula restando lo que recibió el punto de venta y la demanda que tuvo.
+
+
+
+# Para determinar la demanda insatisfecha en cada punto de venta para cada uno de los escenarios se debe cumplir que:
+    # Si la demanda fue menor a lo que recibió el punto de venta, la demanda insatisfecha del periodo vale 0.
+    # Si no, la demanda insatisfecha se calcula restando la demanda que tuvo el punto de venta y la cantidad de productos que recibió.
+
 
 #
 ########################################################################
 
 def main():
+    #############################################
+    ########## Generacion de conjuntos ##########
     # Conjunto de centros de fabricación
     F = list()
     for i in range(0, 10):
@@ -202,6 +253,51 @@ def main():
     E = list()
     generate_demand_scenarios_with_monte_carlo(E=E, P=P, kE=10, min_demand=1, max_demand=100)
     print_demand_scenarios(E)
+
+    ###########################################
+    ########## Variables de decision ##########
+    
+    ##########################################
+    ############### Parametros ###############
+    cf = dict() # fabricacion - distribucion
+    curva_fabricacion_distribucion = 0.1 #random.randint(0, 10)
+    crear_curva_fabricacion_distribucion(F, S, cf, curva_fabricacion_distribucion)
+    print('cf: ', cf)
+
+    cp = dict() # distribucion - ventas
+    curva_distribucion_venta = 0.1 #random.randint(0, 10)
+    crear_curva_distribucion_venta(S, P, cp, curva_distribucion_venta)
+    print('cp: ', cp)
+
+    #############################################
+    ############# Funcion objetivo ##############
+    # X, Y, Z, wDS, wDP
+    X = dict()
+    cantidad = 100
+    generar_produccion_por_centro(X, F, cantidad)
+    print('X: ', X)
+
+    wDS = dict()
+    cantidad = 10 # fabricacion - distribucion
+    # cada centro de fabricacion manda 10 productos a cada centro de venta --> en cada centro de venta hay 10*10=100 productos
+    generar_wds(wDS, F, S, cantidad)
+    #wDS[1,1] = 0
+    print('wDS: ', wDS)
+
+    wDP = dict() # distribucion - ventas
+    cantidad = 10
+    generar_wdp(wDP, F, S, cantidad)
+    #wDS[1,1] = 0
+    print('wDP: ', wDP)
+
+    #############################################
+    ############### Restricciones ###############
+
+    print(distribuye_a_centros_de_distribucion_segun_curva(F, S, X, cf, wDS))
+
+    print(distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP))
+
+
 
 if __name__ == "__main__":
     main()
