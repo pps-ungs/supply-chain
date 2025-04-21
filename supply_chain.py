@@ -39,6 +39,22 @@ usuaries_insert_statement = "insert into usuarie (id, nombre, apellido) values (
 usuaries_csv_file = "db/data/usuaries.csv"
 insert_data_from_csv(conn, usuaries_insert_statement, usuaries_csv_file)
 
+centro_de_fabr_insert_statement = "insert into centro_de_fabricacion (nombre, data) values (%s, %s)"
+centro_de_fabr_csv_file = "./db/data/conjuntos/centrosFabricacion.csv"
+insert_data_from_csv(conn, centro_de_fabr_insert_statement, centro_de_fabr_csv_file)
+
+centro_de_distr_insert_statement = "insert into centro_de_distribucion (nombre, data) values (%s, %s)"
+centro_de_distr_csv_file = "./db/data/conjuntos/centrosDistribucion.csv"
+insert_data_from_csv(conn, centro_de_distr_insert_statement, centro_de_distr_csv_file)
+
+punto_venta_insert_statement = "insert into punto_de_venta(nombre, data) values (%s, %s)"
+punto_venta_csv_file = "./db/data/conjuntos/puntosVenta.csv"
+insert_data_from_csv(conn, punto_venta_insert_statement, punto_venta_csv_file)
+
+escenario_insert_statement = "insert into escenario (nombre, data) values (%s, %s)"
+escenario_csv_file = "./db/data/conjuntos/escenarios.csv"
+insert_data_from_csv(conn, escenario_insert_statement, escenario_csv_file)
+
 conn.close()
 print("[okay] Connection closed")
 

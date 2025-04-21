@@ -49,18 +49,18 @@ def create_tables(conn: psycopg.Connection) -> None:
                     nombre text,
                     data text);
                 
-                create table centroDeFabricacion (
+                create table centro_de_fabricacion (
                     id serial primary key,
                     nombre text,
                     data text);
                 
                         
-                create table centroDeDistribucion (
+                create table centro_de_distribucion (
                     id serial primary key,
                     nombre text,
                     data text);
                         
-                create table puntoDeVenta (
+                create table punto_de_venta (
                     id serial primary key,
                     nombre text,
                     data text)
