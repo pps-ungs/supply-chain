@@ -18,7 +18,7 @@ def parse_lines_to_rows_json(ruta_archivo: str, headers: list, rows: list[str]) 
             e_name = f"e_{idx}"
             p_dict = {prod: demand for prod, demand in escenario}
             json_data = json.dumps(p_dict)
-            f.write(f"{e_name},\"{json_data}\"\n")
+            writer.writerow([e_name,json_data])
 
 def add_rows(ruta_archivo: str, headers: list, rows: list):
     with open(ruta_archivo, 'w', newline='') as archivo:

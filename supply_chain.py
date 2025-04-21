@@ -53,7 +53,7 @@ insert_data_from_csv(conn, punto_venta_insert_statement, punto_venta_csv_file)
 
 escenario_insert_statement = "insert into escenario (nombre, data) values (%s, %s)"
 escenario_csv_file = "./db/data/conjuntos/escenarios.csv"
-insert_data_from_csv(conn, escenario_insert_statement, escenario_csv_file)
+insert_data_from_csv_json(conn, escenario_insert_statement, escenario_csv_file)
 
 conn.close()
 print("[okay] Connection closed")

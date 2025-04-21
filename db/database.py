@@ -2,6 +2,7 @@ import psycopg
 import subprocess
 import os
 import csv
+import json
 
 
 def create_supply_chain_database() -> None:
@@ -47,13 +48,12 @@ def create_tables(conn: psycopg.Connection) -> None:
                 create table escenario (
                     id serial primary key,
                     nombre text,
-                    data text);
+                    data jsonb);
                 
                 create table centro_de_fabricacion (
                     id serial primary key,
                     nombre text,
                     data text);
-                
                         
                 create table centro_de_distribucion (
                     id serial primary key,
@@ -79,6 +79,21 @@ def insert_data_from_csv(conn: psycopg.Connection, insert_statement: str, csv_fi
                 next(reader)  # Skip the header row
                 for row in reader:
                     cur.execute(insert_statement, row)
+            conn.commit()
+            print(f"[okay] Data inserted from {csv_file}")
+    except (psycopg.DatabaseError, Exception) as e:
+        print(f"?error inserting data: {e}")
+
+def insert_data_from_csv_json(conn: psycopg.Connection, insert_statement: str, csv_file: str) -> None:
+    try:
+        with conn.cursor() as cur:
+            with open(csv_file, 'r', newline='') as file:
+                reader = csv.DictReader(file, quotechar='"')
+                for row in reader:
+                    nombre = row['nombre']
+                    data_str = row['data']
+                    data_json = json.loads(data_str)
+                    cur.execute(insert_statement, (nombre, json.dumps(data_json)))
             conn.commit()
             print(f"[okay] Data inserted from {csv_file}")
     except (psycopg.DatabaseError, Exception) as e:
