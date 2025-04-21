@@ -1,31 +1,12 @@
 import random
 import numpy as np
-import csv
 import re
-import json
+from db import write_csv
 
 ########################################################################
 # Modelo de Cadena de Distribución Básica
 # ---------------------------------------
 ########################################################################
-
-def parse_lines_to_rows_json(ruta_archivo: str, headers: list, rows: list[str]) -> list[list[str]]:
-    with open(ruta_archivo, 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(headers)
-
-        for idx, escenario in enumerate(rows):
-            e_name = f"e_{idx}"
-            p_dict = {prod: demand for prod, demand in escenario}
-            json_data = json.dumps(p_dict)
-            writer.writerow([e_name,json_data])
-
-def add_rows(ruta_archivo: str, headers: list, rows: list):
-    with open(ruta_archivo, 'w', newline='') as archivo:
-        escritor_csv = csv.writer(archivo)
-        escritor_csv.writerow(headers)
-        escritor_csv.writerows(rows)
-
 
 ########################################################################
 # Conjuntos de datos
@@ -136,13 +117,12 @@ def print_demand_scenarios(E: list) -> None:
     return None
 
 # Genera escenarios de demanda utilizando el método de Monte Carlo.
-# Se generan $kE$ escenarios de demanda aleatorios entre un mínimo y un
-# máximo, para cada punto de venta $k$.
-# E: escenarios de demanda
-# kE: número de escenarios a generar
-# P: puntos de venta
-# min_demand: demanda mínima
-# max_demand: demanda máxima.
+# Se generan $kE$ escenarios de demanda aleatorios entre un mínimo y un máximo, para cada punto de venta $k$.
+    # E: escenarios de demanda
+    # kE: número de escenarios a generar
+    # P: puntos de venta
+    # min_demand: demanda mínima
+    # max_demand: demanda máxima.
 def generate_demand_scenarios_with_monte_carlo(E: list, kE: int, P: list, min_demand: int, max_demand: int) -> None:
     for l in range(kE):
         E.append([])
@@ -256,29 +236,34 @@ def distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP):
 def main():
 
     ########## Generacion de conjuntos ##########
+    path_to_files = "./db/data/conjuntos/"
 
-    F = list() # Conjunto de centros de fabricación
+    # Conjunto de centros de fabricación
+    F = list()
     for i in range(0, 10):
         add_fabrication_center(F, f"f_{i}")
-    add_rows("./db/data/conjuntos/centrosFabricacion.csv",["nombre", "data"], F)
+    write_csv.add_rows(f"{path_to_files}centros_fabricacion.csv",["nombre", "data"], F)
     # print_fabrication_centers(F)
 
-    S = list() # Conjunto de centros de distribución
+    # Conjunto de centros de distribución
+    S = list()
     for i in range(0, 10):
         add_distribution_center(S, f"s_{i}")
-    add_rows("./db/data/conjuntos/centrosDistribucion.csv",["nombre", "data"], S)
+    write_csv.add_rows(f"{path_to_files}centros_distribucion.csv",["nombre", "data"], S)
     # print_distribution_centers(S)
 
-    P = list() # Conjunto de puntos de venta
+    # Conjunto de puntos de venta
+    P = list()
     for i in range(0, 10):
         add_point_of_sale(P, f"p_{i}")
-    add_rows("./db/data/conjuntos/puntosVenta.csv",["nombre", "data"], P)
+    write_csv.add_rows(f"{path_to_files}puntos_venta.csv",["nombre", "data"], P)
     # print_points_of_sale(P)
 
-    E = list() # Conjunto de escenarios de demanda
+     # Conjunto de escenarios de demanda
+    E = list()
     generate_demand_scenarios_with_monte_carlo(E=E, P=P, kE=10, min_demand=1, max_demand=100)
-    parse_lines_to_rows_json("./db/data/conjuntos/escenarios.csv",["nombre", "data"], E)
-    print_demand_scenarios(E)
+    write_csv.add_rows_json(f"{path_to_files}escenarios.csv",["nombre", "data"], E)
+    # print_demand_scenarios(E)
 
 
 
