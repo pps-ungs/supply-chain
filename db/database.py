@@ -47,6 +47,22 @@ def create_tables(conn: psycopg.Connection) -> None:
                 create table escenario (
                     id serial primary key,
                     nombre text,
+                    data text);
+                
+                create table centroDeFabricacion (
+                    id serial primary key,
+                    nombre text,
+                    data text);
+                
+                        
+                create table centroDeDistribucion (
+                    id serial primary key,
+                    nombre text,
+                    data text);
+                        
+                create table puntoDeVenta (
+                    id serial primary key,
+                    nombre text,
                     data text)
                 """)
             conn.commit()

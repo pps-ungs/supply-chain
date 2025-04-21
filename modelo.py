@@ -1,10 +1,31 @@
 import random
 import numpy as np
+import csv
+import re
+import json
 
 ########################################################################
 # Modelo de Cadena de Distribución Básica
 # ---------------------------------------
 ########################################################################
+
+def parse_lines_to_rows_json(ruta_archivo: str, headers: list, rows: list[str]) -> list[list[str]]:
+    with open(ruta_archivo, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(headers)
+
+        for idx, escenario in enumerate(rows):
+            e_name = f"e_{idx}"
+            p_dict = {prod: demand for prod, demand in escenario}
+            json_data = json.dumps(p_dict)
+            f.write(f"{e_name},\"{json_data}\"\n")
+
+def add_rows(ruta_archivo: str, headers: list, rows: list):
+    with open(ruta_archivo, 'w', newline='') as archivo:
+        escritor_csv = csv.writer(archivo)
+        escritor_csv.writerow(headers)
+        escritor_csv.writerows(rows)
+
 
 ########################################################################
 # Conjuntos de datos
@@ -21,22 +42,24 @@ import numpy as np
 # Agrega un centro de fabricación a la lista F.
 def add_fabrication_center(F: list, fabrication_center: str) -> None:
     if fabrication_center not in F:
-        F.append(fabrication_center)
+        F.append([fabrication_center, None])
     return None
 
 # Elimina un centro de fabricación de la lista F.
 def remove_fabrication_center(F: list, fabrication_center: str) -> None:
     try:
-        F.remove(fabrication_center)
+        for fab_center in F:
+            if fab_center[0] == fabrication_center:
+                F.remove(fab_center)
     except ValueError:
         raise ValueError(f"?centro de fabricación {fabrication_center} no está en la lista.")
     return None
 
 # Imprime los centros de fabricación en la lista F.
 def print_fabrication_centers(F: list) -> None:
-    print("F:", end=" [ ")
-    print(", ".join(sorted(F)) + " ]")
-    return None
+    names = sorted([name for name, _ in F])
+    print("F: [ " + ", ".join(names) + " ]")
+
 
 # Conjunto de $kS$ centros de distribución
 # ----------------------------------------
@@ -49,22 +72,23 @@ def print_fabrication_centers(F: list) -> None:
 # Agrega un centro de distribución a la lista S.
 def add_distribution_center(S: list, distribution_center: str) -> None:
     if distribution_center not in S:
-        S.append(distribution_center)
+        S.append([distribution_center, None])
     return None
 
 # Elimina un centro de distribución de la lista S.
 def remove_distribution_center(S: list, distribution_center: str) -> None:
     try:
-        S.remove(distribution_center)
+        for dis_center in S:
+            if dis_center[0] == distribution_center:
+                S.remove(dis_center)
     except ValueError:
         raise ValueError(f"?centro de distribución {distribution_center} no está en la lista.")
     return None
 
 # Imprime los centros de distribución en la lista S.
 def print_distribution_centers(S: list) -> None:
-    print("S:", end=" [ ")
-    print(", ".join(sorted(S)) + " ]")
-    return None
+    names = sorted([name for name, _ in S])
+    print("S: [ " + ", ".join(names) + " ]")
 
 # Conjunto de $kP$ puntos de venta
 # --------------------------------
@@ -77,22 +101,23 @@ def print_distribution_centers(S: list) -> None:
 # Agrega un punto de venta a la lista P.
 def add_point_of_sale(P: list, point_of_sale: str) -> None:
     if point_of_sale not in P:
-        P.append(point_of_sale)
+        P.append([point_of_sale, None])
     return None
 
 # Elimina un punto de venta de la lista P.
 def remove_point_of_sale(P: list, point_of_sale: str) -> None:
     try:
-        P.remove(point_of_sale)
+        for point in P:
+            if point[0] == point_of_sale:
+                P.remove(point)
     except ValueError:
         raise ValueError(f"?punto de venta {point_of_sale} no está en la lista.")
     return None
 
 # Imprime los puntos de venta en la lista P.
 def print_points_of_sale(P: list) -> None:
-    print("P:", end=" [ ")
-    print(", ".join(sorted(P)) + " ]")
-    return None
+    names = sorted([name for name, _ in P])
+    print("P: [ " + ", ".join(names) + " ]")
 
 # Conjunto de $kE$ escenarios de demanda posibles
 # -----------------------------------------------
@@ -123,7 +148,7 @@ def generate_demand_scenarios_with_monte_carlo(E: list, kE: int, P: list, min_de
         E.append([])
         for k in P:
             demand = np.random.uniform(min_demand, max_demand)
-            E[l].append((k, demand))
+            E[l].append((k[0], demand))
     return None
 #
 ########################################################################
@@ -229,73 +254,72 @@ def distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP):
 ########################################################################
 
 def main():
-    #############################################
+
     ########## Generacion de conjuntos ##########
-    # Conjunto de centros de fabricación
-    F = list()
+
+    F = list() # Conjunto de centros de fabricación
     for i in range(0, 10):
         add_fabrication_center(F, f"f_{i}")
-    print_fabrication_centers(F)
+    add_rows("./db/data/conjuntos/centrosFabricacion.csv",["nombre", "data"], F)
+    # print_fabrication_centers(F)
 
-    # Conjunto de centros de distribución
-    S = list()
+    S = list() # Conjunto de centros de distribución
     for i in range(0, 10):
         add_distribution_center(S, f"s_{i}")
-    print_distribution_centers(S)
+    add_rows("./db/data/conjuntos/centrosDistribucion.csv",["nombre", "data"], S)
+    # print_distribution_centers(S)
 
-    # Conjunto de puntos de venta
-    P = list()
+    P = list() # Conjunto de puntos de venta
     for i in range(0, 10):
         add_point_of_sale(P, f"p_{i}")
-    print_points_of_sale(P)
+    add_rows("./db/data/conjuntos/puntosVenta.csv",["nombre", "data"], P)
+    # print_points_of_sale(P)
 
-    # Conjunto de escenarios de demanda
-    E = list()
+    E = list() # Conjunto de escenarios de demanda
     generate_demand_scenarios_with_monte_carlo(E=E, P=P, kE=10, min_demand=1, max_demand=100)
+    parse_lines_to_rows_json("./db/data/conjuntos/escenarios.csv",["nombre", "data"], E)
     print_demand_scenarios(E)
 
-    ###########################################
-    ########## Variables de decision ##########
+
+
+    # ########## Variables de decision ##########
     
-    ##########################################
-    ############### Parametros ###############
-    cf = dict() # fabricacion - distribucion
-    curva_fabricacion_distribucion = 0.1 #random.randint(0, 10)
-    crear_curva_fabricacion_distribucion(F, S, cf, curva_fabricacion_distribucion)
-    print('cf: ', cf)
+    # ############### Parametros ###############
+    # cf = dict() # fabricacion - distribucion
+    # curva_fabricacion_distribucion = 0.1 #random.randint(0, 10)
+    # crear_curva_fabricacion_distribucion(F, S, cf, curva_fabricacion_distribucion)
+    # print('cf: ', cf)
 
-    cp = dict() # distribucion - ventas
-    curva_distribucion_venta = 0.1 #random.randint(0, 10)
-    crear_curva_distribucion_venta(S, P, cp, curva_distribucion_venta)
-    print('cp: ', cp)
+    # cp = dict() # distribucion - ventas
+    # curva_distribucion_venta = 0.1 #random.randint(0, 10)
+    # crear_curva_distribucion_venta(S, P, cp, curva_distribucion_venta)
+    # print('cp: ', cp)
 
-    #############################################
-    ############# Funcion objetivo ##############
-    # X, Y, Z, wDS, wDP
-    X = dict()
-    cantidad = 100
-    generar_produccion_por_centro(X, F, cantidad)
-    print('X: ', X)
+    # ############# Funcion objetivo ##############
+    # # X, Y, Z, wDS, wDP
+    # X = dict()
+    # cantidad = 100
+    # generar_produccion_por_centro(X, F, cantidad)
+    # print('X: ', X)
 
-    wDS = dict()
-    cantidad = 10 # fabricacion - distribucion
-    # cada centro de fabricacion manda 10 productos a cada centro de venta --> en cada centro de venta hay 10*10=100 productos
-    generar_wds(wDS, F, S, cantidad)
-    #wDS[1,1] = 0
-    print('wDS: ', wDS)
+    # wDS = dict()
+    # cantidad = 10 # fabricacion - distribucion
+    # # cada centro de fabricacion manda 10 productos a cada centro de venta --> en cada centro de venta hay 10*10=100 productos
+    # generar_wds(wDS, F, S, cantidad)
+    # #wDS[1,1] = 0
+    # print('wDS: ', wDS)
 
-    wDP = dict() # distribucion - ventas
-    cantidad = 10
-    generar_wdp(wDP, F, S, cantidad)
-    #wDS[1,1] = 0
-    print('wDP: ', wDP)
+    # wDP = dict() # distribucion - ventas
+    # cantidad = 10
+    # generar_wdp(wDP, F, S, cantidad)
+    # #wDS[1,1] = 0
+    # print('wDP: ', wDP)
 
-    #############################################
-    ############### Restricciones ###############
+    # ############### Restricciones ###############
 
-    print(distribuye_a_centros_de_distribucion_segun_curva(F, S, X, cf, wDS))
+    # print(distribuye_a_centros_de_distribucion_segun_curva(F, S, X, cf, wDS))
 
-    print(distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP))
+    # print(distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP))
 
 
 
