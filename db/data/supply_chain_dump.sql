@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 14.17 (Homebrew)
--- Dumped by pg_dump version 14.17 (Homebrew)
+-- Dumped from database version 16.8
+-- Dumped by pg_dump version 16.8
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -46,7 +46,7 @@ CREATE SEQUENCE public.centro_de_distribucion_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.centro_de_distribucion_id_seq OWNER TO postgres;
+ALTER SEQUENCE public.centro_de_distribucion_id_seq OWNER TO postgres;
 
 --
 -- Name: centro_de_distribucion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -81,7 +81,7 @@ CREATE SEQUENCE public.centro_de_fabricacion_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.centro_de_fabricacion_id_seq OWNER TO postgres;
+ALTER SEQUENCE public.centro_de_fabricacion_id_seq OWNER TO postgres;
 
 --
 -- Name: centro_de_fabricacion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -116,7 +116,7 @@ CREATE SEQUENCE public.escenario_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.escenario_id_seq OWNER TO postgres;
+ALTER SEQUENCE public.escenario_id_seq OWNER TO postgres;
 
 --
 -- Name: escenario_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -151,48 +151,13 @@ CREATE SEQUENCE public.punto_de_venta_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.punto_de_venta_id_seq OWNER TO postgres;
+ALTER SEQUENCE public.punto_de_venta_id_seq OWNER TO postgres;
 
 --
 -- Name: punto_de_venta_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE public.punto_de_venta_id_seq OWNED BY public.punto_de_venta.id;
-
-
---
--- Name: usuarie; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.usuarie (
-    id integer NOT NULL,
-    nombre text,
-    apellido text
-);
-
-
-ALTER TABLE public.usuarie OWNER TO postgres;
-
---
--- Name: usuarie_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.usuarie_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.usuarie_id_seq OWNER TO postgres;
-
---
--- Name: usuarie_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.usuarie_id_seq OWNED BY public.usuarie.id;
 
 
 --
@@ -221,13 +186,6 @@ ALTER TABLE ONLY public.escenario ALTER COLUMN id SET DEFAULT nextval('public.es
 --
 
 ALTER TABLE ONLY public.punto_de_venta ALTER COLUMN id SET DEFAULT nextval('public.punto_de_venta_id_seq'::regclass);
-
-
---
--- Name: usuarie id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.usuarie ALTER COLUMN id SET DEFAULT nextval('public.usuarie_id_seq'::regclass);
 
 
 --
@@ -271,16 +229,16 @@ COPY public.centro_de_fabricacion (id, nombre, data) FROM stdin;
 --
 
 COPY public.escenario (id, nombre, data) FROM stdin;
-1	e_0	{"p_0": 37.562923912428104, "p_1": 16.44887666443045, "p_2": 57.89875371359547, "p_3": 10.634215990575502, "p_4": 65.33591760296683, "p_5": 72.99629305905654, "p_6": 1.7844133325014677, "p_7": 53.581683649687434, "p_8": 59.119273676749515, "p_9": 29.588993805743932}
-2	e_1	{"p_0": 89.22415158665964, "p_1": 32.0623199184253, "p_2": 3.1356605782821974, "p_3": 70.49993442021376, "p_4": 82.99663943218361, "p_5": 51.33210885207995, "p_6": 97.06132007984797, "p_7": 69.89958194367381, "p_8": 68.65822574292143, "p_9": 27.77730628244255}
-3	e_2	{"p_0": 56.090127463199636, "p_1": 38.14032877927303, "p_2": 85.86858026594469, "p_3": 61.420219961917525, "p_4": 43.25195142026833, "p_5": 69.0733122620419, "p_6": 57.24519242418489, "p_7": 40.545520496041625, "p_8": 77.59798128377808, "p_9": 88.7691723730234}
-4	e_3	{"p_0": 94.03872951191934, "p_1": 81.57440008412001, "p_2": 35.35077661819054, "p_3": 46.04927386000793, "p_4": 1.5948225303125994, "p_5": 17.111790497396743, "p_6": 14.023161352783498, "p_7": 44.5797983985483, "p_8": 74.81702570851206, "p_9": 13.826680208125943}
-5	e_4	{"p_0": 62.26493910889623, "p_1": 67.87042312826519, "p_2": 62.26782115549901, "p_3": 84.31100653780089, "p_4": 30.675844646851022, "p_5": 57.48145330877862, "p_6": 13.82221534738015, "p_7": 27.52858591166277, "p_8": 99.914013018829, "p_9": 1.0908953987501238}
-6	e_5	{"p_0": 44.40104868335265, "p_1": 37.18227847140677, "p_2": 60.49761520795799, "p_3": 90.30973847043742, "p_4": 79.09891056564919, "p_5": 4.422549274646722, "p_6": 48.75515066913369, "p_7": 60.71038374701634, "p_8": 70.8878393349242, "p_9": 87.3599072445952}
-7	e_6	{"p_0": 89.52922102018141, "p_1": 41.108664884641115, "p_2": 77.16546552354679, "p_3": 3.093389455638673, "p_4": 44.05339897475948, "p_5": 5.70623516424002, "p_6": 78.72160216634043, "p_7": 55.57302656088303, "p_8": 10.232055566892566, "p_9": 7.3870164838201315}
-8	e_7	{"p_0": 31.29711162009829, "p_1": 92.96298253929483, "p_2": 14.125364437383842, "p_3": 63.23060468286924, "p_4": 80.3373049738721, "p_5": 23.914343016197872, "p_6": 84.5685861014823, "p_7": 31.487957011201274, "p_8": 69.42366059495872, "p_9": 51.389404849634055}
-9	e_8	{"p_0": 12.232296300678053, "p_1": 13.539665095745956, "p_2": 2.3692897954525827, "p_3": 45.4712299257429, "p_4": 3.617860556613268, "p_5": 89.40091994819593, "p_6": 12.445328548570929, "p_7": 12.276893050411916, "p_8": 78.2389980339984, "p_9": 57.86405711878847}
-10	e_9	{"p_0": 82.54245348899013, "p_1": 94.65192969981644, "p_2": 55.905948081757685, "p_3": 73.00283666964717, "p_4": 70.2897094038456, "p_5": 38.95724063774679, "p_6": 70.12766172615427, "p_7": 23.277597174207187, "p_8": 45.94751727290584, "p_9": 42.5428768004506}
+1	e_0	{"p_0": 11.685208901236928, "p_1": 87.91097612864822, "p_2": 72.05044127917776, "p_3": 88.46948833579854, "p_4": 99.96406948178853, "p_5": 18.779520968329248, "p_6": 45.98042516731735, "p_7": 22.576787339962962, "p_8": 76.56945337679392, "p_9": 63.99579614154163}
+2	e_1	{"p_0": 57.19649105288111, "p_1": 72.45471938985192, "p_2": 82.4916923387757, "p_3": 92.74840330953215, "p_4": 49.82817073735708, "p_5": 3.590916971922963, "p_6": 71.89273307416684, "p_7": 20.794087575384015, "p_8": 52.577661663322296, "p_9": 69.49969733140469}
+3	e_2	{"p_0": 26.34836154636276, "p_1": 97.86418378329941, "p_2": 3.0246985554450783, "p_3": 16.373875772965278, "p_4": 8.719781979487571, "p_5": 15.290526693669003, "p_6": 13.606972859318214, "p_7": 47.85623687389053, "p_8": 53.015447996223294, "p_9": 97.57641825010639}
+4	e_3	{"p_0": 4.020072658174159, "p_1": 29.121713229708522, "p_2": 10.603469553125628, "p_3": 55.25951788094882, "p_4": 36.88963974153672, "p_5": 85.33159499077847, "p_6": 89.65274685113611, "p_7": 14.69855508644184, "p_8": 68.210043737754, "p_9": 12.235901854512518}
+5	e_4	{"p_0": 54.85275287285126, "p_1": 51.249547808869075, "p_2": 96.21427846041469, "p_3": 6.720809982892698, "p_4": 12.920514457443126, "p_5": 87.3056667722875, "p_6": 70.92835060102998, "p_7": 14.525076167926846, "p_8": 94.83849947877577, "p_9": 53.681823598673596}
+6	e_5	{"p_0": 42.26630356280117, "p_1": 28.460352434082964, "p_2": 62.248131691377104, "p_3": 17.129327068342814, "p_4": 49.10740449496739, "p_5": 6.998780795626509, "p_6": 78.77087850503236, "p_7": 37.748438883822004, "p_8": 5.9878457186394645, "p_9": 96.97099045760285}
+7	e_6	{"p_0": 47.03297585652103, "p_1": 25.60859752930668, "p_2": 37.19107090472335, "p_3": 72.95585728724764, "p_4": 53.247989040900386, "p_5": 66.71191347250536, "p_6": 48.62333840210495, "p_7": 42.56240377612156, "p_8": 14.385574049812382, "p_9": 74.75507759744075}
+8	e_7	{"p_0": 36.229409166666606, "p_1": 19.14122448757921, "p_2": 36.779684045119055, "p_3": 82.24799380075025, "p_4": 18.86351482219592, "p_5": 5.798316656413306, "p_6": 13.471920176766554, "p_7": 72.37700843276956, "p_8": 21.909052377348424, "p_9": 69.77553448360783}
+9	e_8	{"p_0": 56.14244284430698, "p_1": 19.23994714147006, "p_2": 84.3212278610222, "p_3": 53.44231433619944, "p_4": 56.417050200656895, "p_5": 85.21619025766266, "p_6": 65.64072799973195, "p_7": 17.917032911328224, "p_8": 55.072723824297505, "p_9": 82.47031737029185}
+10	e_9	{"p_0": 89.94761160844268, "p_1": 60.536258139023175, "p_2": 74.68778792722358, "p_3": 64.05478153343388, "p_4": 62.88377059539734, "p_5": 4.2971366631746, "p_6": 54.761009812120236, "p_7": 24.107780608922546, "p_8": 85.68979903020983, "p_9": 6.959593044423634}
 \.
 
 
@@ -299,15 +257,6 @@ COPY public.punto_de_venta (id, nombre, data) FROM stdin;
 8	p_7	
 9	p_8	
 10	p_9	
-\.
-
-
---
--- Data for Name: usuarie; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.usuarie (id, nombre, apellido) FROM stdin;
-626	'Diego'	'Maradona'
 \.
 
 
@@ -340,13 +289,6 @@ SELECT pg_catalog.setval('public.punto_de_venta_id_seq', 10, true);
 
 
 --
--- Name: usuarie_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('public.usuarie_id_seq', 1, false);
-
-
---
 -- Name: centro_de_distribucion centro_de_distribucion_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -376,14 +318,6 @@ ALTER TABLE ONLY public.escenario
 
 ALTER TABLE ONLY public.punto_de_venta
     ADD CONSTRAINT punto_de_venta_pkey PRIMARY KEY (id);
-
-
---
--- Name: usuarie usuarie_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.usuarie
-    ADD CONSTRAINT usuarie_pkey PRIMARY KEY (id);
 
 
 --

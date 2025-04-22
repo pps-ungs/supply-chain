@@ -40,30 +40,29 @@ def create_tables(conn: psycopg.Connection) -> None:
     try:
         with conn.cursor() as cur:
             cur.execute("""
-                create table usuarie (
-                    id serial primary key,
-                    nombre text,
-                    apellido text);
-
                 create table escenario (
                     id serial primary key,
                     nombre text,
-                    data jsonb);
+                    data jsonb
+                );
                 
                 create table centro_de_fabricacion (
                     id serial primary key,
                     nombre text,
-                    data text);
+                    data text
+                );
                         
                 create table centro_de_distribucion (
                     id serial primary key,
                     nombre text,
-                    data text);
+                    data text
+                );
                         
                 create table punto_de_venta (
                     id serial primary key,
                     nombre text,
-                    data text)
+                    data text
+                );
                 """)
             conn.commit()
             print("[okay] Tables created")
