@@ -5,15 +5,17 @@ from db import write_csv
 
 ########################################################################
 # Modelo de Cadena de Distribución Básica
-# ---------------------------------------
 ########################################################################
 
 ########################################################################
 # Conjuntos de datos
-# ------------------
+########################################################################
 
+########################################################################
 # Conjunto de $kF$ centros de fabricación
 # ---------------------------------------
+#
+# Un centro de fabricación $f_i$ sólo tiene nombre.
 #
 # F = {f_1, f_2, ..., f_i, ..., f_kF}
 # F = list()
@@ -40,10 +42,14 @@ def remove_fabrication_center(F: list, fabrication_center: str) -> None:
 def print_fabrication_centers(F: list) -> None:
     names = sorted([name for name, _ in F])
     print("F: [ " + ", ".join(names) + " ]")
+#
+########################################################################
 
-
+########################################################################
 # Conjunto de $kS$ centros de distribución
 # ----------------------------------------
+#
+# Un centro de distribución $s_j$ sólo tiene nombre.
 #
 # S = {s_1, s_2, ..., s_j, ..., s_kS}
 # S = list()
@@ -70,9 +76,14 @@ def remove_distribution_center(S: list, distribution_center: str) -> None:
 def print_distribution_centers(S: list) -> None:
     names = sorted([name for name, _ in S])
     print("S: [ " + ", ".join(names) + " ]")
+#
+########################################################################
 
+########################################################################
 # Conjunto de $kP$ puntos de venta
 # --------------------------------
+#
+# Un punto de venta $p_k$ sólo tiene nombre.
 #
 # P = {p_1, p_2, ..., p_k, ..., p_kP}
 # P = list()
@@ -99,7 +110,10 @@ def remove_point_of_sale(P: list, point_of_sale: str) -> None:
 def print_points_of_sale(P: list) -> None:
     names = sorted([name for name, _ in P])
     print("P: [ " + ", ".join(names) + " ]")
+#
+########################################################################
 
+########################################################################
 # Conjunto de $kE$ escenarios de demanda posibles
 # -----------------------------------------------
 #
@@ -117,12 +131,14 @@ def print_demand_scenarios(E: list) -> None:
     return None
 
 # Genera escenarios de demanda utilizando el método de Monte Carlo.
-# Se generan $kE$ escenarios de demanda aleatorios entre un mínimo y un máximo, para cada punto de venta $k$.
-    # E: escenarios de demanda
-    # kE: número de escenarios a generar
-    # P: puntos de venta
-    # min_demand: demanda mínima
-    # max_demand: demanda máxima.
+# Se generan $kE$ escenarios de demanda aleatorios entre un mínimo y un
+# máximo, para cada punto de venta $k$.
+#
+# E: escenarios de demanda
+# kE: número de escenarios a generar
+# P: puntos de venta
+# min_demand: demanda mínima
+# max_demand: demanda máxima.
 def generate_demand_scenarios_with_monte_carlo(E: list, kE: int, P: list, min_demand: int, max_demand: int) -> None:
     for l in range(kE):
         E.append([])
@@ -135,34 +151,62 @@ def generate_demand_scenarios_with_monte_carlo(E: list, kE: int, P: list, min_de
 
 ########################################################################
 # Variables de decisión
-# ---------------------
+########################################################################
 
-# Conjunto de variables de decisión que representan la cantidad de producto a producir en el centro de fabricación $i$
+########################################################################
+# Conjunto de variables de decisión que representan la cantidad de
+# producto a producir en el centro de fabricación $i$
+#
 # X = {x_1, x_2, ..., x_i, ..., x_kF}
+
 def generar_produccion_por_centro(X: dict, F: list, cantidad: int):
     # Esto deberia salir de la heuristica
     for i in range(len(F)):
         X[i] = cantidad
     return None
+#
+########################################################################
 
-# Conjunto de variables de decisión que representan la cantidad de producto sobrante en el punto de venta $k$ para el escenario $l$
+########################################################################
+# Conjunto de variables de decisión que representan la cantidad de
+# producto sobrante en el punto de venta $k$ para el escenario $l$
+#
 # Y = {y_1, y_2, ..., y_kl, ..., y_kPkE}
+
 Y = dict()
+#
+########################################################################
 
-# Conjunto de variables de decisión que representan la cantidad de producto demandada que no pudo ser astisfecha en el punto de venta $k$ para el escenario $l$
+########################################################################
+# Conjunto de variables de decisión que representan la cantidad de
+# producto demandada que no pudo ser astisfecha en el punto de venta $k$
+# para el escenario $l$
+#
 # Z = {z_11, z_12, ..., z_kl, ..., z_kPkE}
+#
+########################################################################
 
-# Conjunto de variables de decisión que representan la cantidad de producto enviado del centro de fabricación $i$ al centro de distribución $j$
+########################################################################
+# Conjunto de variables de decisión que representan la cantidad de
+# producto enviado del centro de fabricación $i$ al centro de
+# distribución $j$
+#
 # wDS = {wds_11, wds_12, ..., wds_ij, ..., wds_kFkS}
+
 def generar_wds(wDS: dict, F: list, S: list, cantidad: int):
     for i in range(len(F)):
         for j in range(len(S)):
             wDS[i, j] = cantidad
     return None
+#
+########################################################################
 
-
-# Conjunto de variables de decisión que representan la cantidad de producto enviado del centro de distribución $j$ al punto de venta $k$
+########################################################################
+# Conjunto de variables de decisión que representan la cantidad de
+# producto enviado del centro de distribución $j$ al punto de venta $k$
+#
 # wDP = {wdp_11, wdp_12, ..., wdp_jk, ..., wdp_kSkP}
+
 def generar_wdp(wDP: dict, S: list, P: list, cantidad: int):
     for i in range(len(S)):
         for j in range(len(P)):
@@ -178,7 +222,10 @@ def generar_wdp(wDP: dict, S: list, P: list, cantidad: int):
 
 #Xime TODO
 
-# cf : F × S → R cf_{i,j} indica la proporcion de la cantidad de productos fabricados en i se deben enviar al centro de distribucion j.
+# cf : F × S → R cf_{i,j}
+# indica la proporcion de la cantidad de productos fabricados en $i$ que
+# se deben enviar al centro de distribución $j$.
+
 def crear_curva_fabricacion_distribucion(F, S, cf, curva_fabricacion_distribucion):
     for i in range(len(F)):
             for j in range(len(S)):
@@ -236,36 +283,34 @@ def distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP):
 def main():
 
     ########## Generacion de conjuntos ##########
-    path_to_files = "./db/data/conjuntos/"
+    path_to_files = "./db/data/conjuntos"
 
     # Conjunto de centros de fabricación
     F = list()
     for i in range(0, 10):
         add_fabrication_center(F, f"f_{i}")
-    write_csv.add_rows(f"{path_to_files}centros_fabricacion.csv",["nombre", "data"], F)
-    # print_fabrication_centers(F)
+    write_csv.add_rows(f"{path_to_files}/centros_de_fabricacion.csv",["nombre", "data"], F)
+    print_fabrication_centers(F)
 
     # Conjunto de centros de distribución
     S = list()
     for i in range(0, 10):
         add_distribution_center(S, f"s_{i}")
-    write_csv.add_rows(f"{path_to_files}centros_distribucion.csv",["nombre", "data"], S)
-    # print_distribution_centers(S)
+    write_csv.add_rows(f"{path_to_files}/centros_de_distribucion.csv",["nombre", "data"], S)
+    print_distribution_centers(S)
 
     # Conjunto de puntos de venta
     P = list()
     for i in range(0, 10):
         add_point_of_sale(P, f"p_{i}")
-    write_csv.add_rows(f"{path_to_files}puntos_venta.csv",["nombre", "data"], P)
-    # print_points_of_sale(P)
+    write_csv.add_rows(f"{path_to_files}/puntos_de_venta.csv",["nombre", "data"], P)
+    print_points_of_sale(P)
 
-     # Conjunto de escenarios de demanda
+    # Conjunto de escenarios de demanda
     E = list()
     generate_demand_scenarios_with_monte_carlo(E=E, P=P, kE=10, min_demand=1, max_demand=100)
-    write_csv.add_rows_json(f"{path_to_files}escenarios.csv",["nombre", "data"], E)
-    # print_demand_scenarios(E)
-
-
+    write_csv.add_rows_json(f"{path_to_files}/escenarios.csv",["nombre", "data"], E)
+    print_demand_scenarios(E)
 
     # ########## Variables de decision ##########
     
@@ -305,8 +350,6 @@ def main():
     # print(distribuye_a_centros_de_distribucion_segun_curva(F, S, X, cf, wDS))
 
     # print(distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP))
-
-
 
 if __name__ == "__main__":
     main()
