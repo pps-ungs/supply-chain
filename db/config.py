@@ -18,6 +18,9 @@ def load_config(file_path: str, section: str) -> dict:
     return config
 
 
+# Testing
+"""
 if __name__ == "__main__":
     config = load_config()
     print(config)
+"""

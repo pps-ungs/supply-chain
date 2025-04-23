@@ -32,9 +32,8 @@ def remove_fabrication_center(F: list, fabrication_center: str) -> None:
 def print_fabrication_centers(F: list) -> None:
     names = sorted([name for name, _ in F])
     print("F: [ " + ", ".join(names) + " ]")
-
+#
 ####################################################################
-
 
 ####################################################################
 # Centros de distribución
@@ -59,8 +58,7 @@ def remove_distribution_center(S: list, distribution_center: str) -> None:
 def print_distribution_centers(S: list) -> None:
     names = sorted([name for name, _ in S])
     print("S: [ " + ", ".join(names) + " ]")
-
-
+#
 ####################################################################
 
 ####################################################################
@@ -86,7 +84,7 @@ def remove_point_of_sale(P: list, point_of_sale: str) -> None:
 def print_points_of_sale(P: list) -> None:
     names = sorted([name for name, _ in P])
     print("P: [ " + ", ".join(names) + " ]")
-
+#
 ####################################################################
 
 ####################################################################
@@ -116,7 +114,7 @@ def generate_demand_scenarios_with_monte_carlo(E: list, kE: int, P: list, min_de
             demand = np.random.uniform(min_demand, max_demand)
             E[l].append((k[0], demand))
     return None
-
+#
 ####################################################################
 
 ####################################################################
@@ -160,7 +158,7 @@ print_demand_scenarios(E)
 ####################################################################
 
 config = load_config('db/database.ini', 'postgres')
-create_supply_chain_database(config=config)
+create_supply_chain_database(config)
 
 config = load_config('db/database.ini', 'supply_chain')
 conn = get_connection(config)

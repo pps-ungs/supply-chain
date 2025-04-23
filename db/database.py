@@ -3,11 +3,11 @@ import subprocess
 import os
 import csv
 import json
-
+import pandas as pd
 
 def create_supply_chain_database(config: dict) -> None:
     try:
-        with get_connection(config=config) as conn:
+        with get_connection(config) as conn:
             print("[okay] Connection to postgres established")
             conn.autocommit = True
             with conn.cursor() as cur:
@@ -22,7 +22,7 @@ def create_supply_chain_database(config: dict) -> None:
     except (psycopg.DatabaseError, Exception) as e:
         print(f"?error creating database: {e}")
     finally:
-        # conn.close()
+        conn.close()
         print("[okay] Connection to postgres closed")
 
 
@@ -97,8 +97,6 @@ def insert_data_from_csv_json(conn: psycopg.Connection, insert_statement: str, c
             print(f"[okay] Data inserted from {csv_file}")
     except (psycopg.DatabaseError, Exception) as e:
         print(f"?error inserting data: {e}")
-
-import pandas as pd
 
 def read(conn: psycopg.Connection, select_statement: str) -> pd.DataFrame:
     try:

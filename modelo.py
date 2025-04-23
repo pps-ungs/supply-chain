@@ -3,34 +3,12 @@ import re
 from db import write_csv
 from db.config import load_config
 from db.database import *
+import warnings
+warnings.filterwarnings('ignore') # get rid of annoying pandas warnings
 
 ########################################################################
 # Modelo de Cadena de Distribución Básica
 ########################################################################
-
-########################################################################
-# WIP
-"""
-def generar_escenarios() -> set:
-    return set()
-
-# Función objetivo
-# vtas: monto de ventas esperadas
-# pStk: penalidad esperada por stock almacenado en los puntos de venta
-# pDIn: penalidad esperada por demanda insatisfecha en los puntos de venta
-def z(vtas: float, pStk: float, pDIn: float) -> float:
-    return vtas - pStk - pDIn
-
-def maximizar(z: callable[[float, float, float], float]) -> float:
-    return 0
-
-for escenario in generar_escenarios():
-    vtas = escenario['vtas']
-    pStk = escenario['pStk']
-    pDIn = escenario['pDIn']
-
-print(maximizar(z))
-"""
 
 ########################################################################
 # 1. Conjuntos de datos
@@ -49,11 +27,8 @@ print(maximizar(z))
 # Importante: los centros de fabricación van con $i$.
 # i → centros de fabricación
 
-def read_fabrication_centers() -> dict:
-    config = load_config('db/database.ini', 'supply_chain')
-    conn = get_connection(config)
+def read_fabrication_centers(conn: psycopg.Connection) -> list:
     fabrication_centers = read(conn, "select * from centro_de_fabricacion;")
-
     return fabrication_centers.to_dict(orient='records')
 #
 ########################################################################
@@ -71,11 +46,8 @@ def read_fabrication_centers() -> dict:
 # Importante: los centros de distribución van con $j$.
 # j → centros de distribución
 
-def read_distribution_centers() -> dict:
-    config = load_config('db/database.ini', 'supply_chain')
-    conn = get_connection(config)
+def read_distribution_centers(conn: psycopg.Connection) -> list:
     distribution_centers = read(conn, "select * from centro_de_distribucion;")
-
     return distribution_centers.to_dict(orient='records')
 #
 ########################################################################
@@ -93,11 +65,8 @@ def read_distribution_centers() -> dict:
 # Importante: los puntos de venta van con $k$.
 # k → puntos de venta
 
-def read_points_of_sale() -> dict:
-    config = load_config('db/database.ini', 'supply_chain')
-    conn = get_connection(config)
+def read_points_of_sale(conn: psycopg.Connection) -> list:
     points_of_sale = read(conn, "select * from punto_de_venta;")
-
     return points_of_sale.to_dict(orient='records')
 #
 ########################################################################
@@ -110,11 +79,8 @@ def read_points_of_sale() -> dict:
 # E = [][]
 #
 # l → escenarios
-def read_scenarios() -> dict:
-    config = load_config('db/database.ini', 'supply_chain')
-    conn = get_connection(config)
+def read_scenarios(conn: psycopg.Connection) -> list:
     scenarios = read(conn, "select * from escenario;")
-
     return scenarios.to_dict(orient='records')
 #
 ########################################################################
@@ -342,17 +308,22 @@ def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP):
 def supply_chain(m: dict, ct: list, cv: list, pi: list, d: list, cf: list, cp: list, ps: list, pdi: list) -> None:
     print('WIP')
 
-
 #
 ########################################################################
 
 # Main de prueba, esto debería ir en un archivo separado.
 def main():
 
-    fabrication_centers = read_fabrication_centers()
-    distribution_centers = read_distribution_centers()
-    points_of_sale = read_points_of_sale()
-    scenarios = read_scenarios()
+    config = load_config('db/database.ini', 'supply_chain')
+    conn = get_connection(config)
+
+    fabrication_centers = read_fabrication_centers(conn)
+    distribution_centers = read_distribution_centers(conn)
+    points_of_sale = read_points_of_sale(conn)
+    scenarios = read_scenarios(conn)
+
+    conn.close()
+    print("[okay] Connection to supply_chain closed")
 
     ####################################################################
     # Variables de decisión
