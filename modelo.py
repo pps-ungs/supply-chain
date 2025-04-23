@@ -8,18 +8,20 @@ from db import write_csv
 ########################################################################
 
 ########################################################################
-# Conjuntos de datos
+# 1. Conjuntos de datos
 ########################################################################
 
 ########################################################################
-# Conjunto de $kF$ centros de fabricación
+# Conjunto de $kF$ centros de fabricación ✅
 # ---------------------------------------
 #
-# Un centro de fabricación $f_i$ sólo tiene nombre.
+# Un centro de fabricación $f_i$ sólo tiene nombre, no tiene datos
+# asociados.
 #
 # F = {f_1, f_2, ..., f_i, ..., f_kF}
 # F = list()
 #
+# Importante: los centros de fabricación van con $i$.
 # i → centros de fabricación
 
 # Agrega un centro de fabricación a la lista F.
@@ -46,14 +48,16 @@ def print_fabrication_centers(F: list) -> None:
 ########################################################################
 
 ########################################################################
-# Conjunto de $kS$ centros de distribución
+# Conjunto de $kS$ centros de distribución ✅
 # ----------------------------------------
 #
-# Un centro de distribución $s_j$ sólo tiene nombre.
+# Un centro de distribución $s_j$ sólo tiene nombre, no tiene datos
+# asociados.
 #
 # S = {s_1, s_2, ..., s_j, ..., s_kS}
 # S = list()
 #
+# Importante: los centros de distribución van con $j$.
 # j → centros de distribución
 
 # Agrega un centro de distribución a la lista S.
@@ -80,14 +84,16 @@ def print_distribution_centers(S: list) -> None:
 ########################################################################
 
 ########################################################################
-# Conjunto de $kP$ puntos de venta
+# Conjunto de $kP$ puntos de venta ✅
 # --------------------------------
 #
-# Un punto de venta $p_k$ sólo tiene nombre.
+# Un punto de venta $p_k$ sólo tiene nombre, no tiene datos asociados.
+# (Pueden contener lugar de almacenamiento.)
 #
 # P = {p_1, p_2, ..., p_k, ..., p_kP}
 # P = list()
 #
+# Importante: los puntos de venta van con $k$.
 # k → puntos de venta
 
 # Agrega un punto de venta a la lista P.
@@ -150,7 +156,7 @@ def generate_demand_scenarios_with_monte_carlo(E: list, kE: int, P: list, min_de
 ########################################################################
 
 ########################################################################
-# Variables de decisión
+# 2. Variables de decisión
 ########################################################################
 
 ########################################################################
@@ -158,11 +164,18 @@ def generate_demand_scenarios_with_monte_carlo(E: list, kE: int, P: list, min_de
 # producto a producir en el centro de fabricación $i$
 #
 # X = {x_1, x_2, ..., x_i, ..., x_kF}
-
-def generar_produccion_por_centro(X: dict, F: list, cantidad: int):
-    # Esto deberia salir de la heuristica
-    for i in range(len(F)):
-        X[i] = cantidad
+# X = list()
+#
+# Asigna la cantidad de producto a producir en el centro de fabricación
+# $i$. Estos valores se toman de la solución de la heurística.
+#
+# X: lista de cantidades a producir
+# solution: diccionario con la solución de la heurística.
+def allocate_production_per_center(X: list, solution: dict) -> None:
+    X = []
+    quantities = solution["X"]
+    for i in range(len(quantities)):
+        X.append(quantities[i])
     return None
 #
 ########################################################################
@@ -172,8 +185,17 @@ def generar_produccion_por_centro(X: dict, F: list, cantidad: int):
 # producto sobrante en el punto de venta $k$ para el escenario $l$
 #
 # Y = {y_1, y_2, ..., y_kl, ..., y_kPkE}
-
-Y = dict()
+# Y = list()
+#
+# Asigna la cantidad de producto sobrante en el punto de venta $k$ para 
+# el escenario $l$. Estos valores se toman de la solución de la
+# heurística.
+def allocate_surplus_per_point(Y: list, solution: dict) -> None:
+    Y = []
+    quantities = solution["Y"]
+    for kl in range(len(quantities)):
+        Y.append(quantities[kl])
+    return None 
 #
 ########################################################################
 
@@ -183,6 +205,17 @@ Y = dict()
 # para el escenario $l$
 #
 # Z = {z_11, z_12, ..., z_kl, ..., z_kPkE}
+# Z = list()
+#
+# Asigna la cantidad de producto demandada que no pudo ser satisfecha
+# en el punto de venta $k$ para el escenario $l$. Estos valores se toman
+# de la solución de la heurística.
+def allocate_unsatisfied_demand(Z: list, solution: dict) -> None:
+    Z = []
+    quantities = solution["Z"]
+    for kl in range(len(quantities)):
+        Z.append(quantities[kl])
+    return None
 #
 ########################################################################
 
@@ -192,11 +225,19 @@ Y = dict()
 # distribución $j$
 #
 # wDS = {wds_11, wds_12, ..., wds_ij, ..., wds_kFkS}
-
-def generar_wds(wDS: dict, F: list, S: list, cantidad: int):
-    for i in range(len(F)):
-        for j in range(len(S)):
-            wDS[i, j] = cantidad
+# wDS = list()
+#
+# Asigna la cantidad de producto enviado del centro de fabricación $i$
+# al centro de distribución $j$. Estos valores se toman de la solución
+# de la heurística.
+#
+# wDS: lista de cantidades a enviar
+# solution: diccionario con la solución de la heurística.
+def allocate_distribution_per_center(wDS: list, solution: dict) -> None:
+    wDS = []
+    quantities = solution["wDS"]
+    for ij in range(len(quantities)):
+        wDS.append(quantities[ij])
     return None
 #
 ########################################################################
@@ -206,45 +247,44 @@ def generar_wds(wDS: dict, F: list, S: list, cantidad: int):
 # producto enviado del centro de distribución $j$ al punto de venta $k$
 #
 # wDP = {wdp_11, wdp_12, ..., wdp_jk, ..., wdp_kSkP}
-
-def generar_wdp(wDP: dict, S: list, P: list, cantidad: int):
-    for i in range(len(S)):
-        for j in range(len(P)):
-            wDP[i, j] = cantidad
+# wDP = list()
+#
+# Asigna la cantidad de producto enviado del centro de distribución $j$
+# al punto de venta $k$. Estos valores se toman de la solución de la
+# heurística.
+#
+# wDP: lista de cantidades a enviar
+# solution: diccionario con la solución de la heurística.
+def allocate_distribution_per_point_of_sale(wDP: list, solution: dict) -> None:
+    wDP = []
+    quantities = solution["wDP"]
+    for jk in range(len(quantities)):
+        wDP.append(quantities[jk])
     return None
-
 #
 ########################################################################
 
 ########################################################################
-# Parámetros
-# ----------
+# 3. Parámetros
+########################################################################
 
 #Xime TODO
 
-# cf : F × S → R cf_{i,j}
-# indica la proporcion de la cantidad de productos fabricados en $i$ que
-# se deben enviar al centro de distribución $j$.
+#
+########################################################################
 
-def crear_curva_fabricacion_distribucion(F, S, cf, curva_fabricacion_distribucion):
-    for i in range(len(F)):
-            for j in range(len(S)):
-                cf[i, j] = curva_fabricacion_distribucion
-    return None
+########################################################################
+# 4. Función objetivo
+########################################################################
 
-# cp : S × P → R cp_{j,k} curva de distribucion de los productos entregados en los centros de distribucion que se deben enviar a los puntos de venta.
-def crear_curva_distribucion_venta(S, P, cp, curva_distribucion_venta):
-    for j in range(len(S)):
-            for k in range(len(P)):
-                cp[j, k] = curva_distribucion_venta
-    return None
+#Xime TODO
 
 #
 ########################################################################
 
 ########################################################################
-# Restricciones
-# -------------
+# 5. Restricciones
+########################################################################
 
 # La cantidad producida se debe distribuir desde los centros de fabricación a los centros de distribución según la curva de distribución establecida. Surge de X.
     # F centros de fabricacion
@@ -280,9 +320,47 @@ def distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP):
 #
 ########################################################################
 
+########################################################################
+# 6. Super Mock Heurística (WIP)
+########################################################################
+
+def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP):
+    # Inicializar variables de decisión
+    X = [0] * len(F)
+    Y = [0] * len(P) * len(E)
+    Z = [0] * len(P) * len(E)
+    wDS = [0] * len(F) * len(S)
+    wDP = [0] * len(S) * len(P)
+
+    # Generar una solución inicial aleatoria
+    for i in range(len(F)):
+        X[i] = random.randint(1, 100)
+
+    for j in range(len(S)):
+        for k in range(len(P)):
+            wDP[j][k] = random.randint(1, 100)
+
+    # Calcular la función objetivo
+    objective_value = sum(X) + sum(Y) + sum(Z) + sum(wDS) + sum(wDP)
+
+    return {
+        "X": X,
+        "Y": Y,
+        "Z": Z,
+        "wDS": wDS,
+        "wDP": wDP,
+        "objective_value": objective_value
+    }
+#
+########################################################################
+
+# Main de prueba, esto debería ir en un archivo separado.
 def main():
 
-    ########## Generacion de conjuntos ##########
+    ####################################################################
+    # Generacion de conjuntos
+    ####################################################################
+
     path_to_files = "./db/data/conjuntos"
 
     # Conjunto de centros de fabricación
@@ -307,17 +385,25 @@ def main():
     print_points_of_sale(P)
 
     # Conjunto de escenarios de demanda
+    # Obs: la decision de la cantidad de escenarios a generar, junto con las
+    # demandas mínima y máxima es arbitraria, por ahora. Estos valores se deberían
+    # definir en base a la heurística, y a las pruebas que hagamos.
     E = list()
     generate_demand_scenarios_with_monte_carlo(E=E, P=P, kE=10, min_demand=1, max_demand=100)
     write_csv.add_rows_json(f"{path_to_files}/escenarios.csv",["nombre", "data"], E)
     print_demand_scenarios(E)
 
-    # ########## Variables de decision ##########
+    ####################################################################
+    # Variables de decisión
+    ####################################################################
     
-    # ############### Parametros ###############
+    ####################################################################
+    # Parámetros
+    ####################################################################
+
     # cf = dict() # fabricacion - distribucion
     # curva_fabricacion_distribucion = 0.1 #random.randint(0, 10)
-    # crear_curva_fabricacion_distribucion(F, S, cf, curva_fabricacion_distribucion)
+    # allocate_distribution_per_center(wDS, X) # crear_curva_fabricacion_distribucion(F, S, cf, curva_fabricacion_distribucion)
     # print('cf: ', cf)
 
     # cp = dict() # distribucion - ventas
@@ -335,13 +421,13 @@ def main():
     # wDS = dict()
     # cantidad = 10 # fabricacion - distribucion
     # # cada centro de fabricacion manda 10 productos a cada centro de venta --> en cada centro de venta hay 10*10=100 productos
-    # generar_wds(wDS, F, S, cantidad)
+    # allocate_distribution_per_center(wDS, X) # generar_wds(wDS, F, S, cantidad)
     # #wDS[1,1] = 0
     # print('wDS: ', wDS)
 
     # wDP = dict() # distribucion - ventas
     # cantidad = 10
-    # generar_wdp(wDP, F, S, cantidad)
+    # allocate_distribution_per_point_of_sale(wDP, X) # generar_wdp(wDP, S, P, cantidad)
     # #wDS[1,1] = 0
     # print('wDP: ', wDP)
 
