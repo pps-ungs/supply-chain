@@ -28,9 +28,10 @@ print(maximizar(z))
 """
 ########################################################################
 
-create_supply_chain_database()
+config = load_config('db/database.ini', 'postgres')
+create_supply_chain_database(config=config)
 
-config = load_config('db/database.ini', 'postgresql')
+config = load_config('db/database.ini', 'supply_chain')
 conn = get_connection(config)
 
 create_tables(conn)
@@ -67,8 +68,8 @@ conn.close()
 print("[okay] Connection closed")
 
 # Mock
-a = input("Do you want to dump (backup to a file) the database? (y/n): ")
-dump("db/data/supply_chain_dump.sql")
+# a = input("Do you want to dump (backup to a file) the database? (y/n): ")
+# dump("db/data/supply_chain_dump.sql")
 
-a = input("Do you want to restore the database from the dump file? (y/n): ")
-restore("db/data/supply_chain_dump.sql")
+# a = input("Do you want to restore the database from the dump file? (y/n): ")
+# restore("db/data/supply_chain_dump.sql")
