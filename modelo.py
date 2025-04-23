@@ -93,9 +93,9 @@ def print_distribution_centers(S: list) -> None:
 def read_distribution_centers() -> pd.DataFrame:
     config = load_config('db/database.ini', 'supply_chain')
     conn = get_connection(config)
-    fabrication_centers = read(conn, "select * from centro_de_distribucion;")
+    distribution_centers = read(conn, "select * from centro_de_distribucion;")
 
-    return fabrication_centers
+    return distribution_centers
 #
 ########################################################################
 
@@ -132,6 +132,13 @@ def remove_point_of_sale(P: list, point_of_sale: str) -> None:
 def print_points_of_sale(P: list) -> None:
     names = sorted([name for name, _ in P])
     print("P: [ " + ", ".join(names) + " ]")
+
+def read_points_of_sale() -> pd.DataFrame:
+    config = load_config('db/database.ini', 'supply_chain')
+    conn = get_connection(config)
+    points_of_sale = read(conn, "select * from punto_de_venta;")
+
+    return points_of_sale
 #
 ########################################################################
 
@@ -168,6 +175,13 @@ def generate_demand_scenarios_with_monte_carlo(E: list, kE: int, P: list, min_de
             demand = np.random.uniform(min_demand, max_demand)
             E[l].append((k[0], demand))
     return None
+
+def read_scenarios() -> pd.DataFrame:
+    config = load_config('db/database.ini', 'supply_chain')
+    conn = get_connection(config)
+    scenarios = read(conn, "select * from escenarios;")
+
+    return scenarios
 #
 ########################################################################
 
