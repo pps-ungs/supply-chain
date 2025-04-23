@@ -9,9 +9,10 @@ import numpy as np
 # Operaciones de conjuntos
 ####################################################################
 
-########################################################################
+####################################################################
 # Centros de fabricación
-
+# ------------------------------------------------------------------
+#
 # Agrega un centro de fabricación a la lista F.
 def add_fabrication_center(F: list, fabrication_center: str) -> None:
     if fabrication_center not in F:
@@ -32,13 +33,13 @@ def remove_fabrication_center(F: list, fabrication_center: str) -> None:
 def print_fabrication_centers(F: list) -> None:
     names = sorted([name for name, _ in F])
     print("F: [ " + ", ".join(names) + " ]")
-
+#
 ####################################################################
-
 
 ####################################################################
 # Centros de distribución
-
+# ------------------------------------------------------------------
+#
 # Agrega un centro de distribución a la lista S.
 def add_distribution_center(S: list, distribution_center: str) -> None:
     if distribution_center not in S:
@@ -59,13 +60,13 @@ def remove_distribution_center(S: list, distribution_center: str) -> None:
 def print_distribution_centers(S: list) -> None:
     names = sorted([name for name, _ in S])
     print("S: [ " + ", ".join(names) + " ]")
-
-
+#
 ####################################################################
 
 ####################################################################
 # Puntos de venta
-
+# ------------------------------------------------------------------
+#
 # Agrega un punto de venta a la lista P.
 def add_point_of_sale(P: list, point_of_sale: str) -> None:
     if point_of_sale not in P:
@@ -86,12 +87,13 @@ def remove_point_of_sale(P: list, point_of_sale: str) -> None:
 def print_points_of_sale(P: list) -> None:
     names = sorted([name for name, _ in P])
     print("P: [ " + ", ".join(names) + " ]")
-
+#
 ####################################################################
 
 ####################################################################
 # Escenarios
-
+# ------------------------------------------------------------------
+#
 # Imprime los escenarios de demanda en el conjunto E.
 def print_demand_scenarios(E: list) -> None:
     print("E:")
@@ -116,13 +118,14 @@ def generate_demand_scenarios_with_monte_carlo(E: list, kE: int, P: list, min_de
             demand = np.random.uniform(min_demand, max_demand)
             E[l].append((k[0], demand))
     return None
-
+#
 ####################################################################
 
 ####################################################################
 # Generacion de conjuntos
-####################################################################
-
+# ------------------------------------------------------------------
+#
+#
 path_to_files = "./db/data/conjuntos"
 
 # Conjunto de centros de fabricación
@@ -154,11 +157,15 @@ E = list()
 generate_demand_scenarios_with_monte_carlo(E=E, P=P, kE=10, min_demand=1, max_demand=100)
 write_csv.add_rows_json(f"{path_to_files}/escenarios.csv",["nombre", "data"], E)
 print_demand_scenarios(E)
+#
+####################################################################
+
 
 ####################################################################
 # DB
-####################################################################
-
+# ------------------------------------------------------------------
+#
+#
 config = load_config('db/database.ini', 'postgres')
 create_supply_chain_database(config=config)
 
@@ -167,36 +174,38 @@ conn = get_connection(config)
 
 create_tables(conn)
 
-########################################################################
+####################################################################
 # Centros de fabricación
 centro_de_fabricacion_insert_statement = "insert into centro_de_fabricacion (nombre, data) values (%s, %s)"
 centro_de_fabricacion_csv_file = "./db/data/conjuntos/centros_de_fabricacion.csv"
 insert_data_from_csv(conn, centro_de_fabricacion_insert_statement, centro_de_fabricacion_csv_file)
-########################################################################
+####################################################################
 
-########################################################################
+####################################################################
 # Centros de distribución
 centro_de_distribucion_insert_statement = "insert into centro_de_distribucion (nombre, data) values (%s, %s)"
 centro_de_distribucion_csv_file = "./db/data/conjuntos/centros_de_distribucion.csv"
 insert_data_from_csv(conn, centro_de_distribucion_insert_statement, centro_de_distribucion_csv_file)
-########################################################################
+####################################################################
 
-########################################################################
+####################################################################
 # Puntos de venta
 punto_de_venta_insert_statement = "insert into punto_de_venta(nombre, data) values (%s, %s)"
 punto_de_venta_csv_file = "./db/data/conjuntos/puntos_de_venta.csv"
 insert_data_from_csv(conn, punto_de_venta_insert_statement, punto_de_venta_csv_file)
-########################################################################
+####################################################################
 
-########################################################################
+####################################################################
 # Escenarios
 escenario_insert_statement = "insert into escenario (nombre, data) values (%s, %s)"
 escenario_csv_file = "./db/data/conjuntos/escenarios.csv"
 insert_data_from_csv_json(conn, escenario_insert_statement, escenario_csv_file)
-########################################################################
+####################################################################
 
 conn.close()
 print("[okay] Connection closed")
+#
+####################################################################
 
 # Mock
 # a = input("Do you want to dump (backup to a file) the database? (y/n): ")
