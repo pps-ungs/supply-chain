@@ -4,6 +4,8 @@ import os
 import csv
 import json
 import pandas as pd
+from db.config import load_config
+
 
 def create_supply_chain_database(config: dict) -> None:
     try:
@@ -128,7 +130,8 @@ def dump(filepath: str) -> None:
 
 
 def restore(filepath: str) -> None:
-    create_supply_chain_database()
+    config = load_config('db/database.ini', 'postgres')
+    create_supply_chain_database(config)
 
     if os.name == 'posix':
         command = f"psql -U postgres supply_chain < {filepath}"
