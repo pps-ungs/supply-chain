@@ -2,6 +2,8 @@ import random
 import numpy as np
 import re
 from db import write_csv
+from db.config import load_config
+from db.database import *
 
 ########################################################################
 # Modelo de Cadena de Distribución Básica
@@ -44,6 +46,14 @@ def remove_fabrication_center(F: list, fabrication_center: str) -> None:
 def print_fabrication_centers(F: list) -> None:
     names = sorted([name for name, _ in F])
     print("F: [ " + ", ".join(names) + " ]")
+
+def read_fabrication_centers() -> pd.DataFrame:
+    config = load_config('db/database.ini', 'postgresql')
+    conn = get_connection(config)
+    fabrication_centers = read(conn, "select * from centro_de_fabricacion;")
+
+    print(fabrication_centers)
+    return fabrication_centers
 #
 ########################################################################
 
@@ -388,7 +398,7 @@ def main():
     ####################################################################
     # Generacion de conjuntos
     ####################################################################
-
+    read_fabrication_centers()
     path_to_files = "./db/data/conjuntos"
 
     # Conjunto de centros de fabricación
