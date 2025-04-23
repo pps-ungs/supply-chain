@@ -351,6 +351,11 @@ def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP):
         "wDP": wDP,
         "objective_value": objective_value
     }
+
+def supply_chain(m: dict, ct: list, cv: list, pi: list, d: list, cf: list, cp: list, ps: list, pdi: list) -> None:
+    print('WIP')
+
+
 #
 ########################################################################
 
