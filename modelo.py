@@ -47,12 +47,12 @@ def print_fabrication_centers(F: list) -> None:
     names = sorted([name for name, _ in F])
     print("F: [ " + ", ".join(names) + " ]")
 
-def read_fabrication_centers() -> pd.DataFrame:
+def read_fabrication_centers() -> dict:
     config = load_config('db/database.ini', 'supply_chain')
     conn = get_connection(config)
     fabrication_centers = read(conn, "select * from centro_de_fabricacion;")
 
-    return fabrication_centers
+    return fabrication_centers.to_dict(orient='records')
 #
 ########################################################################
 
@@ -90,12 +90,12 @@ def print_distribution_centers(S: list) -> None:
     names = sorted([name for name, _ in S])
     print("S: [ " + ", ".join(names) + " ]")
 
-def read_distribution_centers() -> pd.DataFrame:
+def read_distribution_centers() -> dict:
     config = load_config('db/database.ini', 'supply_chain')
     conn = get_connection(config)
     distribution_centers = read(conn, "select * from centro_de_distribucion;")
 
-    return distribution_centers
+    return distribution_centers.to_dict(orient='records')
 #
 ########################################################################
 
@@ -133,12 +133,12 @@ def print_points_of_sale(P: list) -> None:
     names = sorted([name for name, _ in P])
     print("P: [ " + ", ".join(names) + " ]")
 
-def read_points_of_sale() -> pd.DataFrame:
+def read_points_of_sale() -> dict:
     config = load_config('db/database.ini', 'supply_chain')
     conn = get_connection(config)
     points_of_sale = read(conn, "select * from punto_de_venta;")
 
-    return points_of_sale
+    return points_of_sale.to_dict(orient='records')
 #
 ########################################################################
 
@@ -176,12 +176,12 @@ def generate_demand_scenarios_with_monte_carlo(E: list, kE: int, P: list, min_de
             E[l].append((k[0], demand))
     return None
 
-def read_scenarios() -> pd.DataFrame:
+def read_scenarios() -> dict:
     config = load_config('db/database.ini', 'supply_chain')
     conn = get_connection(config)
-    scenarios = read(conn, "select * from escenarios;")
+    scenarios = read(conn, "select * from escenario;")
 
-    return scenarios
+    return scenarios.to_dict(orient='records')
 #
 ########################################################################
 
@@ -418,7 +418,12 @@ def main():
     ####################################################################
     # Generacion de conjuntos
     ####################################################################
-    read_fabrication_centers()
+    
+    fabrication_centers = read_fabrication_centers()
+    distribution_centers = read_distribution_centers()
+    points_of_sale = read_points_of_sale()
+    scenarios = read_scenarios()
+
     path_to_files = "./db/data/conjuntos"
 
     # Conjunto de centros de fabricación
