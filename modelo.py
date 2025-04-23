@@ -286,38 +286,61 @@ def allocate_distribution_per_point_of_sale(wDP: list, solution: dict) -> None:
 # 5. Restricciones
 ########################################################################
 
-# La cantidad producida se debe distribuir desde los centros de fabricación a los centros de distribución según la curva de distribución establecida. Surge de X.
-    # F centros de fabricacion
-    # S centros de distribucion
-    # X cantidad de producto a producir en el centro de fabricación $i$
-    # cf curva de distribucion Fabrica-Centro de distribucion
-    # wDS_{i, j} cantidad de producto que se transporta desde el centro de fabricacion i al centro de distribucion j.
+########################################################################
+# La cantidad producida se debe distribuir desde los centros de
+# fabricación a los centros de distribución según la curva de
+# distribución establecida. Surge de X.
+#
+# F: centros de fabricación
+# S: centros de distribución
+# X: cantidad de producto a producir en el centro de fabricación $i$
+# cf: curva de distribución Fábrica-Centro de distribución
+# wDS[i][j] cantidad de producto que se transporta desde el centro de
+# fabricación $i$ al centro de distribucion $j$.
 def distribuye_a_centros_de_distribucion_segun_curva(F, S, X, cf, wDS):
     return all(X[i] * cf[i, j] == wDS[i, j] for i in range(len(F)) for j in range(len(S)))
+#
+########################################################################
 
-# La cantidad producida se debe distribuir a los puntos de venta desde los centros de distribución según la curva de distribución establecida.
-    # F centros de fabricacion
-    # S centros de distribucion
-    # P puntos de venta
-    # cp curva de distribucion Centro de distribucion-Punto de venta
-    # wDS_{i, j} cantidad de producto que se transporta desde el centro de fabricacion i al centro de distribucion j.
-    # wDP_{j, k} cantidad de producto que se transporta desde el centro de distribucion j al punto de venta k.
+########################################################################
+# La cantidad producida se debe distribuir a los puntos de venta desde
+# los centros de distribución según la curva de distribución establecida.
+#
+# F: centros de fabricación
+# S: centros de distribución
+# P: puntos de venta
+# cp: curva de distribución Centro de distribución-Punto de venta
+# wDS[i, j]: cantidad de producto que se transporta desde el centro de
+# fabricación $i$ al centro de distribución $j$.
+# wDP[j, k]: cantidad de producto que se transporta desde el centro de
+# distribución $j$ al punto de venta $k$.
 def distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP):
     return all(suma := sum(wDS[i, j] for i in range(len(F))) * cp[j, k] == wDP[j, k] 
            for j in range(len(S)) for k in range(len(P)))
-
-# Para determinar el stock al final del período de comercialización en cada punto de venta para cada uno de los escenarios se debe cumplir que:
-    # Si la demanda supera a lo que recibió el punto de venta, el stock al final del periodo vale 0.
-    # Si no, el stock sobrante se calcula restando lo que recibió el punto de venta y la demanda que tuvo.
-
-
-
-# Para determinar la demanda insatisfecha en cada punto de venta para cada uno de los escenarios se debe cumplir que:
-    # Si la demanda fue menor a lo que recibió el punto de venta, la demanda insatisfecha del periodo vale 0.
-    # Si no, la demanda insatisfecha se calcula restando la demanda que tuvo el punto de venta y la cantidad de productos que recibió.
-
-
 #
+########################################################################
+
+########################################################################
+# Para determinar el stock al final del período de comercialización en
+# cada punto de venta para cada uno de los escenarios se debe cumplir
+# que:
+#
+# Si la demanda supera a lo que recibió el punto de venta, el stock al
+# final del periodo vale 0.
+#
+# Si no, el stock sobrante se calcula restando lo que recibió el punto
+# de venta y la demanda que tuvo.
+########################################################################
+
+########################################################################
+# Para determinar la demanda insatisfecha en cada punto de venta para
+# cada uno de los escenarios se debe cumplir que:
+#
+# Si la demanda fue menor a lo que recibió el punto de venta, la demanda
+# insatisfecha del periodo vale 0.
+#
+# Si no, la demanda insatisfecha se calcula restando la demanda que tuvo
+# el punto de venta y la cantidad de productos que recibió.
 ########################################################################
 
 ########################################################################
