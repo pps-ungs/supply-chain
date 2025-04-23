@@ -42,12 +42,6 @@ def create_tables(conn: psycopg.Connection) -> None:
     try:
         with conn.cursor() as cur:
             cur.execute("""
-                create table escenario (
-                    id serial primary key,
-                    nombre text,
-                    data jsonb
-                );
-                
                 create table centro_de_fabricacion (
                     id serial primary key,
                     nombre text,
@@ -64,6 +58,12 @@ def create_tables(conn: psycopg.Connection) -> None:
                     id serial primary key,
                     nombre text,
                     data text
+                );
+
+                create table escenario (
+                    id serial primary key,
+                    nombre text,
+                    data jsonb
                 );
                 """)
             conn.commit()
@@ -108,6 +108,16 @@ def read(conn: psycopg.Connection, select_statement: str) -> pd.DataFrame:
     except (psycopg.DatabaseError, Exception) as e:
         print(f"?error reading data': {e}")
         return pd.DataFrame()
+
+def insert_data_from_dataframe(conn: psycopg.Connection, insert_statement: str, df: pd.DataFrame) -> None:
+    try:
+        with conn.cursor() as cur:
+            for index, row in df.iterrows():
+                cur.execute(insert_statement, tuple(row))
+            conn.commit()
+            print(f"[okay] Data inserted from DataFrame")
+    except (psycopg.DatabaseError, Exception) as e:
+        print(f"?error inserting data: {e}")
 
 def dump(filepath: str) -> None:
     if os.name == 'posix':
