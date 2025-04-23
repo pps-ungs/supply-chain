@@ -89,6 +89,13 @@ def remove_distribution_center(S: list, distribution_center: str) -> None:
 def print_distribution_centers(S: list) -> None:
     names = sorted([name for name, _ in S])
     print("S: [ " + ", ".join(names) + " ]")
+
+def read_distribution_centers() -> pd.DataFrame:
+    config = load_config('db/database.ini', 'supply_chain')
+    conn = get_connection(config)
+    fabrication_centers = read(conn, "select * from centro_de_distribucion;")
+
+    return fabrication_centers
 #
 ########################################################################
 
