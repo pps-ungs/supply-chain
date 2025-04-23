@@ -48,11 +48,10 @@ def print_fabrication_centers(F: list) -> None:
     print("F: [ " + ", ".join(names) + " ]")
 
 def read_fabrication_centers() -> pd.DataFrame:
-    config = load_config('db/database.ini', 'postgresql')
+    config = load_config('db/database.ini', 'supply_chain')
     conn = get_connection(config)
     fabrication_centers = read(conn, "select * from centro_de_fabricacion;")
 
-    print(fabrication_centers)
     return fabrication_centers
 #
 ########################################################################
