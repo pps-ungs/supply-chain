@@ -1,22 +1,34 @@
 ########################################################################
-# 5. Restricciones
+# 2. y 5. Variables de decisión y sus restricciones
 ########################################################################
 
 ########################################################################
-# La cantidad producida se debe distribuir desde los centros de
-# fabricación a los centros de distribución según la curva de
-# distribución establecida 
+# Conjunto de variables de decisión que representan la cantidad de
+# producto a producir en el centro de fabricación $i$
+# X = {x_1, x_2, ..., x_i, ..., x_kF}
+# X = list()
+# Asigna la cantidad de producto a producir en el centro de fabricación
+# $i$. Estos valores se toman de la solución de la heurística.
+# X: lista de cantidades a producir
+# solution: diccionario con la solución de la heurística.
+def allocate_production_per_center(X: list, solution: dict) -> None:
+    X = []
+    quantities = solution["X"]
+    for i in range(len(quantities)):
+        X.append(quantities[i])
+    return None
 
-# X: lista que contiene cuantos productos se fabrican en cada fabrica.
-# S: lista que contiene los centros de distribución
-# cf: es la curva de distribucion fabricas-centros. Es de la forma: 
-#   [   [0.02, 0.04, 0.05, 0.07, 0.09, 0.11, 0.13, 0.15, 0.16, 0.18], 
-#       [0.02, 0.04, 0.05, 0.07, 0.09, 0.11, 0.13, 0.15, 0.16, 0.18], 
-#   ... ]
-# 
-# Returns: wDS = [ [cantidad enviada de la fabrica 0 a cada centro de
-# distribución], [cantidad enviada de la fabrica 1 a cada centro de
-# distribución], ...]
+########################################################################
+# La cantidad producida se debe distribuir desde los centros de fabricación a los centros de  distribución según la curva de distribución establecida 
+### Parametros ###
+    # * X es una lista que contiene cuantos productos se fabrican en cada fabrica.
+    # * S es una lista que contiene los centros de distribucion
+    # * cf es la curva de distribucion fabricas-centros. Es de la forma: 
+    #   [   [0.02, 0.04, 0.05, 0.07, 0.09, 0.11, 0.13, 0.15, 0.16, 0.18], 
+    #       [0.02, 0.04, 0.05, 0.07, 0.09, 0.11, 0.13, 0.15, 0.16, 0.18], 
+    #   ... ]
+### Retorna ###
+    # * wDS = [ [cantidad enviada de la fabrica 0 a cada centro de distr.], [cantidad enviada de la fabrica 1 a cada centro de distr.], ...]
 def generate_products_to_distribution_center(X: list, S:list, cf: list) -> list:
     wDS = []
     for i in range(len(X)):
