@@ -262,20 +262,38 @@ def objective_function(margen, pStk, pDIn, CTf2s, CTs2p):
 ########################################################################
 
 ########################################################################
-# 6. Super Mock Heurística (WIP)
+# 6. Heurística
 ########################################################################
-def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP, d):
-    # Inicializar variables de decisión
-    X = [0] * len(F)
-    Y = [0] * len(P) * len(E)
-    Z = [0] * len(P) * len(E)
 
-    # Hay restricciones sobre el valor de Y y Z, entonces no sé si hay
-    # que crearlas garantizando esas propiedades, o si solamente hay que
-    # validar si las cumplen o no. Por las dudas hice las dos cosas )?
-    # Y, Z = calcular_stock_y_demanda_insatisfecha(P, E, S, d, wDP)
-    wDS = [0] * len(F) * len(S)
-    wDP = [0] * len(S) * len(P)
+# monto de la ganancia esperada
+def get_margin(E, P, wDP, Y, pi, m):
+    margin = 0
+    for k in range(P):
+        sum = 0
+        for l in range(E):
+            sum += (wDP[k] - Y[k][l]) * pi[l] * m[k]
+        margin += sum
+    return margin
+
+# penalidad esperada por stock almacenado en los puntos de venta
+def get_penalty_stock(E, P, Y, pi, ps):
+    pStK = 0
+    for l in range(E):
+        sum = 0
+        for k in range(P):
+            sum += ps[k] * Y[k][l]
+        pStK += sum * pi[l]
+    return pStK
+
+
+
+
+def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP, d):
+    margen = 0
+    pStk = 0
+    pDIn = 0
+    CTf2s = 0
+    CTs2p = 0
 
     # Generar una solución inicial aleatoria
     for i in range(len(F)):
@@ -285,8 +303,7 @@ def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP, d):
         for k in range(len(P)):
             wDP[j][k] = random.randint(1, 100)
 
-    # Calcular la función objetivo
-    objective_value = sum(X) + sum(Y) + sum(Z) + sum(wDS) + sum(wDP)
+    objective_value = objective_function(margen, pStk, pDIn, CTf2s, CTs2p)
 
     return {
         "X": X,
