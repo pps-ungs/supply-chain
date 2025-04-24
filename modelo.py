@@ -225,13 +225,23 @@ def get_probability_of_occurrence(E):
 def get_demand_per_point_of_sale(E, P):
     return [e['data'] for e in E]
 
-# cf = curva de distribucion de los productos fabricados a los diferentes centros de distribucion.
+# cf = curva de distribucion de los productos fabricados a los diferentes centros de distribucion
 def get_distribution_curve_from_fabrication_to_distribution(F, S):
     return [[round((i + 1) / sum(range(1, len(S) + 1)), 2) for i in range(len(S))] for _ in range(len(F))]
 
-# cp = curva de distribucion de los productos entregados en los centros de distribucion que se deben enviar a los puntos de venta.
+# cp = curva de distribucion de los productos entregados en los centros de distribucion que se deben enviar a los puntos de venta
 def get_distribution_curve_from_distribution_to_sale(S, P):
     return [[round((i + 1) / sum(range(1, len(S) + 1)), 2) for i in range(len(P))] for _ in range(len(S))]
+
+# ps = Penalidad unitaria por dejar un producto en el punto de venta sin comercializar
+def get_distribution_curve_from_fabrication_to_sale(F, P):
+    m = get_margin_per_point_of_sale(P)
+    return [m[i] * 0.15 for i in range(len(P))]
+
+# pdi = Penalidad unitaria por demanda insatisfecha en un punto de venta
+def get_penalty_for_unsatisfied_demand(P):
+    m = get_margin_per_point_of_sale(P)
+    return [m[i] * 0.1 for i in range(len(P))]
 
 #
 ########################################################################
