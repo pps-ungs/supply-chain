@@ -1,6 +1,22 @@
 ########################################################################
-# 5. Restricciones
+# 2. y 5. Variables de decisión y sus restricciones
 ########################################################################
+
+########################################################################
+# Conjunto de variables de decisión que representan la cantidad de
+# producto a producir en el centro de fabricación $i$
+# X = {x_1, x_2, ..., x_i, ..., x_kF}
+# X = list()
+# Asigna la cantidad de producto a producir en el centro de fabricación
+# $i$. Estos valores se toman de la solución de la heurística.
+# X: lista de cantidades a producir
+# solution: diccionario con la solución de la heurística.
+def allocate_production_per_center(X: list, solution: dict) -> None:
+    X = []
+    quantities = solution["X"]
+    for i in range(len(quantities)):
+        X.append(quantities[i])
+    return None
 
 ########################################################################
 # La cantidad producida se debe distribuir desde los centros de fabricación a los centros de  distribución según la curva de distribución establecida 
