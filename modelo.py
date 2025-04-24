@@ -2,7 +2,7 @@ import random
 import re
 from db.config import load_config
 from db.database import *
-from restricciones import *
+from variables_de_decision import *
 import warnings
 warnings.filterwarnings('ignore') # get rid of annoying pandas warnings
 
@@ -74,126 +74,13 @@ def read_points_of_sale(conn: psycopg.Connection) -> list:
 ########################################################################
 # Conjunto de $kE$ escenarios de demanda posibles
 # -----------------------------------------------
-#
 # E = {e_1, e_2, ..., e_l, ..., e_kE}
 # E = [][]
-#
 # l → escenarios
-
 def read_scenarios(conn: psycopg.Connection) -> list:
     scenarios = read(conn, "select * from escenario;")
     return scenarios.to_dict(orient='records')
-#
-########################################################################
 
-########################################################################
-# 2. Variables de decisión
-########################################################################
-
-########################################################################
-# Conjunto de variables de decisión que representan la cantidad de
-# producto a producir en el centro de fabricación $i$
-#
-# X = {x_1, x_2, ..., x_i, ..., x_kF}
-# X = list()
-#
-# Asigna la cantidad de producto a producir en el centro de fabricación
-# $i$. Estos valores se toman de la solución de la heurística.
-#
-# X: lista de cantidades a producir
-# solution: diccionario con la solución de la heurística.
-def allocate_production_per_center(X: list, solution: dict) -> None:
-    X = []
-    quantities = solution["X"]
-    for i in range(len(quantities)):
-        X.append(quantities[i])
-    return None
-#
-########################################################################
-
-########################################################################
-# Conjunto de variables de decisión que representan la cantidad de
-# producto sobrante en el punto de venta $k$ para el escenario $l$
-#
-# Y = {y_1, y_2, ..., y_kl, ..., y_kPkE}
-# Y = list()
-#
-# Asigna la cantidad de producto sobrante en el punto de venta $k$ para 
-# el escenario $l$. Estos valores se toman de la solución de la
-# heurística.
-# def allocate_surplus_per_point(Y: list, solution: dict) -> None:
-#     Y = []
-#     quantities = solution["Y"]
-#     for kl in range(len(quantities)):
-#         Y.append(quantities[kl])
-#     return None 
-#
-########################################################################
-
-########################################################################
-# Conjunto de variables de decisión que representan la cantidad de
-# producto demandada que no pudo ser astisfecha en el punto de venta $k$
-# para el escenario $l$
-#
-# Z = {z_11, z_12, ..., z_kl, ..., z_kPkE}
-# Z = list()
-#
-# Asigna la cantidad de producto demandada que no pudo ser satisfecha
-# en el punto de venta $k$ para el escenario $l$. Estos valores se toman
-# de la solución de la heurística.
-# def allocate_unsatisfied_demand(Z: list, solution: dict) -> None:
-#     Z = []
-#     quantities = solution["Z"]
-#     for kl in range(len(quantities)):
-#         Z.append(quantities[kl])
-#     return None
-#
-########################################################################
-
-########################################################################
-# Conjunto de variables de decisión que representan la cantidad de
-# producto enviado del centro de fabricación $i$ al centro de
-# distribución $j$
-#
-# wDS = {wds_11, wds_12, ..., wds_ij, ..., wds_kFkS}
-# wDS = list()
-#
-# Asigna la cantidad de producto enviado del centro de fabricación $i$
-# al centro de distribución $j$. Estos valores se toman de la solución
-# de la heurística.
-#
-# wDS: lista de cantidades a enviar
-# solution: diccionario con la solución de la heurística.
-# def allocate_distribution_per_center(wDS: list, solution: dict) -> None:
-#     wDS = []
-#     quantities = solution["wDS"]
-#     for ij in range(len(quantities)):
-#         wDS.append(quantities[ij])
-#     return None
-#
-########################################################################
-
-########################################################################
-# Conjunto de variables de decisión que representan la cantidad de
-# producto enviado del centro de distribución $j$ al punto de venta $k$
-#
-# wDP = {wdp_11, wdp_12, ..., wdp_jk, ..., wdp_kSkP}
-# wDP = list()
-#
-# Asigna la cantidad de producto enviado del centro de distribución $j$
-# al punto de venta $k$. Estos valores se toman de la solución de la
-# heurística.
-#
-# wDP: lista de cantidades a enviar
-# solution: diccionario con la solución de la heurística.
-# def allocate_distribution_per_point_of_sale(wDP: list, solution: dict) -> None:
-#     wDP = []
-#     quantities = solution["wDP"]
-#     for jk in range(len(quantities)):
-#         wDP.append(quantities[jk])
-#     return None
-#
-########################################################################
 
 ########################################################################
 # 3. Parámetros
@@ -339,61 +226,3 @@ def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP, d):
 
 def supply_chain(objective_function, m: dict, ct: list, cv: list, pi: list, d: list, cf: list, cp: list, ps: list, pdi: list) -> None:
     print('WIP')
-#
-########################################################################
-
-def main():
-
-    ####################################################################
-    # Conjuntos
-    ####################################################################
-
-    config = load_config('db/database.ini', 'supply_chain')
-    conn = get_connection(config)
-
-    F = read_fabrication_centers(conn)
-    S = read_distribution_centers(conn)
-    P = read_points_of_sale(conn)
-    E = read_scenarios(conn)
-    
-    print("E:",E)
-
-    conn.close()
-    print("[okay] Connection to supply_chain closed")
-
-    ####################################################################
-    # Parámetros
-    ####################################################################
-
-    m = get_margin_per_point_of_sale(P)
-    ct = get_transportation_cost_from_fabrication_to_distribution(F, S)
-    cv = get_transportation_cost_from_distribution_to_sale(S, P)
-    pi = get_probability_of_occurrence(E)
-    d = get_demand_per_point_of_sale(E, P)
-    cf = get_distribution_curve_from_fabrication_to_distribution(F, S)
-    cp = get_distribution_curve_from_distribution_to_sale(S, P)
-    ps = get_distribution_curve_from_fabrication_to_sale(F, P)
-    pdi = get_penalty_for_unsatisfied_demand(P)
-
-    print("S:", S)
-    print("P:", P)
-    print("CP:", cp)
-    print("CF:", cf)
-    print("d:", d)
-
-    X = [100, 200, 300, 400, 500, 100, 200, 300, 400, 500]
-    wDS = generate_products_to_distribution_center(X, S, cf)
-
-    print("wDS:", wDS)
-
-    wDP = generate_products_to_points_of_sale(F, S, P, wDS, cp)
-
-    Y, Z = generate_stock_and_unsatisfied_demand(S, P, d, wDP)
-    print("Y:", Y)
-    print("Z:", Z)
-
-    supply_chain(objective_function, m, ct, cv, pi, d, cf, cp, ps, pdi)
-
-
-if __name__ == "__main__":
-    main()

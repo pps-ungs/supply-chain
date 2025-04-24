@@ -1,6 +1,22 @@
 ########################################################################
-# 5. Restricciones
+# 2. y 5. Variables de decisión y sus restricciones
 ########################################################################
+
+########################################################################
+# Conjunto de variables de decisión que representan la cantidad de
+# producto a producir en el centro de fabricación $i$
+# X = {x_1, x_2, ..., x_i, ..., x_kF}
+# X = list()
+# Asigna la cantidad de producto a producir en el centro de fabricación
+# $i$. Estos valores se toman de la solución de la heurística.
+# X: lista de cantidades a producir
+# solution: diccionario con la solución de la heurística.
+def allocate_production_per_center(X: list, solution: dict) -> None:
+    X = []
+    quantities = solution["X"]
+    for i in range(len(quantities)):
+        X.append(quantities[i])
+    return None
 
 ########################################################################
 # La cantidad producida se debe distribuir desde los centros de fabricación a los centros de  distribución según la curva de distribución establecida 
@@ -23,17 +39,18 @@ def generate_products_to_distribution_center(X: list, S:list, cf: list) -> list:
     return wDS
 
 ########################################################################
-# La cantidad producida se debe distribuir a los puntos de venta desde los centros de distribución según la curva de distribución establecida.
-### Parametros ###
-    # * F es una lista que contiene las fabricas.
-    # * S es una lista que contiene los centros de distribucion 
-    # * P es una lista que contiene los puntos de venta
-    # * wDS es la cantidad de productos que entrego cada fabrica a cada centro de distribucion. Es de la forma: 
-    #   [[0.02, 0.04, 0.05, 0.07, 0.09, 0.11, 0.13, 0.15, 0.16, 0.18], [0.02, 0.04, 0.05, 0.07, 0.09, 0.11, 0.13, 0.15, 0.16, 0.18], ...]
-    #   [ [cantidad enviada de la fabrica 0 a cada centro de distr.], [cantidad enviada de la fabrica 1 a cada centro de distr.], ...]
-    # * cp es la curva de distribucion centros-puntos de venta. Es de la forma: 
-### Retorna ###
-    # * wDP = [ [cantidad enviada del centro de destr. 0 a cada punto de venta], [cantidad enviada del centro de destr. 1 a cada punto de venta], ...]
+# La cantidad producida se debe distribuir a los puntos de venta desde
+# los centros de distribución según la curva de distribución establecida.
+
+# F: es una lista que contiene las fabricas.
+# S: es una lista que contiene los centros de distribución 
+# P: es una lista que contiene los puntos de venta
+# wDS: es la cantidad de productos que entrego cada fabrica a cada
+#      centro de distribución. Es de la forma: 
+#   [[0.02, 0.04, 0.05, 0.07, 0.09, 0.11, 0.13, 0.15, 0.16, 0.18], [0.02, 0.04, 0.05, 0.07, 0.09, 0.11, 0.13, 0.15, 0.16, 0.18], ...]
+#   [ [cantidad enviada de la fabrica 0 a cada centro de distr.], [cantidad enviada de la fabrica 1 a cada centro de distr.], ...]
+# cp: es la curva de distribucion centros-puntos de venta. Es de la forma: 
+# Returns: wDP = [ [cantidad enviada del centro de destr. 0 a cada punto de venta], [cantidad enviada del centro de destr. 1 a cada punto de venta], ...]
 def generate_products_to_points_of_sale(F:list, S: list, P: list, wDS: list, cp: list):
     wDP = []
     for j in range(len(S)):

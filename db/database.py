@@ -72,6 +72,7 @@ def create_tables(conn: psycopg.Connection) -> None:
         print(f"?error creating tables: {e}")
 
 
+# ?
 def insert_data_from_csv(conn: psycopg.Connection, insert_statement: str, csv_file: str) -> None:
     try:
         with conn.cursor() as cur:
@@ -85,6 +86,7 @@ def insert_data_from_csv(conn: psycopg.Connection, insert_statement: str, csv_fi
     except (psycopg.DatabaseError, Exception) as e:
         print(f"?error inserting data: {e}")
 
+# ?
 def insert_data_from_csv_json(conn: psycopg.Connection, insert_statement: str, csv_file: str) -> None:
     try:
         with conn.cursor() as cur:
@@ -109,6 +111,7 @@ def read(conn: psycopg.Connection, select_statement: str) -> pd.DataFrame:
         print(f"?error reading data': {e}")
         return pd.DataFrame()
 
+# FIXME
 def insert_data_from_dataframe(conn: psycopg.Connection, insert_statement: str, df: pd.DataFrame) -> None:
     try:
         with conn.cursor() as cur:
