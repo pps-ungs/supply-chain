@@ -256,16 +256,16 @@ def objective_function(margen, pStk, pDIn, CTf2s, CTs2p):
 ########################################################################
 # 5. Restricciones
 ########################################################################
-def cumple_restricciones(F, S, P, E, X, Y, Z, d, cf, cp, wDS, wDP):
+def validate_restrictions(F, S, P, E, X, Y, Z, d, cf, cp, wDS, wDP):
     return (
-        distribuye_a_centros_de_distribucion_segun_curva(F, S, X, cf, wDS) and
-        distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP) and
-        validar_stock_y_demanda_insatisfecha(P, E, S, Y, Z, d, wDP)
+        distributes_to_distribution_centers_according_curve(F, S, X, cf, wDS) and
+        distributes_to_point_sales_according_curve(F, S, P, cp, wDS, wDP) and
+        validate_stock_and_unsatisfied_demand(P, E, S, Y, Z, d, wDP)
     )
 
 # La cantidad producida se debe distribuir desde los centros de fabricación a los centros de 
 # distribución según la curva de distribución establecida.
-def distribuye_a_centros_de_distribucion_segun_curva(F, S, X, cf, wDS):
+def distributes_to_distribution_centers_according_curve(F, S, X, cf, wDS):
     return all(X[i] * cf[i, j] == wDS[i, j] for i in range(len(F)) for j in range(len(S)))
 #
 ########################################################################
@@ -273,8 +273,8 @@ def distribuye_a_centros_de_distribucion_segun_curva(F, S, X, cf, wDS):
 ########################################################################
 # La cantidad producida se debe distribuir a los puntos de venta desde
 # los centros de distribución según la curva de distribución establecida.
-def distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP):
-    return all(suma := sum(wDS[i, j] for i in range(len(F))) * cp[j, k] == wDP[j, k] 
+def distributes_to_point_sales_according_curve(F, S, P, cp, wDS, wDP):
+    return all(result := sum(wDS[i, j] for i in range(len(F))) * cp[j, k] == wDP[j, k] 
            for j in range(len(S)) for k in range(len(P)))
 #
 ########################################################################
@@ -291,33 +291,33 @@ def distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP):
     # Si la demanda fue menor a lo que recibió el punto de venta, la demanda insatisfecha del periodo vale 0.
     # Si no, la demanda insatisfecha se calcula restando la demanda que tuvo el punto de venta y la cantidad de productos que recibió.
 ########################################################################
-def validar_stock_y_demanda_insatisfecha(P, E, S, Y, Z, d, wDP):
-    es_valido = True
+def validate_stock_and_unsatisfied_demand(P, E, S, Y, Z, d, wDP) -> bool:
+    is_valid = True
     for k in P:
         for l in E:
-            enviado = sum(wDP[j, k] for j in S)
-            demanda = d[l, k]    
-            if demanda > enviado:
-                es_valido = es_valido and Y[k, l] == 0
-                es_valido = es_valido and  Z[k, l] == demanda - enviado
+            sent = sum(wDP[j, k] for j in S)
+            demand = d[l, k]    
+            if demand > sent:
+                is_valid = is_valid and Y[k, l] == 0
+                is_valid = is_valid and  Z[k, l] == demand - sent
             else:
-                es_valido = es_valido and Y[k, l] == enviado - demanda
-                es_valido = es_valido and Z[k, l] == 0
-    return es_valido
+                is_valid = is_valid and Y[k, l] == sent - demand
+                is_valid = is_valid and Z[k, l] == 0
+    return is_valid
 
-def calcular_stock_y_demanda_insatisfecha(P, E, S, d, wDP):
+def generate_stock_and_unsatisfied_demand(P, E, S, d, wDP):
     Y = {}  # stock sobrante
     Z = {}  # demanda insatisfecha
 
     for k in P:
         for l in E:
-            enviado = sum(wDP[j, k] for j in S)
-            demanda = d[l, k]    
-            if demanda > enviado:
+            sent = sum(wDP[j, k] for j in S)
+            demand = d[l, k]    
+            if demand > sent:
                 Y[k, l] = 0
-                Z[k, l] = demanda - enviado
+                Z[k, l] = demand - sent
             else:
-                Y[k, l] = enviado - demanda
+                Y[k, l] = sent - demand
                 Z[k, l] = 0
     return Y, Z
 
@@ -402,7 +402,7 @@ def main():
     
     #objective_function(margen, pStk, pDIn, CTf2s, CTs2p)
 
-    # cumple_restricciones(F, S, P, E, X, Y, Z, d, cf, cp, wDS, wDP)
+    # validate_restrictions(F, S, P, E, X, Y, Z, d, cf, cp, wDS, wDP)
 
 if __name__ == "__main__":
     main()
