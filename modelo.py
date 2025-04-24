@@ -256,18 +256,15 @@ def objective_function(margen, pStk, pDIn, CTf2s, CTs2p):
 ########################################################################
 # 5. Restricciones
 ########################################################################
+def cumple_restricciones(F, S, P, E, X, Y, Z, d, cf, cp, wDS, wDP):
+    return (
+        distribuye_a_centros_de_distribucion_segun_curva(F, S, X, cf, wDS) and
+        distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP) and
+        validar_stock_y_demanda_insatisfecha(P, E, S, Y, Z, d, wDP)
+    )
 
-########################################################################
-# La cantidad producida se debe distribuir desde los centros de
-# fabricación a los centros de distribución según la curva de
-# distribución establecida. Surge de X.
-#
-# F: centros de fabricación
-# S: centros de distribución
-# X: cantidad de producto a producir en el centro de fabricación $i$
-# cf: curva de distribución Fábrica-Centro de distribución
-# wDS[i][j] cantidad de producto que se transporta desde el centro de
-# fabricación $i$ al centro de distribucion $j$.
+# La cantidad producida se debe distribuir desde los centros de fabricación a los centros de 
+# distribución según la curva de distribución establecida.
 def distribuye_a_centros_de_distribucion_segun_curva(F, S, X, cf, wDS):
     return all(X[i] * cf[i, j] == wDS[i, j] for i in range(len(F)) for j in range(len(S)))
 #
@@ -276,15 +273,6 @@ def distribuye_a_centros_de_distribucion_segun_curva(F, S, X, cf, wDS):
 ########################################################################
 # La cantidad producida se debe distribuir a los puntos de venta desde
 # los centros de distribución según la curva de distribución establecida.
-#
-# F: centros de fabricación
-# S: centros de distribución
-# P: puntos de venta
-# cp: curva de distribución Centro de distribución-Punto de venta
-# wDS[i, j]: cantidad de producto que se transporta desde el centro de
-# fabricación $i$ al centro de distribución $j$.
-# wDP[j, k]: cantidad de producto que se transporta desde el centro de
-# distribución $j$ al punto de venta $k$.
 def distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP):
     return all(suma := sum(wDS[i, j] for i in range(len(F))) * cp[j, k] == wDP[j, k] 
            for j in range(len(S)) for k in range(len(P)))
@@ -295,33 +283,56 @@ def distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP):
 # Para determinar el stock al final del período de comercialización en
 # cada punto de venta para cada uno de los escenarios se debe cumplir
 # que:
-#
-# Si la demanda supera a lo que recibió el punto de venta, el stock al
-# final del periodo vale 0.
-#
-# Si no, el stock sobrante se calcula restando lo que recibió el punto
-# de venta y la demanda que tuvo.
-########################################################################
+    # Si la demanda supera a lo que recibió el punto de venta, el stock al final del periodo vale 0.
+    # Si no, el stock sobrante se calcula restando lo que recibió el punto de venta y la demanda que tuvo.
 
-########################################################################
 # Para determinar la demanda insatisfecha en cada punto de venta para
 # cada uno de los escenarios se debe cumplir que:
-#
-# Si la demanda fue menor a lo que recibió el punto de venta, la demanda
-# insatisfecha del periodo vale 0.
-#
-# Si no, la demanda insatisfecha se calcula restando la demanda que tuvo
-# el punto de venta y la cantidad de productos que recibió.
+    # Si la demanda fue menor a lo que recibió el punto de venta, la demanda insatisfecha del periodo vale 0.
+    # Si no, la demanda insatisfecha se calcula restando la demanda que tuvo el punto de venta y la cantidad de productos que recibió.
 ########################################################################
+def validar_stock_y_demanda_insatisfecha(P, E, S, Y, Z, d, wDP):
+    es_valido = True
+    for k in P:
+        for l in E:
+            enviado = sum(wDP[j, k] for j in S)
+            demanda = d[l, k]    
+            if demanda > enviado:
+                es_valido = es_valido and Y[k, l] == 0
+                es_valido = es_valido and  Z[k, l] == demanda - enviado
+            else:
+                es_valido = es_valido and Y[k, l] == enviado - demanda
+                es_valido = es_valido and Z[k, l] == 0
+    return es_valido
+
+def calcular_stock_y_demanda_insatisfecha(P, E, S, d, wDP):
+    Y = {}  # stock sobrante
+    Z = {}  # demanda insatisfecha
+
+    for k in P:
+        for l in E:
+            enviado = sum(wDP[j, k] for j in S)
+            demanda = d[l, k]    
+            if demanda > enviado:
+                Y[k, l] = 0
+                Z[k, l] = demanda - enviado
+            else:
+                Y[k, l] = enviado - demanda
+                Z[k, l] = 0
+    return Y, Z
 
 ########################################################################
 # 6. Super Mock Heurística (WIP)
 ########################################################################
-def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP):
+def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP, d):
     # Inicializar variables de decisión
     X = [0] * len(F)
     Y = [0] * len(P) * len(E)
     Z = [0] * len(P) * len(E)
+
+    # Hay restricciones sobre el valor de Y y Z, entonces no sé si hay que crearlas garantizando esas propiedades, o si solamente hay que
+    # validar si las cumplen o no. Por las dudas hice las dos cosas )?
+    # Y, Z = calcular_stock_y_demanda_insatisfecha(P, E, S, d, wDP)
     wDS = [0] * len(F) * len(S)
     wDP = [0] * len(S) * len(P)
 
@@ -364,8 +375,11 @@ def main():
     S = read_distribution_centers(conn)
     P = read_points_of_sale(conn)
     E = read_scenarios(conn)
-
-    print(E)
+    
+    # print("F:",F)
+    # print("S:",S)
+    # print("P:",P)
+    # print("E:",E)
 
     conn.close()
     print("[okay] Connection to supply_chain closed")
@@ -374,7 +388,6 @@ def main():
     # Parámetros
     ####################################################################
 
-    # esto todavía no considera las restricciones! es lo de abajo?
     m = get_margin_per_point_of_sale(P)
     ct = get_transportation_cost_from_fabrication_to_distribution(F, S)
     cv = get_transportation_cost_from_distribution_to_sale(S, P)
@@ -386,46 +399,10 @@ def main():
     pdi = get_penalty_for_unsatisfied_demand(P)
 
     supply_chain(objective_function, m, ct, cv, pi, d, cf, cp, ps, pdi)
-
-    ####################################################################
-    # Variables de decisión
-    ####################################################################
     
-    # cf = dict() # fabricacion - distribucion
-    # curva_fabricacion_distribucion = 0.1 #random.randint(0, 10)
-    # allocate_distribution_per_center(wDS, X) # crear_curva_fabricacion_distribucion(F, S, cf, curva_fabricacion_distribucion)
-    # print('cf: ', cf)
+    #objective_function(margen, pStk, pDIn, CTf2s, CTs2p)
 
-    # cp = dict() # distribucion - ventas
-    # curva_distribucion_venta = 0.1 #random.randint(0, 10)
-    # crear_curva_distribucion_venta(S, P, cp, curva_distribucion_venta)
-    # print('cp: ', cp)
-
-    # ############# Funcion objetivo ##############
-    # # X, Y, Z, wDS, wDP
-    # X = dict()
-    # cantidad = 100
-    # generar_produccion_por_centro(X, F, cantidad)
-    # print('X: ', X)
-
-    # wDS = dict()
-    # cantidad = 10 # fabricacion - distribucion
-    # # cada centro de fabricacion manda 10 productos a cada centro de venta --> en cada centro de venta hay 10*10=100 productos
-    # allocate_distribution_per_center(wDS, X) # generar_wds(wDS, F, S, cantidad)
-    # #wDS[1,1] = 0
-    # print('wDS: ', wDS)
-
-    # wDP = dict() # distribucion - ventas
-    # cantidad = 10
-    # allocate_distribution_per_point_of_sale(wDP, X) # generar_wdp(wDP, S, P, cantidad)
-    # #wDS[1,1] = 0
-    # print('wDP: ', wDP)
-
-    # ############### Restricciones ###############
-
-    # print(distribuye_a_centros_de_distribucion_segun_curva(F, S, X, cf, wDS))
-
-    # print(distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP))
+    # cumple_restricciones(F, S, P, E, X, Y, Z, d, cf, cp, wDS, wDP)
 
 if __name__ == "__main__":
     main()
