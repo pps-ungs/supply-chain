@@ -1,10 +1,10 @@
 import random
 import re
-from db import write_csv
 from db.config import load_config
 from db.database import *
 import warnings
 warnings.filterwarnings('ignore') # get rid of annoying pandas warnings
+from restricciones import *
 
 ########################################################################
 # Modelo de Cadena de Distribución Básica
@@ -254,74 +254,6 @@ def objective_function(margen, pStk, pDIn, CTf2s, CTs2p):
 ########################################################################
 
 ########################################################################
-# 5. Restricciones
-########################################################################
-def validate_restrictions(F, S, P, E, X, Y, Z, d, cf, cp, wDS, wDP):
-    return (
-        distributes_to_distribution_centers_according_curve(F, S, X, cf, wDS) and
-        distributes_to_point_sales_according_curve(F, S, P, cp, wDS, wDP) and
-        validate_stock_and_unsatisfied_demand(P, E, S, Y, Z, d, wDP)
-    )
-
-# La cantidad producida se debe distribuir desde los centros de fabricación a los centros de 
-# distribución según la curva de distribución establecida.
-def distributes_to_distribution_centers_according_curve(F, S, X, cf, wDS):
-    return all(X[i] * cf[i, j] == wDS[i, j] for i in range(len(F)) for j in range(len(S)))
-#
-########################################################################
-
-########################################################################
-# La cantidad producida se debe distribuir a los puntos de venta desde
-# los centros de distribución según la curva de distribución establecida.
-def distributes_to_point_sales_according_curve(F, S, P, cp, wDS, wDP):
-    return all(result := sum(wDS[i, j] for i in range(len(F))) * cp[j, k] == wDP[j, k] 
-           for j in range(len(S)) for k in range(len(P)))
-#
-########################################################################
-
-########################################################################
-# Para determinar el stock al final del período de comercialización en
-# cada punto de venta para cada uno de los escenarios se debe cumplir
-# que:
-    # Si la demanda supera a lo que recibió el punto de venta, el stock al final del periodo vale 0.
-    # Si no, el stock sobrante se calcula restando lo que recibió el punto de venta y la demanda que tuvo.
-
-# Para determinar la demanda insatisfecha en cada punto de venta para
-# cada uno de los escenarios se debe cumplir que:
-    # Si la demanda fue menor a lo que recibió el punto de venta, la demanda insatisfecha del periodo vale 0.
-    # Si no, la demanda insatisfecha se calcula restando la demanda que tuvo el punto de venta y la cantidad de productos que recibió.
-########################################################################
-def validate_stock_and_unsatisfied_demand(P, E, S, Y, Z, d, wDP) -> bool:
-    is_valid = True
-    for k in P:
-        for l in E:
-            sent = sum(wDP[j, k] for j in S)
-            demand = d[l, k]    
-            if demand > sent:
-                is_valid = is_valid and Y[k, l] == 0
-                is_valid = is_valid and  Z[k, l] == demand - sent
-            else:
-                is_valid = is_valid and Y[k, l] == sent - demand
-                is_valid = is_valid and Z[k, l] == 0
-    return is_valid
-
-def generate_stock_and_unsatisfied_demand(P, E, S, d, wDP):
-    Y = {}  # stock sobrante
-    Z = {}  # demanda insatisfecha
-
-    for k in P:
-        for l in E:
-            sent = sum(wDP[j, k] for j in S)
-            demand = d[l, k]    
-            if demand > sent:
-                Y[k, l] = 0
-                Z[k, l] = demand - sent
-            else:
-                Y[k, l] = sent - demand
-                Z[k, l] = 0
-    return Y, Z
-
-########################################################################
 # 6. Super Mock Heurística (WIP)
 ########################################################################
 def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP, d):
@@ -398,11 +330,23 @@ def main():
     ps = get_distribution_curve_from_fabrication_to_sale(F, P)
     pdi = get_penalty_for_unsatisfied_demand(P)
 
-    supply_chain(objective_function, m, ct, cv, pi, d, cf, cp, ps, pdi)
-    
-    #objective_function(margen, pStk, pDIn, CTf2s, CTs2p)
 
-    # validate_restrictions(F, S, P, E, X, Y, Z, d, cf, cp, wDS, wDP)
+    X = [100, 200, 300, 400, 500, 100, 200, 300, 400, 500]
+    # print("CF:", cf)
+    # print("S:", S)
+    wDS = generate_products_to_distribution_center(X, S, cf)
+
+    print("CP:", cp)
+    print("S:", S)
+    print("P:", P)
+    print("wDS:", wDS)
+
+    wDP = generate_products_to_points_of_sale(F, S, P, wDS, cp)
+
+
+
+    supply_chain(objective_function, m, ct, cv, pi, d, cf, cp, ps, pdi)
+
 
 if __name__ == "__main__":
     main()
