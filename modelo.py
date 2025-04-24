@@ -223,7 +223,7 @@ def get_probability_of_occurrence(E):
 
 # d = demanda de cada punto de venta para cada escenario
 def get_demand_per_point_of_sale(E, P):
-    return [d.append(e['data'])for e in E]
+    return [e['data'] for e in E]
 
 #
 ########################################################################
