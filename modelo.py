@@ -199,6 +199,7 @@ def get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv):
     return CTs2p
 
 # una banda de parametros ajsajs por ahi hay que moverlo 🫣
+# TODO: Sprint 4
 def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP, d, m, ct, cv, pi, ps, pdi):
     margin = get_margin(E, P, wDP, Y, d, m)
     pStk = get_penalty_stock(E, P, Y, pi, ps)
@@ -206,24 +207,9 @@ def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP, d, m, ct, cv, pi, ps, 
     CTf2s = get_transportation_cost_from_fabrication_to_distribution(F, S, wDS, ct)
     CTs2p = get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv)
 
-    # Generar una solución inicial aleatoria
-    for i in range(len(F)):
-        X[i] = random.randint(1, 100)
-
-    for j in range(len(S)):
-        for k in range(len(P)):
-            wDP[j][k] = random.randint(1, 100)
-
     objective_value = objective_function(margin, pStk, pDIn, CTf2s, CTs2p)
 
-    return {
-        "X": X,
-        "Y": Y,
-        "Z": Z,
-        "wDS": wDS,
-        "wDP": wDP,
-        "objective_value": objective_value
-    }
+    return {}
 
 def supply_chain(objective_function, m: dict, ct: list, cv: list, pi: list, d: list, cf: list, cp: list, ps: list, pdi: list) -> None:
     print('WIP')
