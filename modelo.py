@@ -120,12 +120,12 @@ def allocate_production_per_center(X: list, solution: dict) -> None:
 # Asigna la cantidad de producto sobrante en el punto de venta $k$ para 
 # el escenario $l$. Estos valores se toman de la solución de la
 # heurística.
-def allocate_surplus_per_point(Y: list, solution: dict) -> None:
-    Y = []
-    quantities = solution["Y"]
-    for kl in range(len(quantities)):
-        Y.append(quantities[kl])
-    return None 
+# def allocate_surplus_per_point(Y: list, solution: dict) -> None:
+#     Y = []
+#     quantities = solution["Y"]
+#     for kl in range(len(quantities)):
+#         Y.append(quantities[kl])
+#     return None 
 #
 ########################################################################
 
@@ -140,12 +140,12 @@ def allocate_surplus_per_point(Y: list, solution: dict) -> None:
 # Asigna la cantidad de producto demandada que no pudo ser satisfecha
 # en el punto de venta $k$ para el escenario $l$. Estos valores se toman
 # de la solución de la heurística.
-def allocate_unsatisfied_demand(Z: list, solution: dict) -> None:
-    Z = []
-    quantities = solution["Z"]
-    for kl in range(len(quantities)):
-        Z.append(quantities[kl])
-    return None
+# def allocate_unsatisfied_demand(Z: list, solution: dict) -> None:
+#     Z = []
+#     quantities = solution["Z"]
+#     for kl in range(len(quantities)):
+#         Z.append(quantities[kl])
+#     return None
 #
 ########################################################################
 
@@ -163,12 +163,12 @@ def allocate_unsatisfied_demand(Z: list, solution: dict) -> None:
 #
 # wDS: lista de cantidades a enviar
 # solution: diccionario con la solución de la heurística.
-def allocate_distribution_per_center(wDS: list, solution: dict) -> None:
-    wDS = []
-    quantities = solution["wDS"]
-    for ij in range(len(quantities)):
-        wDS.append(quantities[ij])
-    return None
+# def allocate_distribution_per_center(wDS: list, solution: dict) -> None:
+#     wDS = []
+#     quantities = solution["wDS"]
+#     for ij in range(len(quantities)):
+#         wDS.append(quantities[ij])
+#     return None
 #
 ########################################################################
 
@@ -185,12 +185,12 @@ def allocate_distribution_per_center(wDS: list, solution: dict) -> None:
 #
 # wDP: lista de cantidades a enviar
 # solution: diccionario con la solución de la heurística.
-def allocate_distribution_per_point_of_sale(wDP: list, solution: dict) -> None:
-    wDP = []
-    quantities = solution["wDP"]
-    for jk in range(len(quantities)):
-        wDP.append(quantities[jk])
-    return None
+# def allocate_distribution_per_point_of_sale(wDP: list, solution: dict) -> None:
+#     wDP = []
+#     quantities = solution["wDP"]
+#     for jk in range(len(quantities)):
+#         wDP.append(quantities[jk])
+#     return None
 #
 ########################################################################
 
