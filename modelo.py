@@ -121,12 +121,12 @@ def allocate_production_per_center(X: list, solution: dict) -> None:
 # Asigna la cantidad de producto sobrante en el punto de venta $k$ para 
 # el escenario $l$. Estos valores se toman de la solución de la
 # heurística.
-def allocate_surplus_per_point(Y: list, solution: dict) -> None:
-    Y = []
-    quantities = solution["Y"]
-    for kl in range(len(quantities)):
-        Y.append(quantities[kl])
-    return None 
+# def allocate_surplus_per_point(Y: list, solution: dict) -> None:
+#     Y = []
+#     quantities = solution["Y"]
+#     for kl in range(len(quantities)):
+#         Y.append(quantities[kl])
+#     return None 
 #
 ########################################################################
 
@@ -141,12 +141,12 @@ def allocate_surplus_per_point(Y: list, solution: dict) -> None:
 # Asigna la cantidad de producto demandada que no pudo ser satisfecha
 # en el punto de venta $k$ para el escenario $l$. Estos valores se toman
 # de la solución de la heurística.
-def allocate_unsatisfied_demand(Z: list, solution: dict) -> None:
-    Z = []
-    quantities = solution["Z"]
-    for kl in range(len(quantities)):
-        Z.append(quantities[kl])
-    return None
+# def allocate_unsatisfied_demand(Z: list, solution: dict) -> None:
+#     Z = []
+#     quantities = solution["Z"]
+#     for kl in range(len(quantities)):
+#         Z.append(quantities[kl])
+#     return None
 #
 ########################################################################
 
@@ -164,12 +164,12 @@ def allocate_unsatisfied_demand(Z: list, solution: dict) -> None:
 #
 # wDS: lista de cantidades a enviar
 # solution: diccionario con la solución de la heurística.
-def allocate_distribution_per_center(wDS: list, solution: dict) -> None:
-    wDS = []
-    quantities = solution["wDS"]
-    for ij in range(len(quantities)):
-        wDS.append(quantities[ij])
-    return None
+# def allocate_distribution_per_center(wDS: list, solution: dict) -> None:
+#     wDS = []
+#     quantities = solution["wDS"]
+#     for ij in range(len(quantities)):
+#         wDS.append(quantities[ij])
+#     return None
 #
 ########################################################################
 
@@ -186,12 +186,12 @@ def allocate_distribution_per_center(wDS: list, solution: dict) -> None:
 #
 # wDP: lista de cantidades a enviar
 # solution: diccionario con la solución de la heurística.
-def allocate_distribution_per_point_of_sale(wDP: list, solution: dict) -> None:
-    wDP = []
-    quantities = solution["wDP"]
-    for jk in range(len(quantities)):
-        wDP.append(quantities[jk])
-    return None
+# def allocate_distribution_per_point_of_sale(wDP: list, solution: dict) -> None:
+#     wDP = []
+#     quantities = solution["wDP"]
+#     for jk in range(len(quantities)):
+#         wDP.append(quantities[jk])
+#     return None
 #
 ########################################################################
 
@@ -302,7 +302,6 @@ def supply_chain(objective_function, m: dict, ct: list, cv: list, pi: list, d: l
 #
 ########################################################################
 
-# Main de prueba, esto debería ir en un archivo separado.
 def main():
 
     ####################################################################
@@ -317,10 +316,7 @@ def main():
     P = read_points_of_sale(conn)
     E = read_scenarios(conn)
     
-    # print("F:",F)
-    # print("S:",S)
-    # print("P:",P)
-    # print("E:",E)
+    print("E:",E)
 
     conn.close()
     print("[okay] Connection to supply_chain closed")
@@ -339,18 +335,22 @@ def main():
     ps = get_distribution_curve_from_fabrication_to_sale(F, P)
     pdi = get_penalty_for_unsatisfied_demand(P)
 
-
-    X = [100, 200, 300, 400, 500, 100, 200, 300, 400, 500]
-    # print("CF:", cf)
-    # print("S:", S)
-    wDS = generate_products_to_distribution_center(X, S, cf)
-
-    print("CP:", cp)
     print("S:", S)
     print("P:", P)
+    print("CP:", cp)
+    print("CF:", cf)
+    print("d:", d)
+
+    X = [100, 200, 300, 400, 500, 100, 200, 300, 400, 500]
+    wDS = generate_products_to_distribution_center(X, S, cf)
+
     print("wDS:", wDS)
 
     wDP = generate_products_to_points_of_sale(F, S, P, wDS, cp)
+
+    Y, Z = generate_stock_and_unsatisfied_demand(S, P, d, wDP)
+    print("Y:", Y)
+    print("Z:", Z)
 
     supply_chain(objective_function, m, ct, cv, pi, d, cf, cp, ps, pdi)
 
