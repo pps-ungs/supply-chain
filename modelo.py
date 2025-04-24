@@ -356,6 +356,10 @@ def supply_chain(objective_function, m: dict, ct: list, cv: list, pi: list, d: l
 # Main de prueba, esto debería ir en un archivo separado.
 def main():
 
+    ####################################################################
+    # Conjuntos
+    ####################################################################
+
     config = load_config('db/database.ini', 'supply_chain')
     conn = get_connection(config)
 
@@ -369,6 +373,11 @@ def main():
     conn.close()
     print("[okay] Connection to supply_chain closed")
 
+    ####################################################################
+    # Parámetros
+    ####################################################################
+
+    # esto todavía no considera las restricciones! es lo de abajo?
     m = get_margin_per_point_of_sale(P)
     ct = get_transportation_cost_from_fabrication_to_distribution(F, S)
     cv = get_transportation_cost_from_distribution_to_sale(S, P)
@@ -385,10 +394,6 @@ def main():
     # Variables de decisión
     ####################################################################
     
-    ####################################################################
-    # Parámetros
-    ####################################################################
-
     # cf = dict() # fabricacion - distribucion
     # curva_fabricacion_distribucion = 0.1 #random.randint(0, 10)
     # allocate_distribution_per_center(wDS, X) # crear_curva_fabricacion_distribucion(F, S, cf, curva_fabricacion_distribucion)
