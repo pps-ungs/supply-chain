@@ -285,7 +285,24 @@ def get_penalty_stock(E, P, Y, pi, ps):
         pStK += sum * pi[l]
     return pStK
 
+# penalidad esperada por demanda insatisfecha en los puntos de venta
+def get_penalty_unsatisfied_demand(E, P, Z, pi, pdi):
+    pDIn = 0
+    for l in range(E):
+        sum = 0
+        for k in range(P):
+            sum += pdi[k] * Z[k][l]
+        pDIn += sum * pi[l]
+    return pDIn
 
+# costo de transportar los productos desde los centros 
+# de fabricacion a los centros de distribucion
+def get_transportation_cost_from_fabrication_to_distribution(F, S, wDS, ct):
+    CTf2s = 0
+    for i in range(len(F)):
+        for j in range(len(S)):
+            CTf2s += ct[i][j] * wDS[i][j]
+    return CTf2s
 
 
 def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP, d):
