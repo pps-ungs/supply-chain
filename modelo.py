@@ -225,6 +225,14 @@ def get_probability_of_occurrence(E):
 def get_demand_per_point_of_sale(E, P):
     return [e['data'] for e in E]
 
+# cf = curva de distribucion de los productos fabricados a los diferentes centros de distribucion.
+def get_distribution_curve_from_fabrication_to_distribution(F, S):
+    return [[round((i + 1) / sum(range(1, len(S) + 1)), 2) for i in range(len(S))] for _ in range(len(F))]
+
+# cp = curva de distribucion de los productos entregados en los centros de distribucion que se deben enviar a los puntos de venta.
+def get_distribution_curve_from_distribution_to_sale(S, P):
+    return [[round((i + 1) / sum(range(1, len(S) + 1)), 2) for i in range(len(P))] for _ in range(len(S))]
+
 #
 ########################################################################
 
