@@ -200,6 +200,17 @@ def allocate_distribution_per_point_of_sale(wDP: list, solution: dict) -> None:
 
 #Xime TODO
 
+# m: margen bruto del producto en cada punto de venta
+def get_margin_per_point_of_sale(P):
+    base_values = [1, 2, 3, 5, 8, 13]
+    return [base_values[i % len(base_values)]**2 for i in range(len(P))]
+
+# ct = costo de transportar una unidad del producto desde los centros de fabricacion a los centros de distribucion
+def get_transportation_cost_from_fabrication_to_distribution(F, S):
+    base_values = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+    return [[base_values[(i + j) % len(base_values)] for i in range(len(S))] for j in range(len(F))]
+
+    
 #
 ########################################################################
 
