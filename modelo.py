@@ -198,8 +198,6 @@ def allocate_distribution_per_point_of_sale(wDP: list, solution: dict) -> None:
 # 3. Parámetros
 ########################################################################
 
-#Xime TODO
-
 # m: margen bruto del producto en cada punto de venta
 def get_margin_per_point_of_sale(P):
     base_values = [5, 6, 7, 8, 8, 9]
@@ -360,15 +358,27 @@ def main():
     config = load_config('db/database.ini', 'supply_chain')
     conn = get_connection(config)
 
-    fabrication_centers = read_fabrication_centers(conn)
-    distribution_centers = read_distribution_centers(conn)
-    points_of_sale = read_points_of_sale(conn)
-    scenarios = read_scenarios(conn)
+    F = read_fabrication_centers(conn)
+    S = read_distribution_centers(conn)
+    P = read_points_of_sale(conn)
+    E = read_scenarios(conn)
 
-    print(scenarios)
+    print(E)
 
     conn.close()
     print("[okay] Connection to supply_chain closed")
+
+    m = get_margin_per_point_of_sale(P)
+    ct = get_transportation_cost_from_fabrication_to_distribution(F, S)
+    cv = get_transportation_cost_from_distribution_to_sale(S, P)
+    pi = get_probability_of_occurrence(E)
+    d = get_demand_per_point_of_sale(E, P)
+    cf = get_distribution_curve_from_fabrication_to_distribution(F, S)
+    cp = get_distribution_curve_from_distribution_to_sale(S, P)
+    ps = get_distribution_curve_from_fabrication_to_sale(F, P)
+    pdi = get_penalty_for_unsatisfied_demand(P)
+
+    supply_chain(m, ct, cv, pi, d, cf, cp, ps, pdi)
 
     ####################################################################
     # Variables de decisión
