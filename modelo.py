@@ -269,10 +269,8 @@ def objective_function(margen, pStk, pDIn, CTf2s, CTs2p):
 def get_margin(E, P, wDP, Y, pi, m):
     margin = 0
     for k in range(P):
-        sum = 0
         for l in range(E):
-            sum += (wDP[k] - Y[k][l]) * pi[l] * m[k]
-        margin += sum
+            margin += (wDP[k] - Y[k][l]) * pi[l] * m[k]
     return margin
 
 # penalidad esperada por stock almacenado en los puntos de venta
@@ -304,6 +302,14 @@ def get_transportation_cost_from_fabrication_to_distribution(F, S, wDS, ct):
             CTf2s += ct[i][j] * wDS[i][j]
     return CTf2s
 
+# costo de transportar los productos desde los centros 
+# de distribucion a los puntos de venta
+def get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv):
+    CTs2p = 0
+    for k in range(len(P)):
+        for j in range(len(S)):
+            CTs2p += wDP[j][k] * cv[j][k]
+    return CTs2p
 
 def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP, d):
     margen = 0
