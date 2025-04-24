@@ -199,22 +199,56 @@ def allocate_production_per_center(X: list, solution: dict) -> None:
 # 3. Parámetros
 ########################################################################
 
+########################################################################
 # m: margen bruto del producto en cada punto de venta
-def get_margin_per_point_of_sale(P):
+# m = {m_1, m_2, m_k, ..., m_kP}
+# m = list()
+#
+# El margen bruto del producto en cada punto de venta es un valor
+# fijo, que se obtiene de la base de datos. Se puede calcular
+# a partir de la diferencia entre el precio de venta y el costo
+# de producción.
+def get_margin_per_point_of_sale(P: list) -> list:
     base_values = [5, 6, 7, 8, 8, 9]
-    return [base_values[i % len(base_values)]**2 for i in range(len(P))]
+    return [base_values[k % len(base_values)]**2 for k in range(len(P))]
+#
+########################################################################
 
-# ct = costo de transportar una unidad del producto desde los centros de fabricacion a los centros de distribucion
-def get_transportation_cost_from_fabrication_to_distribution(F, S):
+########################################################################
+# ct = costo de transportar una unidad del producto desde los centros de
+#      fabricación a los centros de distribución
+# ct = {ct_11, ct_12, ..., ct_ij, ..., ct_kFkS}
+# ct = list()
+#
+# El costo de transporte desde los centros de fabricación a los centros
+# de distribución es un valor fijo, que se obtiene de la base de datos.
+# Se puede calcular a partir de la distancia entre los centros de
+# fabricación y los centros de distribución, multiplicada por el costo
+# de transporte por kilómetro.
+def get_transportation_cost_from_fabrication_to_distribution(F: list, S: list) -> list:
     base_cost = 1000
     base_values = [1, 2, 3, 5, 8, 13]
-    return [[base_values[(i + j) % len(base_values)] * 3 + base_cost for i in range(len(S))] for j in range(len(F))]
+    return [[base_values[(i + j) % len(base_values)] * 3 + base_cost for j in range(len(S))] for i in range(len(F))]
+#
+########################################################################
 
-# cv = costo de transportar una unidad del producto desde los centros de distribucion a los puntos de venta
-def get_transportation_cost_from_distribution_to_sale(S, P):
+########################################################################
+# cv = costo de transportar una unidad del producto desde los centros de
+#      distribución a los puntos de venta
+# cv = {cv_11, cv_12, ..., cv_jk, ..., cv_kSkP}
+# cv = list()
+#
+# El costo de transporte desde los centros de distribución a los puntos
+# de venta es un valor fijo, que se obtiene de la base de datos. Se puede
+# calcular a partir de la distancia entre los centros de distribución y
+# los puntos de venta, multiplicada por el costo de transporte por
+# kilómetro.
+def get_transportation_cost_from_distribution_to_sale(S: list, P: list) -> list:
     base_cost = 800
     base_values = [1, 2, 3, 5, 8, 13]
-    return [[base_values[(i + j) % len(base_values)] * 2 + base_cost for i in range(len(S))] for j in range(len(P))]
+    return [[base_values[(j + k) % len(base_values)] * 2 + base_cost for j in range(len(S))] for k in range(len(P))]
+#
+########################################################################
 
 # pi = probabilidad de ocurrencia del escenario
 def get_probability_of_occurrence(E):
