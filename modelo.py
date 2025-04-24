@@ -2,9 +2,9 @@ import random
 import re
 from db.config import load_config
 from db.database import *
+from restricciones import *
 import warnings
 warnings.filterwarnings('ignore') # get rid of annoying pandas warnings
-from restricciones import *
 
 ########################################################################
 # Modelo de Cadena de Distribución Básica
@@ -79,6 +79,7 @@ def read_points_of_sale(conn: psycopg.Connection) -> list:
 # E = [][]
 #
 # l → escenarios
+
 def read_scenarios(conn: psycopg.Connection) -> list:
     scenarios = read(conn, "select * from escenario;")
     return scenarios.to_dict(orient='records')
@@ -240,7 +241,6 @@ def get_distribution_curve_from_fabrication_to_sale(F, P):
 def get_penalty_for_unsatisfied_demand(P):
     m = get_margin_per_point_of_sale(P)
     return [m[i] * 0.1 for i in range(len(P))]
-
 #
 ########################################################################
 
@@ -248,6 +248,14 @@ def get_penalty_for_unsatisfied_demand(P):
 # 4. Función objetivo
 ########################################################################
 
+# Función objetivo a maximizar
+# margen: ganancia bruta del producto en cada punto de venta
+# pStk: costo de mantener el stock en el punto de venta
+# pDIn: costo de la demanda insatisfecha en el punto de venta
+# CTf2s: costo de transporte desde el centro de fabricación al centro de
+#        distribución
+# CTs2p: costo de transporte desde el centro de distribución al punto de
+#        venta
 def objective_function(margen, pStk, pDIn, CTf2s, CTs2p):
     return margen - pStk - pDIn - CTf2s - CTs2p
 #
@@ -262,7 +270,8 @@ def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP, d):
     Y = [0] * len(P) * len(E)
     Z = [0] * len(P) * len(E)
 
-    # Hay restricciones sobre el valor de Y y Z, entonces no sé si hay que crearlas garantizando esas propiedades, o si solamente hay que
+    # Hay restricciones sobre el valor de Y y Z, entonces no sé si hay
+    # que crearlas garantizando esas propiedades, o si solamente hay que
     # validar si las cumplen o no. Por las dudas hice las dos cosas )?
     # Y, Z = calcular_stock_y_demanda_insatisfecha(P, E, S, d, wDP)
     wDS = [0] * len(F) * len(S)
@@ -342,8 +351,6 @@ def main():
     print("wDS:", wDS)
 
     wDP = generate_products_to_points_of_sale(F, S, P, wDS, cp)
-
-
 
     supply_chain(objective_function, m, ct, cv, pi, d, cf, cp, ps, pdi)
 
