@@ -207,10 +207,24 @@ def get_margin_per_point_of_sale(P):
 
 # ct = costo de transportar una unidad del producto desde los centros de fabricacion a los centros de distribucion
 def get_transportation_cost_from_fabrication_to_distribution(F, S):
+    base_cost = 1000
     base_values = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
-    return [[base_values[(i + j) % len(base_values)] for i in range(len(S))] for j in range(len(F))]
+    return [[base_values[(i + j) % len(base_values)] * 3 + base_cost for i in range(len(S))] for j in range(len(F))]
 
-    
+# cv = costo de transportar una unidad del producto desde los centros de distribucion a los puntos de venta
+def get_transportation_cost_from_distribution_to_sale(S, P):
+    base_cost = 800
+    base_values = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+    return [[base_values[(i + j) % len(base_values)] * 2 + base_cost for i in range(len(S))] for j in range(len(P))]
+
+# pi = probabilidad de ocurrencia del escenario
+def get_probability_of_occurrence(E):
+    return [0.3 for _ in range(len(E))] # equiprobable
+
+# d = demanda de cada punto de venta para cada escenario
+def get_demand_per_point_of_sale(E, P):
+    return [d.append(e['data'])for e in E]
+
 #
 ########################################################################
 
@@ -332,6 +346,8 @@ def main():
     distribution_centers = read_distribution_centers(conn)
     points_of_sale = read_points_of_sale(conn)
     scenarios = read_scenarios(conn)
+
+    print(scenarios)
 
     conn.close()
     print("[okay] Connection to supply_chain closed")
