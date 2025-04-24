@@ -250,7 +250,6 @@ def get_penalty_for_unsatisfied_demand(P):
 
 def objective_function(margen, pStk, pDIn, CTf2s, CTs2p):
     return margen - pStk - pDIn - CTf2s - CTs2p
-
 #
 ########################################################################
 
@@ -318,7 +317,6 @@ def distribuye_a_centros_de_venta_segun_curva(F, S, P, cp, wDS, wDP):
 ########################################################################
 # 6. Super Mock Heurística (WIP)
 ########################################################################
-
 def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP):
     # Inicializar variables de decisión
     X = [0] * len(F)
@@ -349,7 +347,6 @@ def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP):
 
 def supply_chain(objective_function, m: dict, ct: list, cv: list, pi: list, d: list, cf: list, cp: list, ps: list, pdi: list) -> None:
     print('WIP')
-
 #
 ########################################################################
 
