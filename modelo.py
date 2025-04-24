@@ -198,12 +198,13 @@ def get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv):
             CTs2p += wDP[j][k] * cv[j][k]
     return CTs2p
 
-def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP, d):
-    margen = 0
-    pStk = 0
-    pDIn = 0
-    CTf2s = 0
-    CTs2p = 0
+# una banda de parametros ajsajs por ahi hay que moverlo 🫣
+def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP, d, m, ct, cv, pi, ps, pdi):
+    margin = get_margin(E, P, wDP, Y, d, m)
+    pStk = get_penalty_stock(E, P, Y, pi, ps)
+    pDIn = get_penalty_unsatisfied_demand(E, P, Z, pi, pdi)
+    CTf2s = get_transportation_cost_from_fabrication_to_distribution(F, S, wDS, ct)
+    CTs2p = get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv)
 
     # Generar una solución inicial aleatoria
     for i in range(len(F)):
@@ -213,7 +214,7 @@ def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP, d):
         for k in range(len(P)):
             wDP[j][k] = random.randint(1, 100)
 
-    objective_value = objective_function(margen, pStk, pDIn, CTf2s, CTs2p)
+    objective_value = objective_function(margin, pStk, pDIn, CTf2s, CTs2p)
 
     return {
         "X": X,
