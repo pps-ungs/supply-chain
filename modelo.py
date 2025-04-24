@@ -248,7 +248,8 @@ def get_penalty_for_unsatisfied_demand(P):
 # 4. Función objetivo
 ########################################################################
 
-#Xime TODO
+def objective_function(margen, pStk, pDIn, CTf2s, CTs2p):
+    return margen - pStk - pDIn - CTf2s - CTs2p
 
 #
 ########################################################################
@@ -346,7 +347,7 @@ def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP):
         "objective_value": objective_value
     }
 
-def supply_chain(m: dict, ct: list, cv: list, pi: list, d: list, cf: list, cp: list, ps: list, pdi: list) -> None:
+def supply_chain(objective_function, m: dict, ct: list, cv: list, pi: list, d: list, cf: list, cp: list, ps: list, pdi: list) -> None:
     print('WIP')
 
 #
@@ -378,7 +379,7 @@ def main():
     ps = get_distribution_curve_from_fabrication_to_sale(F, P)
     pdi = get_penalty_for_unsatisfied_demand(P)
 
-    supply_chain(m, ct, cv, pi, d, cf, cp, ps, pdi)
+    supply_chain(objective_function, m, ct, cv, pi, d, cf, cp, ps, pdi)
 
     ####################################################################
     # Variables de decisión
