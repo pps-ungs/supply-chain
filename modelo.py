@@ -242,8 +242,8 @@ def optimization_heuristic(F, S, P, E, d, m, cf, cp, ct, cv, pi, ps, pdi):
     while actual_sol < best_sol:
         X = [random.randint(0, 1000) for _ in range(len(X))]  # x nuevo ???? TODO: Sprint 4
         margin, pStk, pDIn, CTf2s, CTs2p = get_objective_function_values(F, S, P, E, X, d, m, cf, cp, ct, cv, pi, ps, pdi)
-
         actual_sol = objective_function(margin, pStk, pDIn, CTf2s, CTs2p)
+        
         if actual_sol > best_sol:
             best_sol = actual_sol
 
