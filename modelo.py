@@ -257,7 +257,6 @@ def get_objective_function_values(F, S, P, E, X):
     ct = get_unit_transportation_cost_from_fabrication_to_distribution(F, S)
     cv = get_unit_transportation_cost_from_distribution_to_sale(S, P)
     pi = get_probability_of_occurrence(E)
-    print("pi", pi)
     d = get_demand_per_point_of_sale(E)
     cf = get_distribution_curve_from_fabrication_to_distribution(F, S)
     cp = get_distribution_curve_from_distribution_to_sale(S, P)
