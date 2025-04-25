@@ -232,7 +232,6 @@ def get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv):
             CTs2p += wDP[j][k] * cv[j][k]
     return CTs2p
 
-# una banda de parametros ajsajs por ahi hay que moverlo 🫣
 def optimization_heuristic(F, S, P, E, d, m, cf, cp, ct, cv, pi, ps, pdi):
     X = [100, 200, 300, 400, 500, 100, 200, 300, 400, 500]   # x inicial  TODO: Sprint 4
     margin, pStk, pDIn, CTf2s, CTs2p = get_objective_function_values(F, S, P, E, X, d, m, cf, cp, ct, cv, pi, ps, pdi)
