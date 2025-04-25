@@ -42,8 +42,8 @@ def main():
     print("CF:", cf)
     print("d:", d)
 
-    supply_chain(objective_function, m, ct, cv, pi, d, cf, cp, ps, pdi)
-
+    X = optimization_heuristic(F, S, P, E, m, ct, cv, pi, d, cf, cp, ps, pdi)
+    print("X:", X)
 
 if __name__ == "__main__":
     main()
