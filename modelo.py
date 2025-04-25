@@ -233,17 +233,41 @@ def get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv):
     return CTs2p
 
 # una banda de parametros ajsajs por ahi hay que moverlo 🫣
-# TODO: Sprint 4
-def optimization_heuristic(F, S, P, E, X, Y, Z, wDS, wDP, d, m, ct, cv, pi, ps, pdi):
+
+def optimization_heuristic(F, S, P, E, d, m, cf, cp, ct, cv, pi, ps, pdi):
+    X = [100, 200, 300, 400, 500, 100, 200, 300, 400, 500]   # x inicial  TODO: Sprint 4
+    margin, pStk, pDIn, CTf2s, CTs2p = get_objective_function_values(F, S, P, E, X, d, m, cf, cp, ct, cv, pi, ps, pdi)
+    best_sol = objective_function(margin, pStk, pDIn, CTf2s, CTs2p)
+    
+    actual_sol = 0
+    
+    while actual_sol < best_sol:
+        X = [random.randint(0, 1000) for _ in range(len(X))]  # x nuevo ???? TODO: Sprint 4
+        wDS = generate_products_to_distribution_center(X, S, cf)
+        wDP = generate_products_to_points_of_sale(F, S, P, wDS, cp)
+        Y, Z = generate_stock_and_unsatisfied_demand(S, P, d, wDP)
+        
+        margin = get_margin(E, P, wDP, Y, d, m)
+        pStk = get_penalty_stock(E, P, Y, pi, ps)
+        pDIn = get_penalty_unsatisfied_demand(E, P, Z, pi, pdi)
+        CTf2s = get_transportation_cost_from_fabrication_to_distribution(F, S, wDS, ct)
+        CTs2p = get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv)
+
+        actual_sol = objective_function(margin, pStk, pDIn, CTf2s, CTs2p)
+        if actual_sol > best_sol:
+            best_sol = actual_sol
+
+    return {}
+
+def get_objective_function_values(F, S, P, E, X, d, m, cf, cp, ct, cv, pi, ps, pdi):
+    wDS = generate_products_to_distribution_center(X, S, cf)
+    wDP = generate_products_to_points_of_sale(F, S, P, wDS, cp)
+    Y, Z = generate_stock_and_unsatisfied_demand(S, P, d, wDP)
+    
     margin = get_margin(E, P, wDP, Y, d, m)
     pStk = get_penalty_stock(E, P, Y, pi, ps)
     pDIn = get_penalty_unsatisfied_demand(E, P, Z, pi, pdi)
     CTf2s = get_transportation_cost_from_fabrication_to_distribution(F, S, wDS, ct)
     CTs2p = get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv)
 
-    objective_value = objective_function(margin, pStk, pDIn, CTf2s, CTs2p)
-
-    return {}
-
-def supply_chain(objective_function, m: dict, ct: list, cv: list, pi: list, d: list, cf: list, cp: list, ps: list, pdi: list) -> None:
-    print('WIP')
+    return [margin, pStk, pDIn, CTf2s, CTs2p]  

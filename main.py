@@ -42,17 +42,6 @@ def main():
     print("CF:", cf)
     print("d:", d)
 
-    X = [100, 200, 300, 400, 500, 100, 200, 300, 400, 500]
-    wDS = generate_products_to_distribution_center(X, S, cf)
-
-    print("wDS:", wDS)
-
-    wDP = generate_products_to_points_of_sale(F, S, P, wDS, cp)
-
-    Y, Z = generate_stock_and_unsatisfied_demand(S, P, d, wDP)
-    print("Y:", Y)
-    print("Z:", Z)
-
     supply_chain(objective_function, m, ct, cv, pi, d, cf, cp, ps, pdi)
 
 
