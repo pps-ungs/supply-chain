@@ -42,8 +42,16 @@ def main():
     print("CF:", cf)
     print("d:", d)
 
-    X = optimization_heuristic(F, S, P, E, m, ct, cv, pi, d, cf, cp, ps, pdi)
+    X, margin, pStk, pDIn, CTf2s, CTs2p = optimization_heuristic(F, S, P, E, m, ct, cv, pi, d, cf, cp, ps, pdi)
+
+    print("################ RESULT ################")
     print("X:", X)
+    print("Margin:", margin)
+    print("pStk:", pStk)
+    print("pDIn:", pDIn)
+    print("CTf2s:", CTf2s)
+    print("CTs2p:", CTs2p)
+    print("########################################")
 
 if __name__ == "__main__":
     main()
