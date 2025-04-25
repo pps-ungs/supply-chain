@@ -256,7 +256,7 @@ def optimization_heuristic(F, S, P, E, d, m, cf, cp, ct, cv, pi, ps, pdi):
         if actual_sol > best_sol:
             best_sol = actual_sol
 
-    return X
+    return X    # esto deberia devolver margin, pStk, pDIn, CTf2s, CTs2p TODO: Sprint 4
 
 def get_objective_function_values(F, S, P, E, X, d, m, cf, cp, ct, cv, pi, ps, pdi):
     wDS = generate_products_to_distribution_center(X, S, cf)
