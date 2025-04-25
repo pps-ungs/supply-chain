@@ -241,15 +241,7 @@ def optimization_heuristic(F, S, P, E, d, m, cf, cp, ct, cv, pi, ps, pdi):
     
     while actual_sol < best_sol:
         X = [random.randint(0, 1000) for _ in range(len(X))]  # x nuevo ???? TODO: Sprint 4
-        wDS = generate_products_to_distribution_center(X, S, cf)
-        wDP = generate_products_to_points_of_sale(F, S, P, wDS, cp)
-        Y, Z = generate_stock_and_unsatisfied_demand(S, P, d, wDP)
-        
-        margin = get_margin(E, P, wDP, Y, d, m)
-        pStk = get_penalty_stock(E, P, Y, pi, ps)
-        pDIn = get_penalty_unsatisfied_demand(E, P, Z, pi, pdi)
-        CTf2s = get_transportation_cost_from_fabrication_to_distribution(F, S, wDS, ct)
-        CTs2p = get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv)
+        margin, pStk, pDIn, CTf2s, CTs2p = get_objective_function_values(F, S, P, E, X, d, m, cf, cp, ct, cv, pi, ps, pdi)
 
         actual_sol = objective_function(margin, pStk, pDIn, CTf2s, CTs2p)
         if actual_sol > best_sol:
