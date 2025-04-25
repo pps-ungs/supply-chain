@@ -112,7 +112,7 @@ def get_margin_per_point_of_sale(P: list) -> list:
 # Se puede calcular a partir de la distancia entre los centros de
 # fabricación y los centros de distribución, multiplicada por el costo
 # de transporte por kilómetro.
-def get_transportation_cost_from_fabrication_to_distribution(F: list, S: list) -> list:
+def get_unit_transportation_cost_from_fabrication_to_distribution(F: list, S: list) -> list:
     base_cost = 1000
     base_values = [1, 2, 3, 5, 8, 13]
     return [[base_values[(i + j) % len(base_values)] * 3 + base_cost for j in range(len(S))] for i in range(len(F))]
@@ -130,7 +130,7 @@ def get_transportation_cost_from_fabrication_to_distribution(F: list, S: list) -
 # calcular a partir de la distancia entre los centros de distribución y
 # los puntos de venta, multiplicada por el costo de transporte por
 # kilómetro.
-def get_transportation_cost_from_distribution_to_sale(S: list, P: list) -> list:
+def get_unit_transportation_cost_from_distribution_to_sale(S: list, P: list) -> list:
     base_cost = 800
     base_values = [1, 2, 3, 5, 8, 13]
     return [[base_values[(j + k) % len(base_values)] * 2 + base_cost for j in range(len(S))] for k in range(len(P))]
@@ -142,7 +142,7 @@ def get_probability_of_occurrence(E):
     return [0.3 for _ in range(len(E))] # equiprobable
 
 # d = demanda de cada punto de venta para cada escenario
-def get_demand_per_point_of_sale(E, P):
+def get_demand_per_point_of_sale(E):
     return [e['data'] for e in E]
 
 # cf = curva de distribucion de los productos fabricados a los diferentes centros de distribucion
@@ -187,19 +187,20 @@ def objective_function(margen, pStk, pDIn, CTf2s, CTs2p):
 ########################################################################
 
 # monto de la ganancia esperada
-def get_margin(E, P, wDP, Y, pi, m):
+def get_margin(E, P, S, wDP, Y, pi, m):
     margin = 0
-    for k in range(P):
-        for l in range(E):
-            margin += (wDP[k] - Y[k][l]) * pi[l] * m[k]
+    for j in range(len(S)):     # no es lo que dice el enunciado, pero falta un indice
+        for k in range(len(P)):
+            for l in range(len(E)):
+                margin += (wDP[j][k] - Y[k][l]) * pi[l] * m[k]
     return margin
 
 # penalidad esperada por stock almacenado en los puntos de venta
 def get_penalty_stock(E, P, Y, pi, ps):
     pStK = 0
-    for l in range(E):
+    for l in range(len(E)):
         sum = 0
-        for k in range(P):
+        for k in range(len(P)):
             sum += ps[k] * Y[k][l]
         pStK += sum * pi[l]
     return pStK
@@ -207,9 +208,9 @@ def get_penalty_stock(E, P, Y, pi, ps):
 # penalidad esperada por demanda insatisfecha en los puntos de venta
 def get_penalty_unsatisfied_demand(E, P, Z, pi, pdi):
     pDIn = 0
-    for l in range(E):
+    for l in range(len(E)):
         sum = 0
-        for k in range(P):
+        for k in range(len(P)):
             sum += pdi[k] * Z[k][l]
         pDIn += sum * pi[l]
     return pDIn
@@ -232,9 +233,9 @@ def get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv):
             CTs2p += wDP[j][k] * cv[j][k]
     return CTs2p
 
-def optimization_heuristic(F, S, P, E, d, m, cf, cp, ct, cv, pi, ps, pdi):
+def optimization_heuristic(F, S, P, E):
     X = [100, 200, 300, 400, 500, 100, 200, 300, 400, 500]   # x inicial  TODO: Sprint 4
-    margin, pStk, pDIn, CTf2s, CTs2p = get_objective_function_values(F, S, P, E, X, d, m, cf, cp, ct, cv, pi, ps, pdi)
+    margin, pStk, pDIn, CTf2s, CTs2p = get_objective_function_values(F, S, P, E, X)
     best_sol = objective_function(margin, pStk, pDIn, CTf2s, CTs2p)
     
     actual_sol = 0
@@ -242,7 +243,7 @@ def optimization_heuristic(F, S, P, E, d, m, cf, cp, ct, cv, pi, ps, pdi):
     it = 0
     while actual_sol <= best_sol and it < 1000000000:   # esto tiene que tener un criterio de parada mejor TODO: Sprint 4
         X = [random.randint(0, 1000) for _ in range(len(X))]  # x nuevo ???? TODO: Sprint 4
-        margin, pStk, pDIn, CTf2s, CTs2p = get_objective_function_values(F, S, P, E, X, d, m, cf, cp, ct, cv, pi, ps, pdi)
+        margin, pStk, pDIn, CTf2s, CTs2p = get_objective_function_values(X)
         actual_sol = objective_function(margin, pStk, pDIn, CTf2s, CTs2p)
 
         if actual_sol > best_sol:
@@ -251,12 +252,23 @@ def optimization_heuristic(F, S, P, E, d, m, cf, cp, ct, cv, pi, ps, pdi):
 
     return [X, margin, pStk, pDIn, CTf2s, CTs2p]
 
-def get_objective_function_values(F, S, P, E, X, d, m, cf, cp, ct, cv, pi, ps, pdi):
+def get_objective_function_values(F, S, P, E, X):
+    m = get_margin_per_point_of_sale(P)
+    ct = get_unit_transportation_cost_from_fabrication_to_distribution(F, S)
+    cv = get_unit_transportation_cost_from_distribution_to_sale(S, P)
+    pi = get_probability_of_occurrence(E)
+    print("pi", pi)
+    d = get_demand_per_point_of_sale(E)
+    cf = get_distribution_curve_from_fabrication_to_distribution(F, S)
+    cp = get_distribution_curve_from_distribution_to_sale(S, P)
+    ps = get_distribution_curve_from_fabrication_to_sale(F, P)
+    pdi = get_penalty_for_unsatisfied_demand(P)
+
     wDS = generate_products_to_distribution_center(X, S, cf)
     wDP = generate_products_to_points_of_sale(F, S, P, wDS, cp)
     Y, Z = generate_stock_and_unsatisfied_demand(S, P, d, wDP)
     
-    margin = get_margin(E, P, wDP, Y, d, m)
+    margin = get_margin(E, P, S, wDP, Y, pi, m)
     pStk = get_penalty_stock(E, P, Y, pi, ps)
     pDIn = get_penalty_unsatisfied_demand(E, P, Z, pi, pdi)
     CTf2s = get_transportation_cost_from_fabrication_to_distribution(F, S, wDS, ct)
