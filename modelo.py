@@ -239,13 +239,15 @@ def optimization_heuristic(F, S, P, E, d, m, cf, cp, ct, cv, pi, ps, pdi):
     
     actual_sol = 0
     
-    while actual_sol <= best_sol:   # esto tiene que tener un criterio de parada TODO: Sprint 4
+    it = 0
+    while actual_sol <= best_sol and it < 1000000000:   # esto tiene que tener un criterio de parada mejor TODO: Sprint 4
         X = [random.randint(0, 1000) for _ in range(len(X))]  # x nuevo ???? TODO: Sprint 4
         margin, pStk, pDIn, CTf2s, CTs2p = get_objective_function_values(F, S, P, E, X, d, m, cf, cp, ct, cv, pi, ps, pdi)
         actual_sol = objective_function(margin, pStk, pDIn, CTf2s, CTs2p)
 
         if actual_sol > best_sol:
             best_sol = actual_sol
+        it += 1
 
     return X    # esto deberia devolver margin, pStk, pDIn, CTf2s, CTs2p TODO: Sprint 4
 
