@@ -20,10 +20,11 @@ def main():
     conn.close()
     print("[okay] Connection to supply_chain closed")
 
-    X, margin, pStk, pDIn, CTf2s, CTs2p = optimization_heuristic(F, S, P, E)
+    X, Y, margin, pStk, pDIn, CTf2s, CTs2p = optimization_heuristic(F, S, P, E, 0.5)
 
     print("################ RESULT ################")
     print("X:", X)
+    print("Y:", Y)
     print("Margin:", margin)
     print("pStk:", pStk)
     print("pDIn:", pDIn)

@@ -233,24 +233,59 @@ def get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv):
             CTs2p += wDP[j][k] * cv[j][k]
     return CTs2p
 
-def optimization_heuristic(F: list, S: list, P: list, E: list, max_iterations: int = 1000) -> list:
-    X = [100, 200, 300, 400, 500, 100, 200, 300, 400, 500]   # x inicial  TODO: Sprint 4
-    margin, pStk, pDIn, CTf2s, CTs2p = get_objective_function_values(F, S, P, E, X)
-    best_sol = objective_function(margin, pStk, pDIn, CTf2s, CTs2p)
+def optimization_heuristic(F: list, S: list, P: list, E: list, step: float, max_iterations: int = 1000) -> list:
+    X = [100, 200, 300, 400, 500, 100, 200, 300, 400, 500]   # x inicial  TODO: Sprint 4. Param??
+    Y = get_objective_value(F, S, P, E, X)
     
-    actual_sol = 0
-    
-    it = 0
-    while actual_sol <= best_sol and it < max_iterations:
-        X = [random.randint(0, 1000) for _ in range(len(X))]  # x nuevo ???? TODO: Sprint 4
-        margin, pStk, pDIn, CTf2s, CTs2p = get_objective_function_values(X)
-        actual_sol = objective_function(margin, pStk, pDIn, CTf2s, CTs2p)
+    X_best = X
+    Y_best = Y
 
-        if actual_sol > best_sol:
-            best_sol = actual_sol
+    actual_sol = 0
+    it = 0
+
+    while it < max_iterations:  # Basic termination condition. fixme with a better one
+        # Generating a new solution...
+        X = generate_x()
+        Y = get_objective_value(F, S, P, E, X)
+
+        # Basic creation of neighbourhood
+        X_1 = [X[i] - step for i in range(len(X))]
+        X_2 = [X[i] + step for i in range(len(X))]
+
+        # Evaluation of the neighbourhood
+        Y_1 = get_objective_value(F, S, P, E, X_1)
+        Y_2 = get_objective_value(F, S, P, E, X_2)
+
+        X_best_neighbour, Y_best_neighbour = get_best_sol([X, X_1, X_2], [Y, Y_1, Y_2])
+
+        # Comparing the best solution with the current one
+        if X_best_neighbour > X_best:
+            X_best = X_best_neighbour
+            Y_best = Y_best_neighbour
+
+        # Shall we stop when we dont find a better solution?
+        
         it += 1
 
-    return [X, margin, pStk, pDIn, CTf2s, CTs2p]
+    return [X_best, Y_best] + get_objective_function_values(F, S, P, E, X_best)
+
+def generate_x() -> list:
+    return [random.randint(0, 1000) for _ in range(10)]
+
+def get_best_sol(X: list, sol: list) -> list:
+    best_y = sol[0]
+    best_x = X[0]
+
+    for i in range(1, len(sol)):
+        if sol[i] > best_y:
+            best_y = sol[i]
+            best_x = X[i]
+
+    return [best_x, best_y]
+
+def get_objective_value(F, S, P, E, X):
+    margin, pStk, pDIn, CTf2s, CTs2p = get_objective_function_values(F, S, P, E, X)
+    return objective_function(margin, pStk, pDIn, CTf2s, CTs2p)
 
 def get_objective_function_values(F, S, P, E, X):
     m = get_margin_per_point_of_sale(P)
@@ -273,4 +308,4 @@ def get_objective_function_values(F, S, P, E, X):
     CTf2s = get_transportation_cost_from_fabrication_to_distribution(F, S, wDS, ct)
     CTs2p = get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv)
 
-    return [margin, pStk, pDIn, CTf2s, CTs2p]  
+    return [margin, pStk, pDIn, CTf2s, CTs2p]
