@@ -138,7 +138,7 @@ def get_unit_transportation_cost_from_distribution_to_sale(S: list, P: list) -> 
 ########################################################################
 
 # pi = probabilidad de ocurrencia del escenario
-def get_probability_of_occurrence(E):
+def get_probability_of_occurrence(E):   # FIXME: no estoy leyendo las probabilidades de E, para simplificar, por ahora
     return [0.3 for _ in range(len(E))] # equiprobable
 
 # d = demanda de cada punto de venta para cada escenario
