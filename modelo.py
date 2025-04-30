@@ -233,7 +233,7 @@ def get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv):
             CTs2p += wDP[j][k] * cv[j][k]
     return CTs2p
 
-def optimization_heuristic(F, S, P, E):
+def optimization_heuristic(F: list, S: list, P: list, E: list, max_iterations: int = 1000) -> list:
     X = [100, 200, 300, 400, 500, 100, 200, 300, 400, 500]   # x inicial  TODO: Sprint 4
     margin, pStk, pDIn, CTf2s, CTs2p = get_objective_function_values(F, S, P, E, X)
     best_sol = objective_function(margin, pStk, pDIn, CTf2s, CTs2p)
@@ -241,7 +241,7 @@ def optimization_heuristic(F, S, P, E):
     actual_sol = 0
     
     it = 0
-    while actual_sol <= best_sol and it < 1000000000:   # esto tiene que tener un criterio de parada mejor TODO: Sprint 4
+    while actual_sol <= best_sol and it < max_iterations:
         X = [random.randint(0, 1000) for _ in range(len(X))]  # x nuevo ???? TODO: Sprint 4
         margin, pStk, pDIn, CTf2s, CTs2p = get_objective_function_values(X)
         actual_sol = objective_function(margin, pStk, pDIn, CTf2s, CTs2p)
