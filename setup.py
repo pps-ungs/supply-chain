@@ -154,9 +154,10 @@ print_points_of_sale(P)
 # demandas mínima y máxima es arbitraria, por ahora. Estos valores se deberían
 # definir en base a la heurística, y a las pruebas que hagamos.
 E = list()
-generate_demand_scenarios_with_monte_carlo(E=E, P=P, kE=10, min_demand=1, max_demand=100)
+generate_demand_scenarios_with_monte_carlo(E=E, P=P, kE=500, min_demand=1, max_demand=100)
 write_csv.add_rows_json(f"{path_to_files}/escenarios.csv",["nombre", "data"], E)
-print_demand_scenarios(E)
+# print_demand_scenarios(E)
+print("500 scenarios have been created.")
 #
 ####################################################################
 
