@@ -267,7 +267,7 @@ def optimization_heuristic(F: list, S: list, P: list, E: list, step: float, max_
         
         it += 1
 
-    return [X_best, Y_best] + get_objective_function_values(F, S, P, E, X_best)
+    return [X_best, Y_best] + get_objective_function_values(F, S, P, E, X_best) + [get_objective_value(F, S, P, E, X_best)]
 
 def generate_x() -> list:
     return [random.randint(0, 1000) for _ in range(10)]

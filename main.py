@@ -1,3 +1,4 @@
+import time
 from db.config import *
 from db.database import *
 from modelo import *
@@ -20,7 +21,8 @@ def main():
     conn.close()
     print("[okay] Connection to supply_chain closed")
 
-    X, Y, margin, pStk, pDIn, CTf2s, CTs2p = optimization_heuristic(F, S, P, E, 0.5)
+    t = time.time()
+    X, Y, margin, pStk, pDIn, CTf2s, CTs2p, objective_value = optimization_heuristic(F, S, P, E, 0.5, 10000)
 
     print("################ RESULT ################")
     print("X:", X)
@@ -30,6 +32,8 @@ def main():
     print("pDIn:", pDIn)
     print("CTf2s:", CTf2s)
     print("CTs2p:", CTs2p)
+    print("Objective value:", objective_value)
+    print("Time:", time.time() - t)
     print("########################################")
 
 if __name__ == "__main__":
