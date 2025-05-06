@@ -15,9 +15,11 @@ def create_neighbors_one_change(X, step, num_neighbors):
         neighbor = X[:]
         idx = random.randint(0, len(X) - 1)
         delta = random.choice([-step, step])
-        neighbor[idx] += delta
+        if neighbor[idx] + delta >= 0:
+            neighbor[idx] += delta
         neighbors.append(neighbor)
     return neighbors
+
 
 # Retorna una lista de vecindarios, en los cuales entre 1 y 3 de los vecinos es ligeramente diferente al valor 
 # de X en el mismo índice. 
@@ -28,12 +30,14 @@ def create_multi_change_neighbors(X, step, num_neighbors):
     neighbors = []
     for _ in range(num_neighbors):
         neighbor = X[:]
-        for _ in range(random.randint(1, 3)):  # modificar 1 a 3 valores
+        for _ in range(random.randint(1, 3)):
             i = random.randint(0, len(X)-1)
             delta = random.choice([-step, step])
-            neighbor[i] += delta
+            if neighbor[i] + delta >= 0:
+                neighbor[i] += delta
         neighbors.append(neighbor)
     return neighbors
+
 
 # Retorna una lista con 2*len(X) vecindarios. 
 # Genera dos vecinos para cada X[i]: X[i] + step y X[i] - step
@@ -43,9 +47,10 @@ def create_all_neighbors(X, step, *args):
     neighbors = []
     for i in range(len(X)):
         for delta in [-step, step]:
-            neighbor = X[:]
-            neighbor[i] += delta
-            neighbors.append(neighbor)
+            if X[i] + delta >= 0:
+                neighbor = X[:]
+                neighbor[i] += delta
+                neighbors.append(neighbor)
     return neighbors
 
 def optimization_heuristic_neighbor(F: list, S: list, P: list, E: list, step: float, neighbor_func: callable, num_neighbors=5, max_iterations=1000) -> list:
@@ -74,4 +79,4 @@ def optimization_heuristic_neighbor(F: list, S: list, P: list, E: list, step: fl
 
         it += 1
 
-    return [X_best, Y_best] + modelo.get_objective_function_values(F, S, P, E, X_best) + [modelo.get_objective_value(F, S, P, E, X_best)]
+    return [X_best, Y_best] + modelo.get_objective_function_values(F, S, P, E, X_best)

@@ -31,8 +31,8 @@ def main():
     for name, func in strategies.items():
         t = time.time()
         print(f"Running strategy: {name}")
-        result = optimization_heuristic_neighbor(F, S, P, E, 10, func, 5, 1000)
-        
+        result = optimization_heuristic_neighbor(F=F, S=S, P=P, E=E, step=5, neighbor_func=func, num_neighbors=10, max_iterations=1000000)
+        print(result)
         print(f"Best Y: {result[1]}")
         print(f"Time: {time.time() - t}")
 
