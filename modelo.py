@@ -190,10 +190,11 @@ def objective_function(margen, pStk, pDIn, CTf2s, CTs2p):
 # esto no esta bien, (wDP[j][k] - Y[k][l])  es negativo
 def get_margin(E, P, S, wDP, Y, pi, m):
     margin = 0
-    for j in range(len(S)):     # no es lo que dice el enunciado, pero falta un indice
-        for k in range(len(P)):
-            for l in range(len(E)):
-                margin += (wDP[j][k] - Y[k][l]) * pi[l] * m[k]
+    # for j in range(len(S)):     # no es lo que dice el enunciado, pero falta un indice
+    for k in range(len(P)):
+        for l in range(len(E)):
+            # margin += wDP[j][k] - Y[l][k]) * pi[l] * m[k]
+            margin += (get_products_received_by_point_of_sale(S, k, wDP) - Y[l][k]) * pi[l] * m[k]
     return margin
 
 # penalidad esperada por stock almacenado en los puntos de venta
@@ -202,7 +203,7 @@ def get_penalty_stock(E, P, Y, pi, ps):
     for l in range(len(E)):
         sum = 0
         for k in range(len(P)):
-            sum += ps[k] * Y[k][l]
+            sum += ps[k] * Y[l][k]
         pStK += sum * pi[l]
     return pStK
 
@@ -212,7 +213,7 @@ def get_penalty_unsatisfied_demand(E, P, Z, pi, pdi):
     for l in range(len(E)):
         sum = 0
         for k in range(len(P)):
-            sum += pdi[k] * Z[k][l]
+            sum += pdi[k] * Z[l][k]
         pDIn += sum * pi[l]
     return pDIn
 
@@ -321,3 +322,15 @@ def get_objective_function_values(F, S, P, E, X):
     CTs2p = get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv)
 
     return [margin, pStk, pDIn, CTf2s, CTs2p]
+
+
+# F = ["f_0", "f_1", "f_2"]
+# S = ["c_0", "c_1", "c_2"]
+# P = ["p_0", "p_1", "p_2"]
+# d = [{"p_0": 1, "p_1": 1, "p_2": 1}, {"p_0": 1, "p_1": 1, "p_2": 1}]
+# wDS = [[3, 3, 3], [3, 3, 3], [3, 3, 3]] # cada centro de distr recibe 9 productos
+# cp = [[0.1, 0.1, 0.1], [0.1, 0.1, 0.1], [0.1, 0.1, 0.1]] # cada centro de distr envia el 30% a cada centro de venta
+# # cada punto de venta deberia recibir 3 productos, y quedarse con 2 sobrantes
+# wDP = generate_products_to_points_of_sale(F, S, P, wDS, cp)
+# Y, Z = generate_stock_and_unsatisfied_demand(S, P, d, wDP)
+# print(wDP, Y, Z)

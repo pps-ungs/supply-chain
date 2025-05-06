@@ -48,15 +48,17 @@ def generate_products_to_distribution_center(X: list, S:list, cf: list) -> list:
 # wDS: es la cantidad de productos que entrego cada fabrica a cada
 #      centro de distribución. Es de la forma: 
 #   [[0.02, 0.04, 0.05, 0.07, 0.09, 0.11, 0.13, 0.15, 0.16, 0.18], [0.02, 0.04, 0.05, 0.07, 0.09, 0.11, 0.13, 0.15, 0.16, 0.18], ...]
-#   [ [cantidad enviada de la fabrica 0 a cada centro de distr.], [cantidad enviada de la fabrica 1 a cada centro de distr.], ...]
 # cp: es la curva de distribucion centros-puntos de venta. Es de la forma: 
+#   [ [proporcion enviada del centro de destr. 0 a cada punto de venta], [proporcion enviada del centro de destr. 1 a cada punto de venta], ...]
 # Returns: wDP = [ [cantidad enviada del centro de destr. 0 a cada punto de venta], [cantidad enviada del centro de destr. 1 a cada punto de venta], ...]
+
 def generate_products_to_points_of_sale(F:list, S: list, P: list, wDS: list, cp: list):
     wDP = []
     for j in range(len(S)):
         center_j = []
+        products_received = get_products_received_by_center(F, j, wDS)
         for k in range(len(P)):
-            center_j.append(cp[j][k] * get_products_received_by_center(F, j, wDS))
+            center_j.append(cp[j][k] * products_received)
         wDP.append(center_j)
     return wDP
 
@@ -98,10 +100,12 @@ def get_products_received_by_center(F: list, distribution_center: int, wDS: list
 def generate_stock_and_unsatisfied_demand(S: list, P:list, d: list, wDP: list):
     Y = []
     Z = []
-    for k in range(len(P)):
+    # for k in range(len(P)):
+    for l in range(len(d)):
         Z_k = []
         Y_k = []
-        for l in range(len(d)):
+        # for l in range(len(d)):
+        for k in range(len(P)):
             products_in_k = get_products_received_by_point_of_sale(S, k, wDP)
             key = f"p_{k}"
             if d[l][key] > products_in_k:
