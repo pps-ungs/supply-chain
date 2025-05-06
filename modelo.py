@@ -246,8 +246,6 @@ def optimization_heuristic(F: list, S: list, P: list, E: list, step: float, max_
 
     X = get_initial_X(E)
     Y = get_objective_value(F, S, P, E, X)
-
-    print("X inicial:", X)
     
     X_best = X
     Y_best = Y
@@ -281,10 +279,7 @@ def optimization_heuristic(F: list, S: list, P: list, E: list, step: float, max_
     return [X_best, Y_best] + get_objective_function_values(F, S, P, E, X_best) + [get_objective_value(F, S, P, E, X_best)]
 
 def get_initial_X(E: list) -> list:
-    scenario = E[0]
-    total_demand = sum(scenario['data'].values())
-    num_fabrication_centers = len(scenario['data'])
-    return [total_demand // num_fabrication_centers for _ in range(num_fabrication_centers)]
+    return [100 for _ in range(len(E))]
 
 def get_x() -> list:
     return [random.randint(0, 1000) for _ in range(10)]
