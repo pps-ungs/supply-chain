@@ -127,8 +127,8 @@ def get_margin_per_point_of_sale(P: list) -> list:
 
 # idem caso anterior, no tenemos esos datos
 def get_unit_transportation_cost_from_fabrication_to_distribution(F: list, S: list) -> list:
-    base_cost = 25
-    base_values = [1, 2, 3, 5, 8, 13]
+    base_cost = 2
+    base_values = [1, 2, 3, 4, 5, 6]
     return [[base_values[(i + j) % len(base_values)] * 3 + base_cost for j in range(len(S))] for i in range(len(F))]
 #
 ########################################################################
@@ -147,8 +147,8 @@ def get_unit_transportation_cost_from_fabrication_to_distribution(F: list, S: li
 
 # idem
 def get_unit_transportation_cost_from_distribution_to_sale(S: list, P: list) -> list:
-    base_cost = 20
-    base_values = [1, 2, 3, 5, 8, 13]
+    base_cost = 1.5
+    base_values = [1, 2, 3, 4, 5, 6]
     return [[base_values[(j + k) % len(base_values)] * 2 + base_cost for j in range(len(S))] for k in range(len(P))]
 #
 ########################################################################
@@ -159,14 +159,18 @@ def get_probability_of_occurrence(E):   # FIXME: no estoy leyendo las probabilid
 
 # d = demanda de cada punto de venta para cada escenario
 def get_demand_per_point_of_sale(E):
-    return [e['data'] for e in E]
+    rounded_demands = []
+    for e in E:
+        rounded_data = {key: max(0, int(round(value))) for key, value in e['data'].items()}
+        rounded_demands.append(rounded_data)
+    return rounded_demands
 
 # cf = curva de distribucion de los productos fabricados a los diferentes centros de distribucion
 def get_distribution_curve_from_fabrication_to_distribution(F, S):
+    base_pattern = [1, 2, 3, 4, 5]
     matrix = []
     for i in range(len(F)):
-        curve = [(j + 1) / sum(range(1, len(S) + 1)) for j in range(len(S))]
-        curve = [(value * (i + 1)) for value in curve]
+        curve = [(base_pattern[i % len(base_pattern)]) * (i + j) for j in range(len(S))]
         total = sum(curve)
         curve = [value / total for value in curve]
         matrix.append(curve)
@@ -174,10 +178,10 @@ def get_distribution_curve_from_fabrication_to_distribution(F, S):
 
 # cp = curva de distribucion de los productos entregados en los centros de distribucion que se deben enviar a los puntos de venta
 def get_distribution_curve_from_distribution_to_sale(S, P):
+    base_pattern = [1, 2, 3, 4, 5]
     matrix = []
     for j in range(len(S)):
-        curve = [(k + 1) / sum(range(1, len(P) + 1)) for k in range(len(P))]
-        curve = [(value * (j + 1)) for value in curve]
+        curve = [base_pattern[j % len(base_pattern)] + k * j for k in range(len(P))]
         total = sum(curve)
         curve = [value / total for value in curve]
         matrix.append(curve)
@@ -310,7 +314,7 @@ def optimization_heuristic(F: list, S: list, P: list, E: list, step: float, max_
     return [X_best, Y_best] + get_objective_function_values(F, S, P, E, X_best) + [get_objective_value(F, S, P, E, X_best)]
 
 def get_initial_X(E: list) -> list:
-    return [100 for _ in range(len(E))]
+    return [488 for _ in range(len(E))]
 
 def get_x() -> list:
     return [random.randint(0, 1000) for _ in range(10)]
@@ -350,6 +354,16 @@ def get_objective_function_values(F, S, P, E, X):
     pDIn = get_penalty_unsatisfied_demand(E, P, Z, pi, pdi)
     CTf2s = get_transportation_cost_from_fabrication_to_distribution(F, S, wDS, ct)
     CTs2p = get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv)
+
+    print("Demanda:", d)
+    print("costo de transporte por centro de distribucion:", ct)
+    print("costo de transporte por punto de venta:", cv)
+
+    print("cantidad de producto transportado desde los centros de fabricacion a los centros de distribucion:", wDS)
+    print("cantidad de producto transportado desde los centros de distribucion a los puntos de venta:", wDP)
+
+    print("costo de transporte desde los centros de fabricacion a los centros de distribucion:", CTf2s)
+    print("costo de transporte desde los centros de distribucion a los puntos de venta:", CTs2p)
 
     return [margin, pStk, pDIn, CTf2s, CTs2p]
 

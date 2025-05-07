@@ -63,7 +63,6 @@ def get_initial_X_minimal(F: list, min_value: int = 100) -> list:
 def get_posible_X_sorted(F: list, S: list, P: list, E: list) -> list:
     X_list = [  get_initial_X_uniform(F, E), 
                 get_initial_X_average_demand(F, E), 
-                # Sget_initial_X_based_on_capacity(F, variables_de_decision.get_capacities(F), E), 
                 get_initial_X_from_most_probable_scenario(F, E), 
                 get_initial_X_minimal(F)    ]
     
@@ -146,7 +145,20 @@ def main():
     E = modelo.read_scenarios(conn)
 
     conn.close()
-    print("[okay] Connection to supply_chain closed")
+    print("\n[okay] Connection to supply_chain closed")
+    x_min = get_initial_X_uniform(F, E) 
+    print("X iniciales:", x_min)
+
+    Y = modelo.get_objective_value(F, S, P, E, x_min)
+    print(Y)
+
+    # x, y, s = get_posible_X_sorted(F, S, P, E)
+    # print("X iniciales:", x)
+    # print("Y iniciales:", y)
+    # print("Estrategias:", s)
+
+    '''
+
 
     results = optimization_heuristic_initial_x(F, S, P, E, step=5, max_iterations=1000000)
     print("################ RESULT ################")
@@ -176,6 +188,7 @@ def main():
     execute(conn, query)
     conn.close()
     print("[okay] Connection to supply_chain closed")
+    '''
 
 if __name__ == "__main__":
     main()
