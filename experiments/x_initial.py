@@ -67,3 +67,7 @@ def get_initial_X_average_demand(F: list, E: list) -> list:
     num_fabrication_centers = len(F)
     return [total_average_demand // num_fabrication_centers for _ in range(num_fabrication_centers)]
 
+def get_initial_X_based_on_capacity(F: list, capacities: list, E: list) -> list:
+    total_demand = sum(sum(d.values()) for d in modelo.get_demand_per_point_of_sale(E))
+    total_capacity = sum(capacities)
+    return [int((capacity / total_capacity) * total_demand) for capacity in capacities]
