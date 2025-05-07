@@ -86,6 +86,15 @@ def read_scenarios(conn: psycopg.Connection) -> list:
 # 3. Parámetros
 ########################################################################
 
+# nota: todos estos parámetros son fijos, pero no necesariamente se 
+# obtienen de la base de datos.
+# ahora estan calculados a partir de valores base porque da más flexibilidad
+# a la hora de cambiar la cantidad de escenarios, puntos de venta, etc.
+# esto sirve para hacer pruebas con instancias más chicas.
+# cómo los calculamos y si tienen sentido, son cosas que tenemos que ver
+# con las pruebas.
+# podemos hacer un hardcodeo de los valores en la base de datos.
+
 ########################################################################
 # m: margen bruto del producto en cada punto de venta
 # m = {m_1, m_2, m_k, ..., m_kP}
@@ -95,6 +104,8 @@ def read_scenarios(conn: psycopg.Connection) -> list:
 # fijo, que se obtiene de la base de datos. Se puede calcular
 # a partir de la diferencia entre el precio de venta y el costo
 # de producción.
+
+# ojo que no tenemos esos datos
 def get_margin_per_point_of_sale(P: list) -> list:
     base_values = [5, 6, 7, 8, 8, 9]
     return [base_values[k % len(base_values)]**2 for k in range(len(P))]
@@ -112,6 +123,8 @@ def get_margin_per_point_of_sale(P: list) -> list:
 # Se puede calcular a partir de la distancia entre los centros de
 # fabricación y los centros de distribución, multiplicada por el costo
 # de transporte por kilómetro.
+
+# idem caso anterior, no tenemos esos datos
 def get_unit_transportation_cost_from_fabrication_to_distribution(F: list, S: list) -> list:
     base_cost = 1000
     base_values = [1, 2, 3, 5, 8, 13]
@@ -130,6 +143,8 @@ def get_unit_transportation_cost_from_fabrication_to_distribution(F: list, S: li
 # calcular a partir de la distancia entre los centros de distribución y
 # los puntos de venta, multiplicada por el costo de transporte por
 # kilómetro.
+
+# idem
 def get_unit_transportation_cost_from_distribution_to_sale(S: list, P: list) -> list:
     base_cost = 800
     base_values = [1, 2, 3, 5, 8, 13]
