@@ -67,18 +67,20 @@ def get_posible_X_sorted(F: list, S: list, P: list, E: list) -> list:
                 get_initial_X_from_most_probable_scenario(F, E), 
                 get_initial_X_minimal(F)    ]
     
+    strategies = ["uniform", "average_demand", "most_probable_scenario", "minimal"]
+    
     Y_list = [modelo.get_objective_value(F, S, P, E, X) for X in X_list]
     
-    pairs_of_X_Y = list(zip(X_list, Y_list))
+    pairs_of_X_Y = list(zip(X_list, Y_list, strategies))
     pairs_of_X_Y.sort(key=lambda x: x[1], reverse=True)
 
     X_list = [pair[0] for pair in pairs_of_X_Y]
     Y_list = [pair[1] for pair in pairs_of_X_Y]
 
-    return X_list, Y_list
+    return X_list, Y_list, strategies
 
 def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: float, max_iterations: int = 1000) -> list:
-    X_list, Y_list = get_posible_X_sorted(F, S, P, E)
+    X_list, Y_list, strategies = get_posible_X_sorted(F, S, P, E)
     results = []
 
     print("X iniciales:", X_list)
@@ -118,13 +120,15 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
     for i in range(len(X_list)):
         X = X_list[i]
         Y = Y_list[i]
+        strategy = strategies[i]
         result = results[i]
         
         complete_results[X] = {
             "Y": Y,
             "best_X": result[0],
             "best_Y": result[1],
-            "time": result[2]
+            "time": result[2],
+            "strategy": strategy
         }
 
     return complete_results
@@ -158,14 +162,15 @@ def main():
                 y_inicial decimal(10, 4),
                 x_optimo decimal(10, 4),
                 y_optimo decimal(10, 4),
-                tiempo timestamp
+                tiempo timestamp,
+                estrategia text
             );
             """
     
     for x, result in results.items():
         query += f"""
-            insert into experimentos_x_inicial (x_inicial, y_inicial, x_optimo, y_optimo, tiempo) 
-            values ({x}, {result['Y']}, {result['best_X']}, {result['best_Y']}, {result['time']});
+            insert into experimentos_x_inicial (x_inicial, y_inicial, x_optimo, y_optimo, tiempo, estrategia) 
+            values ({x}, {result['Y']}, {result['best_X']}, {result['best_Y']}, {result['time']}, {{result['strategy']}});
             """
     
     execute(conn, query)
