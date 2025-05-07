@@ -51,3 +51,19 @@ def get_initial_X_uniform(F: list, E: list) -> list:
     total_demand = sum(sum(d.values()) for d in modelo.get_demand_per_point_of_sale(E))
     num_fabrication_centers = len(F)
     return [total_demand // num_fabrication_centers for _ in range(num_fabrication_centers)]
+
+def get_initial_X_average_demand(F: list, E: list) -> list:
+    average_demand = {}
+    num_scenarios = len(E)
+    for scenario in modelo.get_demand_per_point_of_sale(E):
+        for key, value in scenario.items():
+            if key not in average_demand:
+                average_demand[key] = 0
+            average_demand[key] += value
+    for key in average_demand:
+        average_demand[key] /= num_scenarios
+
+    total_average_demand = sum(average_demand.values())
+    num_fabrication_centers = len(F)
+    return [total_average_demand // num_fabrication_centers for _ in range(num_fabrication_centers)]
+
