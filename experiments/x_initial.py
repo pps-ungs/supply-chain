@@ -20,7 +20,6 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
     X_best = X
     Y_best = Y
 
-    actual_sol = 0
     it = 0
 
     while it < max_iterations:  # Basic termination condition. fixme with a better one
@@ -48,8 +47,7 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
 
     return [X_best, Y_best] + modelo.get_objective_function_values(F, S, P, E, X_best) + [modelo.get_objective_value(F, S, P, E, X_best)]
 
-def get_initial_X(E: list) -> list:
-    scenario = E[0]
-    total_demand = sum(scenario['data'].values())
-    num_fabrication_centers = len(scenario['data'])
+def get_initial_X_uniform(F: list, E: list) -> list:
+    total_demand = sum(sum(d.values()) for d in modelo.get_demand_per_point_of_sale(E))
+    num_fabrication_centers = len(F)
     return [total_demand // num_fabrication_centers for _ in range(num_fabrication_centers)]
