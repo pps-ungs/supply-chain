@@ -77,3 +77,6 @@ def get_initial_X_from_single_scenario(F: list, E: list) -> list:
     total_demand = sum(single_scenario.values())
     num_fabrication_centers = len(F)
     return [total_demand // num_fabrication_centers for _ in range(num_fabrication_centers)]
+
+def get_initial_X_minimal(F: list, min_value: int = 100) -> list:
+    return [min_value for _ in range(len(F))]
