@@ -80,3 +80,20 @@ def get_initial_X_from_single_scenario(F: list, E: list) -> list:
 
 def get_initial_X_minimal(F: list, min_value: int = 100) -> list:
     return [min_value for _ in range(len(F))]
+
+def get_posible_X_sorted(F: list, S: list, P: list, E: list) -> list:
+    X_list = [  get_initial_X_uniform(F, E), 
+                get_initial_X_average_demand(F, E), 
+                get_initial_X_based_on_capacity(F, variables_de_decision.get_capacities(F), E), 
+                get_initial_X_from_single_scenario(F, E), 
+                get_initial_X_minimal(F)    ]
+    
+    Y_list = [modelo.get_objective_value(F, S, P, E, X) for X in X_list]
+    
+    pairs_of_X_Y = list(zip(X_list, Y_list))
+    pairs_of_X_Y.sort(key=lambda x: x[1], reverse=True)
+
+    X_list = [pair[0] for pair in pairs_of_X_Y]
+    Y_list = [pair[1] for pair in pairs_of_X_Y]
+
+    return X_list, Y_list
