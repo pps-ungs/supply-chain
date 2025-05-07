@@ -1,6 +1,7 @@
 import sys
 import os
 import random
+import time
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../modelo')))
 import modelo
 
@@ -19,7 +20,6 @@ def create_neighbors_one_change(X, step, num_neighbors):
             neighbor[idx] += delta
         neighbors.append(neighbor)
     return neighbors
-
 
 # Retorna una lista de vecindarios, en los cuales entre 1 y 3 de los vecinos es ligeramente diferente al valor 
 # de X en el mismo índice. 
@@ -53,6 +53,13 @@ def create_all_neighbors(X, step, *args):
                 neighbors.append(neighbor)
     return neighbors
 
+def get_neighbor_strategies():
+    return  {
+    "one_change": create_neighbors_one_change,
+    "exhaustive": create_all_neighbors,
+    "multi_change": create_multi_change_neighbors,
+    } 
+
 def optimization_heuristic_neighbor(F: list, S: list, P: list, E: list, step: float, neighbor_func: callable, num_neighbors=5, max_iterations=1000) -> list:
     X = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100] 
     Y = modelo.get_objective_value(F, S, P, E, X)
@@ -79,4 +86,33 @@ def optimization_heuristic_neighbor(F: list, S: list, P: list, E: list, step: fl
 
         it += 1
 
-    return [X_best, Y_best] + modelo.get_objective_function_values(F, S, P, E, X_best)
+    return [X_best, Y_best] + modelo.get_objective_function_values(F, S, P, E, X_best) 
+
+def run_neighbors_experiment(F: list, S: list, P: list, E: list, neighbor_strategy: dict, num_neighbors: int, max_iterations: int):
+    t = time.time()
+
+    print(f"Running strategy: {neighbor_strategy}")
+
+    result = optimization_heuristic_neighbor(F=F, S=S, P=P, E=E, step=5, neighbor_func=neighbor_strategy.func, num_neighbors=num_neighbors, max_iterations=max_iterations)
+
+    return {
+    "strategy": {neighbor_strategy.name},
+    "neighbors": num_neighbors,
+    "Best Y": {result[1]},
+    "Time": {time.time() - t}
+    }, [neighbor_strategy.name, num_neighbors, result[1], time.time() - t]
+
+
+
+def run_all_experiment(F, S, P, E, step, neighbor_strategy, eval_strategy, num_neighbors, trials=10):
+    results = []
+    for _ in range(trials):
+        X, Y, *_ = optimization_heuristic_neighbor(F, S, P, E, step, neighbor_strategy, eval_strategy, num_neighbors)
+        results.append(Y)
+    return {
+        "strategy": neighbor_strategy.__name__,
+        "evaluation": eval_strategy.__name__,
+        "neighbors": num_neighbors,
+        "average_Y": sum(results) / len(results),
+        "best_Y": max(results)
+    }
