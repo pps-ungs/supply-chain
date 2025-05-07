@@ -110,6 +110,24 @@ def read(conn: psycopg.Connection, select_statement: str) -> pd.DataFrame:
     except (psycopg.DatabaseError, Exception) as e:
         print(f"?error reading data': {e}")
         return pd.DataFrame()
+    
+def insert(conn: psycopg.Connection, insert_statement: str, data: list) -> None:
+    try:
+        with conn.cursor() as cur:
+            cur.execute(insert_statement, data)  
+            conn.commit()
+            print(f"[okay] Data inserted")
+    except (psycopg.DatabaseError, Exception) as e:
+        print(f"?error inserting data: {e}")
+
+def execute(conn: psycopg.Connection, statement: str) -> None:
+    try:
+        with conn.cursor() as cur:
+            cur.execute(statement)
+            conn.commit()
+            print(f"[okay] Statement executed")
+    except (psycopg.DatabaseError, Exception) as e:
+        print(f"?error executing statement: {e}")
 
 # FIXME
 def insert_data_from_dataframe(conn: psycopg.Connection, insert_statement: str, df: pd.DataFrame) -> None:
