@@ -355,16 +355,6 @@ def get_objective_function_values(F, S, P, E, X):
     CTf2s = get_transportation_cost_from_fabrication_to_distribution(F, S, wDS, ct)
     CTs2p = get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv)
 
-    print("Demanda:", d)
-    print("costo de transporte por centro de distribucion:", ct)
-    print("costo de transporte por punto de venta:", cv)
-
-    print("cantidad de producto transportado desde los centros de fabricacion a los centros de distribucion:", wDS)
-    print("cantidad de producto transportado desde los centros de distribucion a los puntos de venta:", wDP)
-
-    print("costo de transporte desde los centros de fabricacion a los centros de distribucion:", CTf2s)
-    print("costo de transporte desde los centros de distribucion a los puntos de venta:", CTs2p)
-
     return [margin, pStk, pDIn, CTf2s, CTs2p]
 
 

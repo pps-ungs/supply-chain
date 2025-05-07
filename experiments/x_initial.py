@@ -12,7 +12,9 @@ from db.database import *
 def get_initial_X_uniform(F: list, E: list) -> list:
     total_demand = sum(sum(d.values()) for d in modelo.get_demand_per_point_of_sale(E))
     num_fabrication_centers = len(F)
-    return [total_demand // num_fabrication_centers for _ in range(num_fabrication_centers)]
+    base_value = total_demand // (num_fabrication_centers * len(E))
+
+    return [base_value + i for i in range(num_fabrication_centers)]
 
 # La demanda promedio de cada centro de fabricacion se calcula como la suma de las demandas
 # promedio de todos los punto de venta en todos los escenarios dividida por el número de escenarios.
@@ -32,12 +34,6 @@ def get_initial_X_average_demand(F: list, E: list) -> list:
     total_average_demand = sum(average_demand.values())
     num_fabrication_centers = len(F)
     return [total_average_demand // num_fabrication_centers for _ in range(num_fabrication_centers)]
-
-
-# def get_initial_X_based_on_capacity(F: list, capacities: list, E: list) -> list:
-#     total_demand = sum(sum(d.values()) for d in modelo.get_demand_per_point_of_sale(E))
-#     total_capacity = sum(capacities)
-#     return [int((capacity / total_capacity) * total_demand) for capacity in capacities]
 
 # La demanda de cada centro de fabricacion se calcula como la suma de las demandas
 # Del escenario más probable
@@ -63,6 +59,7 @@ def get_initial_X_minimal(F: list, min_value: int = 100) -> list:
 def get_posible_X_sorted(F: list, S: list, P: list, E: list) -> list:
     X_list = [  get_initial_X_uniform(F, E), 
                 get_initial_X_average_demand(F, E), 
+                # get_initial_X_based_on_capacity(F, variables_de_decision.get_capacities(F), E), 
                 get_initial_X_from_most_probable_scenario(F, E), 
                 get_initial_X_minimal(F)    ]
     
@@ -145,20 +142,7 @@ def main():
     E = modelo.read_scenarios(conn)
 
     conn.close()
-    print("\n[okay] Connection to supply_chain closed")
-    x_min = get_initial_X_uniform(F, E) 
-    print("X iniciales:", x_min)
-
-    Y = modelo.get_objective_value(F, S, P, E, x_min)
-    print(Y)
-
-    # x, y, s = get_posible_X_sorted(F, S, P, E)
-    # print("X iniciales:", x)
-    # print("Y iniciales:", y)
-    # print("Estrategias:", s)
-
-    '''
-
+    print("[okay] Connection to supply_chain closed")
 
     results = optimization_heuristic_initial_x(F, S, P, E, step=5, max_iterations=1000000)
     print("################ RESULT ################")
@@ -188,7 +172,6 @@ def main():
     execute(conn, query)
     conn.close()
     print("[okay] Connection to supply_chain closed")
-    '''
 
 if __name__ == "__main__":
     main()
