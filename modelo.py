@@ -107,8 +107,9 @@ def read_scenarios(conn: psycopg.Connection) -> list:
 
 # ojo que no tenemos esos datos
 def get_margin_per_point_of_sale(P: list) -> list:
+    base_margin = 300
     base_values = [5, 6, 7, 8, 8, 9]
-    return [base_values[k % len(base_values)]**2 for k in range(len(P))]
+    return [base_values[k % len(base_values)]**2 + base_margin for k in range(len(P))]
 #
 ########################################################################
 
@@ -126,7 +127,7 @@ def get_margin_per_point_of_sale(P: list) -> list:
 
 # idem caso anterior, no tenemos esos datos
 def get_unit_transportation_cost_from_fabrication_to_distribution(F: list, S: list) -> list:
-    base_cost = 1000
+    base_cost = 25
     base_values = [1, 2, 3, 5, 8, 13]
     return [[base_values[(i + j) % len(base_values)] * 3 + base_cost for j in range(len(S))] for i in range(len(F))]
 #
@@ -146,7 +147,7 @@ def get_unit_transportation_cost_from_fabrication_to_distribution(F: list, S: li
 
 # idem
 def get_unit_transportation_cost_from_distribution_to_sale(S: list, P: list) -> list:
-    base_cost = 800
+    base_cost = 20
     base_values = [1, 2, 3, 5, 8, 13]
     return [[base_values[(j + k) % len(base_values)] * 2 + base_cost for j in range(len(S))] for k in range(len(P))]
 #
@@ -154,7 +155,7 @@ def get_unit_transportation_cost_from_distribution_to_sale(S: list, P: list) -> 
 
 # pi = probabilidad de ocurrencia del escenario
 def get_probability_of_occurrence(E):   # FIXME: no estoy leyendo las probabilidades de E, para simplificar, por ahora
-    return [0.3 for _ in range(len(E))] # equiprobable
+    return [1 / len(E) for _ in range(len(E))] # equiprobable
 
 # d = demanda de cada punto de venta para cada escenario
 def get_demand_per_point_of_sale(E):
@@ -162,21 +163,35 @@ def get_demand_per_point_of_sale(E):
 
 # cf = curva de distribucion de los productos fabricados a los diferentes centros de distribucion
 def get_distribution_curve_from_fabrication_to_distribution(F, S):
-    return [[round((i + 1) / sum(range(1, len(S) + 1)), 2) for i in range(len(S))] for _ in range(len(F))]
+    matrix = []
+    for i in range(len(F)):
+        curve = [(j + 1) / sum(range(1, len(S) + 1)) for j in range(len(S))]
+        curve = [(value * (i + 1)) for value in curve]
+        total = sum(curve)
+        curve = [value / total for value in curve]
+        matrix.append(curve)
+    return matrix
 
 # cp = curva de distribucion de los productos entregados en los centros de distribucion que se deben enviar a los puntos de venta
 def get_distribution_curve_from_distribution_to_sale(S, P):
-    return [[round((i + 1) / sum(range(1, len(S) + 1)), 2) for i in range(len(P))] for _ in range(len(S))]
+    matrix = []
+    for j in range(len(S)):
+        curve = [(k + 1) / sum(range(1, len(P) + 1)) for k in range(len(P))]
+        curve = [(value * (j + 1)) for value in curve]
+        total = sum(curve)
+        curve = [value / total for value in curve]
+        matrix.append(curve)
+    return matrix
 
 # ps = Penalidad unitaria por dejar un producto en el punto de venta sin comercializar
 def get_distribution_curve_from_fabrication_to_sale(F, P):
     m = get_margin_per_point_of_sale(P)
-    return [m[i] * 0.15 for i in range(len(P))]
+    return [m[i] * 0.05 for i in range(len(P))]
 
 # pdi = Penalidad unitaria por demanda insatisfecha en un punto de venta
 def get_penalty_for_unsatisfied_demand(P):
     m = get_margin_per_point_of_sale(P)
-    return [m[i] * 0.1 for i in range(len(P))]
+    return [m[i] * 0.03 for i in range(len(P))]
 #
 ########################################################################
 

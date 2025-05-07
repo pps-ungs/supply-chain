@@ -167,11 +167,11 @@ def main():
             );
             """
     
-    for x, result in results.items():
-        query += f"""
-            insert into experimentos_x_inicial (x_inicial, y_inicial, x_optimo, y_optimo, tiempo, estrategia) 
-            values ({x}, {result['Y']}, {result['best_X']}, {result['best_Y']}, {result['time']}, {{result['strategy']}});
-            """
+    # for x, result in results.items():
+    #     query += f"""
+    #         insert into experimentos_x_inicial (x_inicial, y_inicial, x_optimo, y_optimo, tiempo, estrategia) 
+    #         values ({x}, {result['Y']}, {result['best_X']}, {result['best_Y']}, {result['time']}, {{result['strategy']}});
+    #         """
     
     execute(conn, query)
     conn.close()
