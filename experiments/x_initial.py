@@ -124,29 +124,31 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
             if X_best_neighbour > X_best and Y_best_neighbour > 0:
                 X_best = X_best_neighbour
                 Y_best = Y_best_neighbour
+                
+                query = f"""
+                            insert into experimentos_x_inicial (
+                                x_inicial, 
+                                y_inicial,
+                                step,
+                                cant_iteraciones,
+                                x_optimo, 
+                                y_optimo, 
+                                tiempo, 
+                                estrategia) 
+                            values (
+                                '{json.dumps(X)}',
+                                {Y},
+                                {step},
+                                {max_iterations},
+                                '{json.dumps(X_best)}', 
+                                {Y_best}, 
+                                {time.time() - initial_time:.2f}, 
+                                '{strategies[i]}');
+                            """
+                execute(conn, query)
 
             it += 1
 
-            query = f"""
-                insert into experimentos_x_inicial (
-                    x_inicial, 
-                    y_inicial,
-                    step,
-                    x_optimo, 
-                    y_optimo, 
-                    tiempo, 
-                    estrategia) 
-                values (
-                    '{json.dumps(X)}',
-                    {Y},
-                    {step},
-                    '{json.dumps(X_best)}', 
-                    {Y_best}, 
-                    {time.time() - initial_time:.2f}, 
-                    '{strategies[i]}');
-                """
-            execute(conn, query)
-        
         total_time = time.time() - initial_time
         print(f"Sol X = {X_best}, Y = {Y_best}, tiempo = {total_time:.2f} segundos")
         results.append((X_best, Y_best, total_time))
@@ -190,6 +192,7 @@ def main():
             x_inicial text,
             y_inicial decimal(15, 9),
             step decimal(15, 2),
+            cant_iteraciones integer,
             x_optimo text,
             y_optimo decimal(15, 9),
             tiempo decimal(15, 9),
