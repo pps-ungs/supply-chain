@@ -95,10 +95,6 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
     X_list, Y_list, strategies = get_posible_X_sorted(F, S, P, E)
     results = []
 
-    print("X iniciales:", X_list)
-    print("Y iniciales:", Y_list)
-    print("Estrategias:", strategies)
-
     conn = get_connection(load_config('db/database.ini', 'supply_chain'))
     for i in range(len(X_list)):
         initial_time = time.time()
@@ -175,10 +171,6 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
     return complete_results
 
 def main():
-    ####################################################################
-    # Conjuntos
-    ####################################################################
-
     conn = get_connection(load_config('db/database.ini', 'supply_chain'))
 
     F = modelo.read_fabrication_centers(conn)
@@ -209,8 +201,11 @@ def main():
 
     for iteration in num_iterations:
         for step in num_step:
+            print("################ EXECUTION ################")
             print(f"Running with {iteration} iterations and step {step}")
+
             results = optimization_heuristic_initial_x(F, S, P, E, step=step, max_iterations=iteration)
+            
             print("################ RESULT ################")
             print(results)
 
