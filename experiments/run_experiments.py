@@ -48,23 +48,27 @@ def run_eval_neighbors_experiment(F: list, S:list, P:list, E:list):
 def run_creation_aval_neighbors_experiment(F: list, S:list, P:list, E:list):
     
     dir = "experiments/results/creation_evaluation_neighbors"
-    headers = ["Neighbor strategy", "Evaluation strategy", "Best Y", "Num neighbors", "Num. iterations", "Step", "Time"]
+    headers = ["Evaluation strategy", "Neighbor strategy", "Best Y", "Num neighbors", "Num. iterations", "Step", "Time"]
 
-    neighbor_strategies = neighborhood.get_neighbor_strategies()
     eval_strategies = neighborhood.get_eval_strategies()
-
-    # num_neigbors = [2, 4, 8, 16, 32, 64]
-    num_neigbors = [16, 32, 64]
+    neighbor_strategies = neighborhood.get_neighbor_strategies()
+    num_neigbors = [2, 4, 8, 16, 32, 64]
     num_iterations = [10000, 100000, 1000000, 10000000]
     num_step = [10, 20, 40, 60, 80, 100]
 
-    for name_e, func_e in eval_strategies.items():
-        results = []
-        results.append(headers)
-        for name_n, func_n in neighbor_strategies.items():
-            for i in range(len(num_iterations)):
-                for n in range(len(num_neigbors)):
-                    result = neighborhood.run_heuristic_with_all_strategies(F=F, S=S, P=P, E=E, step=20, neighbor_strategy=func_n, eval_strategy=func_e, num_neighbors=num_neigbors[n], max_iterations=num_iterations[i])
-                    results.append(result)
+    # for name_e, func_e in eval_strategies.items():
+        # if name_e != "greedy":
+    for name_c, func_c in neighbor_strategies.items():
+        if name_c == "exhaustive":
+            for name_e, func_e in eval_strategies.items():
+                # if name_e != "exhaustive":
+                print(f"Running strategy: {name_e} - {name_c}")
+                results = []
+                results.append(headers)
+                for i in range(len(num_iterations)):
+                    for s in range(len(num_step)):
+                        for n in range(len(num_neigbors)):
+                            result = neighborhood.run_heuristic_with_all_strategies(F=F, S=S, P=P, E=E, step=num_step[s], neighbor_strategy=func_c, eval_strategy=func_e, num_neighbors=num_neigbors[n], max_iterations=num_iterations[i])
+                            results.append(result)
 
-        writeCSV(filename=f"{dir}/results_neighbors_{name_e}_{name_n}.csv", rows=results)
+                writeCSV(filename=f"{dir}/{name_c}/results_neighbors_{name_e}.csv", rows=results)

@@ -196,4 +196,4 @@ def run_heuristic_with_eval_strategy(F: list, S: list, P: list, E: list, step:20
 def run_heuristic_with_all_strategies(F: list, S: list, P: list, E: list, step: float, neighbor_strategy: callable, eval_strategy: callable, num_neighbors=5, max_iterations=1000):
     t = time.time()
     result = optimization_heuristic_neighbors_exp(F=F, S=S, P=P, E=E, step=step, neighbor_strategy=neighbor_strategy, eval_strategy=eval_strategy, num_neighbors=num_neighbors, max_iterations=max_iterations)
-    return [neighbor_strategy.__name__, eval_strategy.__name__, result[1], num_neighbors, max_iterations, step, time.time() - t]
+    return [ eval_strategy.__name__, neighbor_strategy.__name__, result[1], num_neighbors, max_iterations, step, time.time() - t]
