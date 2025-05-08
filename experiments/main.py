@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
+
 import sys
 import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../db')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../modelo')))
+
 from db.database import *
 from modelo import *
 from experiments.run_experiments import *
@@ -22,7 +24,6 @@ def main():
 
     # run_creation_neighbors_experiment(F=F, S=S, P=P, E=E)
     run_eval_neighbors_experiment(F=F, S=S, P=P, E=E)
-
 
 
 if __name__ == "__main__":

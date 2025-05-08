@@ -44,5 +44,3 @@ def run_eval_neighbors_experiment(F: list, S:list, P:list, E:list):
                 results.append(result)
 
         writeCSV(filename=f"{dir}/results_neighbors_{name}.csv", rows=results)
-
-    
