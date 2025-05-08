@@ -15,7 +15,7 @@ import modelo
 # Crea num_neighbors vecindarios.
 # Ejemplo de return para num_neighbors=2:
 #   [[100, 100, 100, 99.5, 100, 100, 100, 100, 100, 100], 100, 100, 100, 100, 100, 100, 100, 100.5, 100, 100]]
-def create_neighbors_one_change(X, step, num_neighbors):
+def create_one_change_neighbors(X, step, num_neighbors):
     neighbors = []
     for _ in range(num_neighbors):
         neighbor = X[:]
@@ -60,33 +60,10 @@ def create_exhaustive_neighbors(X, step, *args):
 
 def get_neighbor_strategies():
     return  {
-    "one_change": create_neighbors_one_change,
+    "one_change": create_one_change_neighbors,
     "exhaustive": create_exhaustive_neighbors,
     "multi_change": create_multi_change_neighbors,
     } 
-
-#* Evaluación de vecinos: Greedy.
-#* Creación de vecinos: strategy.
-def optimization_heuristic_neighbors_exp(F: list, S: list, P: list, E: list, step: float, neighbor_strategy: callable, num_neighbors=5, max_iterations=1000) -> list:
-    X = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100] 
-    Y = modelo.get_objective_value(F, S, P, E, X)
-    X_best = X
-    Y_best = Y
-    it = 0
-    while it < max_iterations:
-        neighbors = neighbor_strategy(X_best, step, num_neighbors)
-        # Lista de tuplas: (vecino, valor_objetivo)
-        evaluated = [(n, modelo.get_objective_value(F, S, P, E, n)) for n in neighbors]
-        # Se elige el que tiene el mayor valor de función objetivo.
-        #  best_n: mejor vecino, best_y: valor objetivo
-        best_n, best_y = max(evaluated, key=lambda t: t[1])
-        if best_y > Y_best:
-            X_best = best_n
-            Y_best = best_y
-        else:
-            break
-        it += 1
-    return [X_best, Y_best] + modelo.get_objective_function_values(F, S, P, E, X_best) 
 
 ########################################################################
 # Evaluación de vecinos
@@ -129,6 +106,33 @@ def get_eval_strategies():
     "first-improvement": first_improvement_eval,
     "stochastic": stochastic_selection_eval,
     } 
+
+########################################################################
+# Heurísticas con estrategias
+########################################################################
+
+#* Evaluación de vecinos: Greedy.
+#* Creación de vecinos: strategy.
+def optimization_heuristic_neighbors_exp(F: list, S: list, P: list, E: list, step: float, neighbor_strategy: callable, num_neighbors=5, max_iterations=1000) -> list:
+    X = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100] 
+    Y = modelo.get_objective_value(F, S, P, E, X)
+    X_best = X
+    Y_best = Y
+    it = 0
+    while it < max_iterations:
+        neighbors = neighbor_strategy(X_best, step, num_neighbors)
+        # Lista de tuplas: (vecino, valor_objetivo)
+        evaluated = [(n, modelo.get_objective_value(F, S, P, E, n)) for n in neighbors]
+        # Se elige el que tiene el mayor valor de función objetivo.
+        #  best_n: mejor vecino, best_y: valor objetivo
+        best_n, best_y = max(evaluated, key=lambda t: t[1])
+        if best_y > Y_best:
+            X_best = best_n
+            Y_best = best_y
+        else:
+            break
+        it += 1
+    return [X_best, Y_best] + modelo.get_objective_function_values(F, S, P, E, X_best) 
 
 #* Evaluación de vecinos: strategy.
 #* Creación de vecinos: exhaustive
