@@ -16,11 +16,3 @@ def load_config(file_path: str, section: str) -> dict:
         config[p[0]] = p[1]
 
     return config
-
-
-# Testing
-"""
-if __name__ == "__main__":
-    config = load_config()
-    print(config)
-"""

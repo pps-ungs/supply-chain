@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+# Stand alone script to validate demand data This script validates the
+# demand data by checking the mean, confidence interval, and goodness of
+# fit using the Kolmogorov-Smirnov test.   It also generates a histogram
+# of the demand data.
+
 import numpy as np
 import scipy.stats as stats
 import matplotlib.pyplot as plt

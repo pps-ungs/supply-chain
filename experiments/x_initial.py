@@ -1,4 +1,5 @@
-import os, sys, time
+import datetime
+import os, sys, time, random
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/')))
@@ -12,7 +13,9 @@ from db.database import *
 def get_initial_X_uniform(F: list, E: list) -> list:
     total_demand = sum(sum(d.values()) for d in modelo.get_demand_per_point_of_sale(E))
     num_fabrication_centers = len(F)
-    return [total_demand // num_fabrication_centers for _ in range(num_fabrication_centers)]
+    base_value = total_demand // (num_fabrication_centers * len(E))
+
+    return [base_value + i for i in range(num_fabrication_centers)]
 
 # La demanda promedio de cada centro de fabricacion se calcula como la suma de las demandas
 # promedio de todos los punto de venta en todos los escenarios dividida por el número de escenarios.
@@ -32,12 +35,6 @@ def get_initial_X_average_demand(F: list, E: list) -> list:
     total_average_demand = sum(average_demand.values())
     num_fabrication_centers = len(F)
     return [total_average_demand // num_fabrication_centers for _ in range(num_fabrication_centers)]
-
-
-# def get_initial_X_based_on_capacity(F: list, capacities: list, E: list) -> list:
-#     total_demand = sum(sum(d.values()) for d in modelo.get_demand_per_point_of_sale(E))
-#     total_capacity = sum(capacities)
-#     return [int((capacity / total_capacity) * total_demand) for capacity in capacities]
 
 # La demanda de cada centro de fabricacion se calcula como la suma de las demandas
 # Del escenario más probable
@@ -60,15 +57,29 @@ def get_initial_X_from_most_probable_scenario(F: list, E: list) -> list:
 def get_initial_X_minimal(F: list, min_value: int = 100) -> list:
     return [min_value for _ in range(len(F))]
 
+# Toma las demandas máximas de cada punto de venta y las distribuye uniformemente entre los centros de fabricación.
+def get_initial_X_higher_demand(F: list, E: list) -> list:
+    total_demand = sum(max(d.values()) for d in modelo.get_demand_per_point_of_sale(E))
+    return [total_demand // (len(F) * len(E)) for _ in range(len(F))]
+
+# Genera valores de pseudorandoms basados en la suma de las demandas de todos los escenarios.
+def get_initial_X_pseudorandom(F: list, E: list, seed: int = 42) -> list:
+    random.seed(seed)
+    total_demand = sum(sum(d.values()) for d in modelo.get_demand_per_point_of_sale(E))
+
+    base_value = total_demand // (len(F) * len(E))
+    return [base_value + random.randint(1, 10) for _ in range(len(F))]
+
 def get_posible_X_sorted(F: list, S: list, P: list, E: list) -> list:
     X_list = [  get_initial_X_uniform(F, E), 
-                get_initial_X_average_demand(F, E), 
-                # Sget_initial_X_based_on_capacity(F, variables_de_decision.get_capacities(F), E), 
+                get_initial_X_average_demand(F, E),
                 get_initial_X_from_most_probable_scenario(F, E), 
-                get_initial_X_minimal(F)    ]
+                get_initial_X_minimal(F),
+                get_initial_X_higher_demand(F, E),
+                get_initial_X_pseudorandom(F, E)    ]
     
-    strategies = ["uniform", "average_demand", "most_probable_scenario", "minimal"]
-    
+    strategies = ["uniform", "average_demand", "most_probable_scenario", "minimal", "higher_demand", "pseudorandom"]
+
     Y_list = [modelo.get_objective_value(F, S, P, E, X) for X in X_list]
     
     pairs_of_X_Y = list(zip(X_list, Y_list, strategies))
@@ -76,6 +87,7 @@ def get_posible_X_sorted(F: list, S: list, P: list, E: list) -> list:
 
     X_list = [pair[0] for pair in pairs_of_X_Y]
     Y_list = [pair[1] for pair in pairs_of_X_Y]
+    strategies = [pair[2] for pair in pairs_of_X_Y] 
 
     return X_list, Y_list, strategies
 
@@ -83,9 +95,7 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
     X_list, Y_list, strategies = get_posible_X_sorted(F, S, P, E)
     results = []
 
-    print("X iniciales:", X_list)
-    print("Y iniciales:", Y_list)
-
+    conn = get_connection(load_config('db/database.ini', 'supply_chain'))
     for i in range(len(X_list)):
         initial_time = time.time()
 
@@ -96,7 +106,7 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
         Y_best = Y
 
         it = 0
-        print(f"Iteración {i}: X = {X_best}, Y = {Y_best}")
+        print(f"X inicial {X_best}, Y = {Y_best}")
 
         while it < max_iterations:
             X_1 = [X[i] - step for i in range(len(X))]
@@ -110,11 +120,37 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
             if X_best_neighbour > X_best and Y_best_neighbour > 0:
                 X_best = X_best_neighbour
                 Y_best = Y_best_neighbour
+                
+                query = f"""
+                            insert into experimentos_x_inicial (
+                                x_inicial, 
+                                y_inicial,
+                                step,
+                                cant_iteraciones,
+                                x_optimo, 
+                                y_optimo, 
+                                tiempo, 
+                                estrategia) 
+                            values (
+                                '{json.dumps(X)}',
+                                {Y},
+                                {step},
+                                {max_iterations},
+                                '{json.dumps(X_best)}', 
+                                {Y_best}, 
+                                {time.time() - initial_time:.2f}, 
+                                '{strategies[i]}');
+                            """
+                execute(conn, query)
 
             it += 1
-        
+
         total_time = time.time() - initial_time
+        print(f"Sol X = {X_best}, Y = {Y_best}, tiempo = {total_time:.2f} segundos")
         results.append((X_best, Y_best, total_time))
+
+    conn.close()
+    print("[okay] Connection to supply_chain closed")
     
     complete_results = {}
     for i in range(len(X_list)):
@@ -123,10 +159,11 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
         strategy = strategies[i]
         result = results[i]
         
-        complete_results[X] = {
+        complete_results[i] = {
+            "X": X,
             "Y": Y,
-            "best_X": result[0],
-            "best_Y": result[1],
+            "nuevo_X": result[0],
+            "nuevo_Y": result[1],
             "time": result[2],
             "strategy": strategy
         }
@@ -134,10 +171,6 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
     return complete_results
 
 def main():
-    ####################################################################
-    # Conjuntos
-    ####################################################################
-
     conn = get_connection(load_config('db/database.ini', 'supply_chain'))
 
     F = modelo.read_fabrication_centers(conn)
@@ -145,37 +178,36 @@ def main():
     P = modelo.read_points_of_sale(conn)
     E = modelo.read_scenarios(conn)
 
-    conn.close()
-    print("[okay] Connection to supply_chain closed")
-
-    results = optimization_heuristic_initial_x(F, S, P, E, step=5, max_iterations=1000000)
-    print("################ RESULT ################")
-    print(results)
-
-    print("################ DB ################")
-    conn = get_connection(load_config('db/database.ini', 'supply_chain'))
-    
     query = """
-            create table if not exists experimentos_x_inicial (
-                id serial primary key,
-                x_inicial decimal(10, 4),
-                y_inicial decimal(10, 4),
-                x_optimo decimal(10, 4),
-                y_optimo decimal(10, 4),
-                tiempo timestamp,
-                estrategia text
-            );
-            """
-    
-    # for x, result in results.items():
-    #     query += f"""
-    #         insert into experimentos_x_inicial (x_inicial, y_inicial, x_optimo, y_optimo, tiempo, estrategia) 
-    #         values ({x}, {result['Y']}, {result['best_X']}, {result['best_Y']}, {result['time']}, {{result['strategy']}});
-    #         """
-    
+        create table if not exists experimentos_x_inicial (
+            id serial primary key,
+            x_inicial text,
+            y_inicial decimal(15, 9),
+            step decimal(15, 2),
+            cant_iteraciones integer,
+            x_optimo text,
+            y_optimo decimal(15, 9),
+            tiempo decimal(15, 9),
+            estrategia text
+        );
+        """
     execute(conn, query)
+
     conn.close()
     print("[okay] Connection to supply_chain closed")
+
+    num_iterations = [100, 10000, 100000, 1000000, 10000000]
+    num_step = [0.05, 0.5, 1, 5, 10, 20, 40, 60, 80, 100]
+
+    for iteration in num_iterations:
+        for step in num_step:
+            print("################ EXECUTION ################")
+            print(f"Running with {iteration} iterations and step {step}")
+
+            results = optimization_heuristic_initial_x(F, S, P, E, step=step, max_iterations=iteration)
+            
+            print("################ RESULT ################")
+            print(results)
 
 if __name__ == "__main__":
     main()
