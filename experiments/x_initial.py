@@ -1,4 +1,4 @@
-import os, sys, time
+import os, sys, time, random
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/')))
@@ -56,15 +56,29 @@ def get_initial_X_from_most_probable_scenario(F: list, E: list) -> list:
 def get_initial_X_minimal(F: list, min_value: int = 100) -> list:
     return [min_value for _ in range(len(F))]
 
+# Toma las demandas máximas de cada punto de venta y las distribuye uniformemente entre los centros de fabricación.
+def get_initial_X_higher_demand(F: list, E: list) -> list:
+    total_demand = sum(max(d.values()) for d in modelo.get_demand_per_point_of_sale(E))
+    return [total_demand // (len(F) * len(E)) for _ in range(len(F))]
+
+# Genera valores de pseudorandoms basados en la suma de las demandas de todos los escenarios.
+def get_initial_X_pseudorandom(F: list, E: list, seed: int = 42) -> list:
+    random.seed(seed)
+    total_demand = sum(sum(d.values()) for d in modelo.get_demand_per_point_of_sale(E))
+
+    base_value = total_demand // (len(F) * len(E))
+    return [base_value + random.randint(1, 10) for _ in range(len(F))]
+
 def get_posible_X_sorted(F: list, S: list, P: list, E: list) -> list:
     X_list = [  get_initial_X_uniform(F, E), 
-                get_initial_X_average_demand(F, E), 
-                # get_initial_X_based_on_capacity(F, variables_de_decision.get_capacities(F), E), 
+                get_initial_X_average_demand(F, E),
                 get_initial_X_from_most_probable_scenario(F, E), 
-                get_initial_X_minimal(F)    ]
+                get_initial_X_minimal(F),
+                get_initial_X_higher_demand(F, E),
+                get_initial_X_pseudorandom(F, E)    ]
     
-    strategies = ["uniform", "average_demand", "most_probable_scenario", "minimal"]
-    
+    strategies = ["uniform", "average_demand", "most_probable_scenario", "minimal", "higher_demand", "pseudorandom"]
+
     Y_list = [modelo.get_objective_value(F, S, P, E, X) for X in X_list]
     
     pairs_of_X_Y = list(zip(X_list, Y_list, strategies))
@@ -72,6 +86,7 @@ def get_posible_X_sorted(F: list, S: list, P: list, E: list) -> list:
 
     X_list = [pair[0] for pair in pairs_of_X_Y]
     Y_list = [pair[1] for pair in pairs_of_X_Y]
+    strategies = [pair[2] for pair in pairs_of_X_Y] 
 
     return X_list, Y_list, strategies
 
@@ -81,6 +96,7 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
 
     print("X iniciales:", X_list)
     print("Y iniciales:", Y_list)
+    print("Estrategias:", strategies)
 
     for i in range(len(X_list)):
         initial_time = time.time()
@@ -163,11 +179,11 @@ def main():
             );
             """
     
-    # for x, result in results.items():
-    #     query += f"""
-    #         insert into experimentos_x_inicial (x_inicial, y_inicial, x_optimo, y_optimo, tiempo, estrategia) 
-    #         values ({x}, {result['Y']}, {result['best_X']}, {result['best_Y']}, {result['time']}, {{result['strategy']}});
-    #         """
+    for x, result in results.items():
+        query += f"""
+            insert into experimentos_x_inicial (x_inicial, y_inicial, x_optimo, y_optimo, tiempo, estrategia) 
+            values ({x}, {result['Y']}, {result['best_X']}, {result['best_Y']}, {result['time']}, {{result['strategy']}});
+            """
     
     execute(conn, query)
     conn.close()
