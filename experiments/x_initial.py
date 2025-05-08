@@ -1,3 +1,4 @@
+import datetime
 import os, sys, time, random
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
@@ -98,6 +99,7 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
     print("Y iniciales:", Y_list)
     print("Estrategias:", strategies)
 
+    conn = get_connection(load_config('db/database.ini', 'supply_chain'))
     for i in range(len(X_list)):
         initial_time = time.time()
 
@@ -108,7 +110,7 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
         Y_best = Y
 
         it = 0
-        print(f"Iteración {i}: X = {X_best}, Y = {Y_best}")
+        print(f"X inicial {X_best}, Y = {Y_best}")
 
         while it < max_iterations:
             X_1 = [X[i] - step for i in range(len(X))]
@@ -124,9 +126,35 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
                 Y_best = Y_best_neighbour
 
             it += 1
+
+            query = f"""
+                insert into experimentos_x_inicial (
+                    x_inicial, 
+                    y_inicial,
+                    step,
+                    iteracion,
+                    x_optimo, 
+                    y_optimo, 
+                    tiempo, 
+                    estrategia) 
+                values (
+                    '{json.dumps(X)}',
+                    {Y},
+                    {step},
+                    {it},
+                    '{json.dumps(X_best)}', 
+                    {Y_best}, 
+                    {time.time() - initial_time:.2f}, 
+                    '{strategies[i]}');
+                """
+            execute(conn, query)
         
         total_time = time.time() - initial_time
+        print(f"Sol X = {X_best}, Y = {Y_best}, tiempo = {total_time:.2f} segundos")
         results.append((X_best, Y_best, total_time))
+
+    conn.close()
+    print("[okay] Connection to supply_chain closed")
     
     complete_results = {}
     for i in range(len(X_list)):
@@ -135,10 +163,11 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
         strategy = strategies[i]
         result = results[i]
         
-        complete_results[X] = {
+        complete_results[i] = {
+            "X": X,
             "Y": Y,
-            "best_X": result[0],
-            "best_Y": result[1],
+            "nuevo_X": result[0],
+            "nuevo_Y": result[1],
             "time": result[2],
             "strategy": strategy
         }
@@ -157,37 +186,33 @@ def main():
     P = modelo.read_points_of_sale(conn)
     E = modelo.read_scenarios(conn)
 
-    conn.close()
-    print("[okay] Connection to supply_chain closed")
-
-    results = optimization_heuristic_initial_x(F, S, P, E, step=5, max_iterations=1000000)
-    print("################ RESULT ################")
-    print(results)
-
-    print("################ DB ################")
-    conn = get_connection(load_config('db/database.ini', 'supply_chain'))
-    
     query = """
-            create table if not exists experimentos_x_inicial (
-                id serial primary key,
-                x_inicial decimal(10, 4),
-                y_inicial decimal(10, 4),
-                x_optimo decimal(10, 4),
-                y_optimo decimal(10, 4),
-                tiempo timestamp,
-                estrategia text
-            );
-            """
-    
-    for x, result in results.items():
-        query += f"""
-            insert into experimentos_x_inicial (x_inicial, y_inicial, x_optimo, y_optimo, tiempo, estrategia) 
-            values ({x}, {result['Y']}, {result['best_X']}, {result['best_Y']}, {result['time']}, {{result['strategy']}});
-            """
-    
+        create table if not exists experimentos_x_inicial (
+            id serial primary key,
+            x_inicial text,
+            y_inicial decimal(15, 9),
+            step decimal(15, 2),
+            iteracion integer,
+            x_optimo text,
+            y_optimo decimal(15, 9),
+            tiempo decimal(15, 9),
+            estrategia text
+        );
+        """
     execute(conn, query)
+
     conn.close()
     print("[okay] Connection to supply_chain closed")
+
+    num_iterations = [100, 10000, 100000, 1000000, 10000000]
+    num_step = [0.05, 0.5, 1, 5, 10, 20, 40, 60, 80, 100]
+
+    for iteration in num_iterations:
+        for step in num_step:
+            print(f"Running with {iteration} iterations and step {step}")
+            results = optimization_heuristic_initial_x(F, S, P, E, step=step, max_iterations=iteration)
+            print("################ RESULT ################")
+            print(results)
 
 if __name__ == "__main__":
     main()
