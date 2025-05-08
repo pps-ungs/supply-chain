@@ -15,7 +15,7 @@ warnings.filterwarnings('ignore') # get rid of annoying pandas warnings
 ########################################################################
 
 ########################################################################
-# Conjunto de $kF$ centros de fabricación ✅
+# Conjunto de $kF$ centros de fabricación
 # ---------------------------------------
 #
 # Un centro de fabricación $f_i$ sólo tiene nombre, no tiene datos
@@ -26,7 +26,6 @@ warnings.filterwarnings('ignore') # get rid of annoying pandas warnings
 #
 # Importante: los centros de fabricación van con $i$.
 # i → centros de fabricación
-
 def read_fabrication_centers(conn: psycopg.Connection) -> list:
     fabrication_centers = read(conn, "select * from centro_de_fabricacion;")
     return fabrication_centers.to_dict(orient='records')
@@ -34,7 +33,7 @@ def read_fabrication_centers(conn: psycopg.Connection) -> list:
 ########################################################################
 
 ########################################################################
-# Conjunto de $kS$ centros de distribución ✅
+# Conjunto de $kS$ centros de distribución
 # ----------------------------------------
 #
 # Un centro de distribución $s_j$ sólo tiene nombre, no tiene datos
@@ -45,7 +44,6 @@ def read_fabrication_centers(conn: psycopg.Connection) -> list:
 #
 # Importante: los centros de distribución van con $j$.
 # j → centros de distribución
-
 def read_distribution_centers(conn: psycopg.Connection) -> list:
     distribution_centers = read(conn, "select * from centro_de_distribucion;")
     return distribution_centers.to_dict(orient='records')
@@ -53,7 +51,7 @@ def read_distribution_centers(conn: psycopg.Connection) -> list:
 ########################################################################
 
 ########################################################################
-# Conjunto de $kP$ puntos de venta ✅
+# Conjunto de $kP$ puntos de venta
 # --------------------------------
 #
 # Un punto de venta $p_k$ sólo tiene nombre, no tiene datos asociados.
@@ -64,7 +62,6 @@ def read_distribution_centers(conn: psycopg.Connection) -> list:
 #
 # Importante: los puntos de venta van con $k$.
 # k → puntos de venta
-
 def read_points_of_sale(conn: psycopg.Connection) -> list:
     points_of_sale = read(conn, "select * from punto_de_venta;")
     return points_of_sale.to_dict(orient='records')
@@ -74,26 +71,38 @@ def read_points_of_sale(conn: psycopg.Connection) -> list:
 ########################################################################
 # Conjunto de $kE$ escenarios de demanda posibles
 # -----------------------------------------------
+#
 # E = {e_1, e_2, ..., e_l, ..., e_kE}
 # E = [][]
 # l → escenarios
 def read_scenarios(conn: psycopg.Connection) -> list:
     scenarios = read(conn, "select * from escenario;")
     return scenarios.to_dict(orient='records')
-
+#
+########################################################################
 
 ########################################################################
 # 3. Parámetros
 ########################################################################
 
-# nota: todos estos parámetros son fijos, pero no necesariamente se 
-# obtienen de la base de datos.
-# ahora estan calculados a partir de valores base porque da más flexibilidad
-# a la hora de cambiar la cantidad de escenarios, puntos de venta, etc.
-# esto sirve para hacer pruebas con instancias más chicas.
-# cómo los calculamos y si tienen sentido, son cosas que tenemos que ver
+########################################################################
+# Nota:
+# -----
+#
+# Todos estos parámetros son fijos, pero no necesariamente se obtienen
+# de la base de datos.
+#
+# Ahora están calculados a partir de valores base porque da más
+# flexibilidad a la hora de cambiar la cantidad de escenarios, puntos de
+# venta, etc.
+#
+# Esto sirve para hacer pruebas con instancias más chicas.
+#
+# Cómo los calculamos y si tienen sentido, son cosas que tenemos que ver
 # con las pruebas.
-# podemos hacer un hardcodeo de los valores en la base de datos.
+#
+# Podemos hacer un hardcodeo de los valores en la base de datos.
+########################################################################
 
 ########################################################################
 # m: margen bruto del producto en cada punto de venta
