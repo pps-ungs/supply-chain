@@ -507,7 +507,7 @@ def optimization_heuristic(F: list, S: list, P: list, E: list, step: float = 1e-
 
     E = sorted(E, key=lambda x: x['probability'], reverse=True)
 
-    X = get_initial_X(E)
+    X = get_initial_X_minimal(F, 30)
     X_current = X
 
     ####################################################################
@@ -532,7 +532,8 @@ def optimization_heuristic(F: list, S: list, P: list, E: list, step: float = 1e-
         Y_1 = get_objective_value(F, S, P, E, X_1)
         Y_2 = get_objective_value(F, S, P, E, X_2) 
 
-        X_best_neighbour, Y_best_neighbour = get_best_sol([X, X_1, X_2], [Y, Y_1, Y_2])
+        # Evaluating the neighbourhood: FIXME
+        X_best_neighbour, Y_best_neighbour = None, None
 
         # Comparing the best solution with the current one
         # ???
@@ -706,28 +707,11 @@ def optimization_heuristic_with_strategy(F: list, S: list, P: list, E: list, ste
 
 ########################################################################
 
-def get_initial_X(E: list) -> list:
-    return [488 for _ in range(len(E))]
-
 def get_initial_X_random_restart(F: list, E: list) -> list:
     total_demand = sum(sum(d.values()) for d in get_demand_per_point_of_sale(E))
 
     base_value = total_demand // (len(F) * len(E))
     return [base_value + random.uniform(0, 10) for _ in range(len(F))]
-
-def get_x() -> list:
-    return [random.randint(0, 1000) for _ in range(10)]
-
-def get_best_sol(X: list, sol: list) -> list:
-    best_y = sol[0]
-    best_x = X[0]
-
-    for i in range(1, len(sol)):
-        if sol[i] > best_y:
-            best_y = sol[i]
-            best_x = X[i]
-
-    return [best_x, best_y]
 
 def get_objective_value(F, S, P, E, X):
     margin, pStk, pDIn, CTf2s, CTs2p = get_objective_function_values(F, S, P, E, X)
@@ -755,15 +739,3 @@ def get_objective_function_values(F, S, P, E, X):
     CTs2p = get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv)
 
     return [margin, pStk, pDIn, CTf2s, CTs2p]
-
-
-# F = ["f_0", "f_1", "f_2"]
-# S = ["c_0", "c_1", "c_2"]
-# P = ["p_0", "p_1", "p_2"]
-# d = [{"p_0": 1, "p_1": 1, "p_2": 1}, {"p_0": 1, "p_1": 1, "p_2": 1}]
-# wDS = [[3, 3, 3], [3, 3, 3], [3, 3, 3]] # cada centro de distr recibe 9 productos
-# cp = [[0.1, 0.1, 0.1], [0.1, 0.1, 0.1], [0.1, 0.1, 0.1]] # cada centro de distr envia el 30% a cada centro de venta
-# # cada punto de venta deberia recibir 3 productos, y quedarse con 2 sobrantes
-# wDP = generate_products_to_points_of_sale(F, S, P, wDS, cp)
-# Y, Z = generate_stock_and_unsatisfied_demand(S, P, d, wDP)
-# print(wDP, Y, Z)
