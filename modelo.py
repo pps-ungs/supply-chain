@@ -611,23 +611,20 @@ def optimization_heuristic_random_restart(F: list, S: list, P: list, E: list, st
 
         # Basic creation of neighbourhood
         # first improvement - multi change, con un step 20, 100.000 iteraciones, y 32 vecinos. 
-        X_1 = [X[i] - step for i in range(len(X))]
-        X_2 = [X[i] + step for i in range(len(X))]
+        neighbors = create_multi_change_neighbors(X_current, step, 32)
+        evaluated_neighbors = [(n, get_objective_value(F, S, P, E, n)) for n in neighbors]
 
         # Evaluation of the neighbourhood
-        # no entiendo porqué el resultado de la función objetivo es Y
-        Y_1 = get_objective_value(F, S, P, E, X_1)
-        Y_2 = get_objective_value(F, S, P, E, X_2) 
-
-        X_best_neighbour, Y_best_neighbour = get_best_sol([X, X_1, X_2], [Y, Y_1, Y_2])
+        best_n, best_y = first_improvement_eval(evaluated_neighbors, Y_best)
 
         # Comparing the best solution with the current one
         # ???
         # if X_best_neighbour > X_best and Y_best_neighbour > 0:
         #    X_best = X_best_neighbour
         #    Y_best = Y_best_neighbour
-        if X_neighbour > X_current:
-            X_current = X_neighbour
+        if best_n is not None:
+            X_best = best_n
+            Y_best = best_y
 
         ################################################################
         # Criterio de parada
