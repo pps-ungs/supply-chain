@@ -2,7 +2,6 @@ import random
 import re
 from db.config import load_config
 from db.database import *
-from variables_de_decision import *
 import warnings
 warnings.filterwarnings('ignore') # get rid of annoying pandas warnings
 
