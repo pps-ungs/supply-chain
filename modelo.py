@@ -507,11 +507,7 @@ def optimization_heuristic(F: list, S: list, P: list, E: list, step: float = 1e-
     E = sorted(E, key=lambda x: x['probability'], reverse=True)
 
     X = get_initial_X(E)
-    # Y = get_objective_value(F, S, P, E, X) # no entiendo porqué el resultado de la función objetivo es Y
-    
-    # X_best = X
     X_current = X
-    Y_best = Y # esta línea no tiene sentido?
 
     ####################################################################
     # Criterio de parada
@@ -546,7 +542,7 @@ def optimization_heuristic(F: list, S: list, P: list, E: list, step: float = 1e-
             X_current = X_neighbour
 
         ################################################################
-        # Criterio de parada
+        # Criterios de parada
         previous_sol = current_sol
         current_sol = get_objective_value(F, S, P, E, X_current)
         it += 1
@@ -558,7 +554,7 @@ def optimization_heuristic(F: list, S: list, P: list, E: list, step: float = 1e-
             print("[warning] previous solution is better than the current one")
         ################################################################
 
-    return [X_best, Y_best] + get_objective_function_values(F, S, P, E, X_best) + [get_objective_value(F, S, P, E, X_best)] + [limit_is_not_reached]
+    return [X_current, current_sol] + get_objective_function_values(F, S, P, E, X_current) + [get_objective_value(F, S, P, E, X_current)] + [limit_is_not_reached]
 
 ########################################################################
 # Heurística de optimización
@@ -591,12 +587,10 @@ def optimization_heuristic_random_restart(F: list, S: list, P: list, E: list, st
     X = get_initial_X_random_restart(F, E)
     # Y = get_objective_value(F, S, P, E, X) # no entiendo porqué el resultado de la función objetivo es Y
     
-    # X_best = X
     X_current = X
-    Y_best = Y # esta línea no tiene sentido?
 
     ####################################################################
-    # Criterio de parada
+    # Criterios de parada
     previous_sol = None
     current_sol = get_objective_value(F, S, P, E, X_current)
     current_sol_is_better = True
@@ -615,16 +609,13 @@ def optimization_heuristic_random_restart(F: list, S: list, P: list, E: list, st
         evaluated_neighbors = [(n, get_objective_value(F, S, P, E, n)) for n in neighbors]
 
         # Evaluation of the neighbourhood
-        best_n, best_y = first_improvement_eval(evaluated_neighbors, Y_best)
+        best_n, best_sol = first_improvement_eval(evaluated_neighbors, current_sol)
 
         # Comparing the best solution with the current one
         # ???
-        # if X_best_neighbour > X_best and Y_best_neighbour > 0:
-        #    X_best = X_best_neighbour
-        #    Y_best = Y_best_neighbour
         if best_n is not None:
-            X_best = best_n
-            Y_best = best_y
+            X_current = best_n
+            current_sol = best_sol
 
         ################################################################
         # Criterio de parada
@@ -639,7 +630,7 @@ def optimization_heuristic_random_restart(F: list, S: list, P: list, E: list, st
             print("[warning] previous solution is better than the current one")
         ################################################################
 
-    return [X_best, Y_best] + get_objective_function_values(F, S, P, E, X_best) + [get_objective_value(F, S, P, E, X_best)] + [limit_is_not_reached]
+    return [X_current, Y_best] + get_objective_function_values(F, S, P, E, X_current) + [get_objective_value(F, S, P, E, X_current)] + [limit_is_not_reached]
 
 ########################################################################
 
