@@ -3,7 +3,7 @@ import os, sys, time, random
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/')))
-import modelo
+import model
 
 from db.config import *
 from db.database import *
@@ -11,7 +11,7 @@ from db.database import *
 # La demanda uniforme de cada centro de fabricacion se calcula como la suma de las demandas 
 # de todos los escenarios dividida por el número de escenarios.
 def get_initial_X_uniform(F: list, E: list) -> list:
-    total_demand = sum(sum(d.values()) for d in modelo.get_demand_per_point_of_sale(E))
+    total_demand = sum(sum(d.values()) for d in model.get_demand_per_point_of_sale(E))
     num_fabrication_centers = len(F)
     base_value = total_demand // (num_fabrication_centers * len(E))
 
@@ -23,7 +23,7 @@ def get_initial_X_average_demand(F: list, E: list) -> list:
     average_demand = {}
     num_scenarios = len(E)
 
-    for scenario in modelo.get_demand_per_point_of_sale(E):
+    for scenario in model.get_demand_per_point_of_sale(E):
         for key, value in scenario.items():
             if key not in average_demand:
                 average_demand[key] = 0
@@ -39,7 +39,7 @@ def get_initial_X_average_demand(F: list, E: list) -> list:
 # La demanda de cada centro de fabricacion se calcula como la suma de las demandas
 # Del escenario más probable
 def get_initial_X_from_most_probable_scenario(F: list, E: list) -> list:
-    probabilities = modelo.get_probability_of_occurrence(E)
+    probabilities = model.get_probability_of_occurrence(E)
 
     for i in range(len(E)):
         scenario = E[i]
@@ -47,7 +47,7 @@ def get_initial_X_from_most_probable_scenario(F: list, E: list) -> list:
 
     E = sorted(E, key=lambda x: x['probability'], reverse=True)
 
-    single_scenario = modelo.get_demand_per_point_of_sale(E)[0] # Escenario más probable
+    single_scenario = model.get_demand_per_point_of_sale(E)[0] # Escenario más probable
     total_demand = sum(single_scenario.values())
     num_fabrication_centers = len(F)
 
@@ -59,13 +59,13 @@ def get_initial_X_minimal(F: list, min_value: int = 30) -> list:
 
 # Toma las demandas máximas de cada punto de venta y las distribuye uniformemente entre los centros de fabricación.
 def get_initial_X_higher_demand(F: list, E: list) -> list:
-    total_demand = sum(max(d.values()) for d in modelo.get_demand_per_point_of_sale(E))
+    total_demand = sum(max(d.values()) for d in model.get_demand_per_point_of_sale(E))
     return [total_demand // (len(F) * len(E)) for _ in range(len(F))]
 
 # Genera valores de pseudorandoms basados en la suma de las demandas de todos los escenarios.
 def get_initial_X_pseudorandom(F: list, E: list, seed: int = 42) -> list:
     random.seed(seed)
-    total_demand = sum(sum(d.values()) for d in modelo.get_demand_per_point_of_sale(E))
+    total_demand = sum(sum(d.values()) for d in model.get_demand_per_point_of_sale(E))
 
     base_value = total_demand // (len(F) * len(E))
     return [base_value + random.randint(1, 10) for _ in range(len(F))]
@@ -80,7 +80,7 @@ def get_posible_X_sorted(F: list, S: list, P: list, E: list) -> list:
     
     strategies = ["uniform", "average_demand", "most_probable_scenario", "minimal", "higher_demand", "pseudorandom"]
 
-    Y_list = [modelo.get_objective_value(F, S, P, E, X) for X in X_list]
+    Y_list = [model.get_objective_value(F, S, P, E, X) for X in X_list]
     
     pairs_of_X_Y = list(zip(X_list, Y_list, strategies))
     pairs_of_X_Y.sort(key=lambda x: x[1], reverse=True)
@@ -112,10 +112,10 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
             X_1 = [X[i] - step for i in range(len(X))]
             X_2 = [X[i] + step for i in range(len(X))]
 
-            Y_1 = modelo.get_objective_value(F, S, P, E, X_1)
-            Y_2 = modelo.get_objective_value(F, S, P, E, X_2)
+            Y_1 = model.get_objective_value(F, S, P, E, X_1)
+            Y_2 = model.get_objective_value(F, S, P, E, X_2)
 
-            X_best_neighbour, Y_best_neighbour = modelo.get_best_sol([X, X_1, X_2], [Y, Y_1, Y_2])
+            X_best_neighbour, Y_best_neighbour = model.get_best_sol([X, X_1, X_2], [Y, Y_1, Y_2])
 
             if X_best_neighbour > X_best and Y_best_neighbour > 0:
                 X_best = X_best_neighbour
@@ -173,10 +173,10 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
 def main():
     conn = get_connection(load_config('db/database.ini', 'supply_chain'))
 
-    F = modelo.read_fabrication_centers(conn)
-    S = modelo.read_distribution_centers(conn)
-    P = modelo.read_points_of_sale(conn)
-    E = modelo.read_scenarios(conn)
+    F = model.read_fabrication_centers(conn)
+    S = model.read_distribution_centers(conn)
+    P = model.read_points_of_sale(conn)
+    E = model.read_scenarios(conn)
 
     query = """
         create table if not exists experimentos_x_inicial (

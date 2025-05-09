@@ -3,7 +3,7 @@ import os
 import random
 import time
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../modelo')))
-import modelo
+import model
 
 
 ########################################################################
@@ -115,14 +115,14 @@ def get_eval_strategies():
 #* Creación de vecinos: strategy.
 def optimization_heuristic_neighbors_exp(F: list, S: list, P: list, E: list, step: float, neighbor_strategy: callable, num_neighbors=5, max_iterations=1000) -> list:
     X = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100] 
-    Y = modelo.get_objective_value(F, S, P, E, X)
+    Y = model.get_objective_value(F, S, P, E, X)
     X_best = X
     Y_best = Y
     it = 0
     while it < max_iterations:
         neighbors = neighbor_strategy(X_best, step, num_neighbors)
         # Lista de tuplas: (vecino, valor_objetivo)
-        evaluated = [(n, modelo.get_objective_value(F, S, P, E, n)) for n in neighbors]
+        evaluated = [(n, model.get_objective_value(F, S, P, E, n)) for n in neighbors]
         # Se elige el que tiene el mayor valor de función objetivo.
         #  best_n: mejor vecino, best_y: valor objetivo
         best_n, best_y = max(evaluated, key=lambda t: t[1])
@@ -132,20 +132,20 @@ def optimization_heuristic_neighbors_exp(F: list, S: list, P: list, E: list, ste
         else:
             break
         it += 1
-    return [X_best, Y_best] + modelo.get_objective_function_values(F, S, P, E, X_best) 
+    return [X_best, Y_best] + model.get_objective_function_values(F, S, P, E, X_best) 
 
 #* Evaluación de vecinos: strategy.
 #* Creación de vecinos: exhaustive
 def optimization_heuristic_eval_exp(F: list, S: list, P: list, E: list, step:20, eval_strategy: callable, max_iterations=10000) -> list:
     X = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100] 
-    Y = modelo.get_objective_value(F, S, P, E, X)
+    Y = model.get_objective_value(F, S, P, E, X)
     X_best = X
     Y_best = Y
     it = 0
     while it < max_iterations:
         neighbors = create_exhaustive_neighbors(X_best, step)
         # lista de tuplas: [(vecino1, valor obj), (vecino2, valor obj), ..., (vecinoN, valor obj)]
-        evaluated = [(n, modelo.get_objective_value(F, S, P, E, n)) for n in neighbors]
+        evaluated = [(n, model.get_objective_value(F, S, P, E, n)) for n in neighbors]
 
         best_n, best_y = eval_strategy(evaluated, Y_best)
         if best_n is not None:
@@ -154,19 +154,19 @@ def optimization_heuristic_eval_exp(F: list, S: list, P: list, E: list, step:20,
         else:
             break
         it += 1
-    return [X_best, Y_best] + modelo.get_objective_function_values(F, S, P, E, X_best) 
+    return [X_best, Y_best] + model.get_objective_function_values(F, S, P, E, X_best) 
 
 #* Evaluación de vecinos: strategy.
 #* Creación de vecinos: strategy.
 def optimization_heuristic_neighbors_exp(F: list, S: list, P: list, E: list, step: float, neighbor_strategy: callable, eval_strategy: callable, num_neighbors=5, max_iterations=1000) -> list:
     X = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100] 
-    Y = modelo.get_objective_value(F, S, P, E, X)
+    Y = model.get_objective_value(F, S, P, E, X)
     X_best = X
     Y_best = Y
     it = 0
     while it < max_iterations:
         neighbors = neighbor_strategy(X_best, step, num_neighbors)
-        evaluated = [(n, modelo.get_objective_value(F, S, P, E, n)) for n in neighbors]
+        evaluated = [(n, model.get_objective_value(F, S, P, E, n)) for n in neighbors]
 
         best_n, best_y = eval_strategy(evaluated, Y_best)
         if best_n is not None:
@@ -175,7 +175,7 @@ def optimization_heuristic_neighbors_exp(F: list, S: list, P: list, E: list, ste
         else:
             break
         it += 1
-    return [X_best, Y_best] + modelo.get_objective_function_values(F, S, P, E, X_best) 
+    return [X_best, Y_best] + model.get_objective_function_values(F, S, P, E, X_best) 
 
 ########################################################################
 # Correr experimentos

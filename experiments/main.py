@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../d
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../modelo')))
 
 from db.database import *
-from modelo import *
+from model import *
 from experiments.run_experiments import *
 
 def main():

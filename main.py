@@ -1,7 +1,7 @@
 import time
 from db.config import *
 from db.database import *
-from modelo import *
+from model import *
 
 
 def main():
