@@ -54,8 +54,8 @@ def get_initial_X_from_most_probable_scenario(F: list, E: list) -> list:
     return [total_demand // num_fabrication_centers for _ in range(num_fabrication_centers)]
 
 # Mínimo valor de stock inicial para cada centro de fabricacion
-def get_initial_X_minimal(F: list, min_value: int = 100) -> list:
-    return [min_value for _ in range(len(F))]
+def get_initial_X_minimal(F: list, min_value: int = 30) -> list:
+    return [min_value + i**2 for i in range(len(F))]
 
 # Toma las demandas máximas de cada punto de venta y las distribuye uniformemente entre los centros de fabricación.
 def get_initial_X_higher_demand(F: list, E: list) -> list:

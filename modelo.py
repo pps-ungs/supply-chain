@@ -1,7 +1,8 @@
-import random
+import random, sys
 import re
 from db.config import load_config
 from db.database import *
+from criteria import *
 import warnings
 warnings.filterwarnings('ignore') # get rid of annoying pandas warnings
 
@@ -538,8 +539,8 @@ def optimization_heuristic(F: list, S: list, P: list, E: list, step: float = 1e-
         # if X_best_neighbour > X_best and Y_best_neighbour > 0:
         #    X_best = X_best_neighbour
         #    Y_best = Y_best_neighbour
-        if X_neighbour > X_current:
-            X_current = X_neighbour
+        # if X_neighbour > X_current:
+        #    X_current = X_neighbour
 
         ################################################################
         # Criterios de parada
@@ -599,11 +600,8 @@ def optimization_heuristic_random_restart(F: list, S: list, P: list, E: list, st
     ####################################################################
 
     while current_sol_is_better and limit_is_not_reached:
-        # Generating a new solution...
-        # X = get_x()       para random restart
-        # Y = get_objective_value(F, S, P, E, X)
-
-        # Basic creation of neighbourhood
+        # generar X
+        
         # first improvement - multi change, con un step 20, 100.000 iteraciones, y 32 vecinos. 
         neighbors = create_multi_change_neighbors(X_current, step, 32)
         evaluated_neighbors = [(n, get_objective_value(F, S, P, E, n)) for n in neighbors]
@@ -611,8 +609,6 @@ def optimization_heuristic_random_restart(F: list, S: list, P: list, E: list, st
         # Evaluation of the neighbourhood
         best_n, best_sol = first_improvement_eval(evaluated_neighbors, current_sol)
 
-        # Comparing the best solution with the current one
-        # ???
         if best_n is not None:
             X_current = best_n
             current_sol = best_sol
@@ -630,7 +626,7 @@ def optimization_heuristic_random_restart(F: list, S: list, P: list, E: list, st
             print("[warning] previous solution is better than the current one")
         ################################################################
 
-    return [X_current, Y_best] + get_objective_function_values(F, S, P, E, X_current) + [get_objective_value(F, S, P, E, X_current)] + [limit_is_not_reached]
+    return [X_current, current_sol] + get_objective_function_values(F, S, P, E, X_current) + [get_objective_value(F, S, P, E, X_current)] + [limit_is_not_reached]
 
 ########################################################################
 # Metaheurística de optimización
@@ -651,7 +647,7 @@ def optimization_heuristic_random_restart(F: list, S: list, P: list, E: list, st
 # 5. limit_is_not_reached: si se alcanzó el límite de iteraciones. Si es True significa que
 #    hizo pocas iteraciones y encontró la mejor solución. Si es False puede ser indicativo de
 #    que no encontró la mejor solución.
-def optimization_heuristic_with_strategy(strategy: str = "uniform",  F: list, S: list, P: list, E: list, step: float = 1e-3, epsilon: float = 1e-12, max_iterations_allowed: int = 1e12, max_stuck_allowed: int = 1e3) -> list:
+def optimization_heuristic_with_strategy(F: list, S: list, P: list, E: list, step: float = 1e-3, epsilon: float = 1e-12, max_iterations_allowed: int = 1e12, max_stuck_allowed: int = 1e3, strategy: str = "uniform") -> list:
     probabilities = get_probability_of_occurrence(E)
 
     for i in range(len(E)):
@@ -660,8 +656,8 @@ def optimization_heuristic_with_strategy(strategy: str = "uniform",  F: list, S:
 
     E = sorted(E, key=lambda x: x['probability'], reverse=True)
 
-    X_initial = get_initial_X_with_strategy(F, E, strategy)
-    X_current = X
+    X_initial = get_initial_X_minimal(F, 30)
+    X_current = X_initial   
 
     ####################################################################
     # Criterios de parada
@@ -674,17 +670,12 @@ def optimization_heuristic_with_strategy(strategy: str = "uniform",  F: list, S:
     ####################################################################
 
     while sol_current_is_better and limit_is_not_reached and stuck < max_stuck_allowed:
-        # Generating a new solution...
-        # X = get_x()       para random restart
-        # Y = get_objective_value(F, S, P, E, X)
-
-        # Basic creation of neighbourhood
         # first improvement - multi change, con un step 20, 100.000 iteraciones, y 32 vecinos. 
         neighbors = create_multi_change_neighbors(X_current, step, 32)
         evaluated_neighbors = [(n, get_objective_value(F, S, P, E, n)) for n in neighbors]
 
         # Evaluation of the neighbourhood
-        best_n, best_sol = first_improvement_eval(evaluated_neighbors, current_sol)
+        best_n, best_sol = first_improvement_eval(evaluated_neighbors, sol_current)
 
         # Comparing the best solution with the current one
         if best_n is not None:
@@ -708,7 +699,7 @@ def optimization_heuristic_with_strategy(strategy: str = "uniform",  F: list, S:
             print("[warning] previous solution is better than the current one")
 
         if sol_current < 0:
-            print(f"[warning] current solution is negative: {current_sol}")
+            print(f"[warning] current solution is negative: {sol_current}")
         ################################################################
 
     return [X_current, sol_current] + get_objective_function_values(F, S, P, E, X_current) + [get_objective_value(F, S, P, E, X_current)] + [limit_is_not_reached]
