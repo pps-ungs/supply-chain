@@ -174,7 +174,7 @@ def get_demand_per_point_of_sale(E):
         rounded_demands.append(rounded_data)
     return rounded_demands
 
-# cf = curva de distribucion de los productos fabricados a los diferentes centros de distribucion
+# cf = curva de distribución de los productos fabricados a los diferentes centros de distribución
 def get_distribution_curve_from_fabrication_to_distribution(F, S):
     base_pattern = [1, 2, 3, 4, 5]
     matrix = []
@@ -185,7 +185,7 @@ def get_distribution_curve_from_fabrication_to_distribution(F, S):
         matrix.append(curve)
     return matrix
 
-# cp = curva de distribucion de los productos entregados en los centros de distribucion que se deben enviar a los puntos de venta
+# cp = curva de distribución de los productos entregados en los centros de distribución que se deben enviar a los puntos de venta
 def get_distribution_curve_from_distribution_to_sale(S, P):
     base_pattern = [1, 2, 3, 4, 5]
     matrix = []
@@ -261,7 +261,7 @@ def get_penalty_unsatisfied_demand(E, P, Z, pi, pdi):
     return pDIn
 
 # costo de transportar los productos desde los centros 
-# de fabricacion a los centros de distribucion
+# de fabricación a los centros de distribución
 def get_transportation_cost_from_fabrication_to_distribution(F, S, wDS, ct):
     CTf2s = 0
     for i in range(len(F)):
@@ -270,7 +270,7 @@ def get_transportation_cost_from_fabrication_to_distribution(F, S, wDS, ct):
     return CTf2s
 
 # costo de transportar los productos desde los centros 
-# de distribucion a los puntos de venta
+# de distribución a los puntos de venta
 def get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv):
     CTs2p = 0
     for k in range(len(P)):
@@ -278,7 +278,25 @@ def get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv):
             CTs2p += wDP[j][k] * cv[j][k]
     return CTs2p
 
-def optimization_heuristic(F: list, S: list, P: list, E: list, step: float, max_iterations: int = 1000) -> list:
+########################################################################
+# Heurística de optimización
+# F: centros de fabricación
+# S: centros de distribución
+# P: puntos de venta
+# E: escenarios
+# step: tamaño del paso para la búsqueda local
+# epsilon: tolerancia para la convergencia, es un valor muy pequeño
+# max_iterations_allowed: número máximo de iteraciones permitidas, es un valor grande
+#
+# Devuelve una lista con los siguientes elementos:
+# 1. X_current: mejor solución encontrada
+# 2. algo?
+# 3. algo?
+# 4. algo?
+# 5. limit_is_not_reached: si se alcanzó el límite de iteraciones. Si es True significa que
+#    hizo pocas iteraciones y encontró la mejor solución. Si es False puede ser indicativo de
+#    que no encontró la mejor solución.
+def optimization_heuristic(F: list, S: list, P: list, E: list, step: float = 1e-3, epsilon: float = 1e-12, max_iterations_allowed: int = 1e12) -> list:
     # this should be on the database
     probabilities = get_probability_of_occurrence(E)
 
@@ -289,15 +307,22 @@ def optimization_heuristic(F: list, S: list, P: list, E: list, step: float, max_
     E = sorted(E, key=lambda x: x['probability'], reverse=True)
 
     X = get_initial_X(E)
-    Y = get_objective_value(F, S, P, E, X)
+    # Y = get_objective_value(F, S, P, E, X) # no entiendo porqué el resultado de la función objetivo es Y
     
-    X_best = X
-    Y_best = Y
+    # X_best = X
+    X_current = X
+    Y_best = Y # esta línea no tiene sentido?
 
-    actual_sol = 0
+    ####################################################################
+    # Criterio de parada
+    previous_sol = None
+    current_sol = get_objective_value(F, S, P, E, X_current)
+    current_sol_is_better = True
     it = 0
+    limit_is_not_reached = True
+    ####################################################################
 
-    while it < max_iterations:  # Basic termination condition. fixme with a better one
+    while current_sol_is_better and limit_is_not_reached:
         # Generating a new solution...
         # X = get_x()       para random restart
         # Y = get_objective_value(F, S, P, E, X)
@@ -307,20 +332,36 @@ def optimization_heuristic(F: list, S: list, P: list, E: list, step: float, max_
         X_2 = [X[i] + step for i in range(len(X))]
 
         # Evaluation of the neighbourhood
+        # no entiendo porqué el resultado de la función objetivo es Y
         Y_1 = get_objective_value(F, S, P, E, X_1)
-        Y_2 = get_objective_value(F, S, P, E, X_2)
+        Y_2 = get_objective_value(F, S, P, E, X_2) 
 
         X_best_neighbour, Y_best_neighbour = get_best_sol([X, X_1, X_2], [Y, Y_1, Y_2])
 
         # Comparing the best solution with the current one
-        if X_best_neighbour > X_best and Y_best_neighbour > 0:
-            X_best = X_best_neighbour
-            Y_best = Y_best_neighbour
+        # ???
+        # if X_best_neighbour > X_best and Y_best_neighbour > 0:
+        #    X_best = X_best_neighbour
+        #    Y_best = Y_best_neighbour
+        if X_neighbour > X_current:
+            X_current = X_neighbour
 
-        # Shall we stop when we dont find a better solution?
+        ################################################################
+        # Criterio de parada
+        previous_sol = current_sol
+        current_sol = get_objective_value(F, S, P, E, X_current)
         it += 1
+        limit_is_not_reached = it < max_iterations_allowed
+        current_sol_is_better = abs(current_sol - previous_sol) > epsilon
+        if current_sol < 0:
+            print(f"[warning] current solution is negative: {current_sol}")
+        if previous_sol > current_sol:
+            print("[warning] previous solution is better than the current one")
+        ################################################################
 
-    return [X_best, Y_best] + get_objective_function_values(F, S, P, E, X_best) + [get_objective_value(F, S, P, E, X_best)]
+    return [X_best, Y_best] + get_objective_function_values(F, S, P, E, X_best) + [get_objective_value(F, S, P, E, X_best)] + [limit_is_not_reached]
+#
+########################################################################
 
 def get_initial_X(E: list) -> list:
     return [488 for _ in range(len(E))]
