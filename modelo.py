@@ -633,6 +633,87 @@ def optimization_heuristic_random_restart(F: list, S: list, P: list, E: list, st
     return [X_current, Y_best] + get_objective_function_values(F, S, P, E, X_current) + [get_objective_value(F, S, P, E, X_current)] + [limit_is_not_reached]
 
 ########################################################################
+# Metaheurística de optimización
+#
+# F: centros de fabricación
+# S: centros de distribución
+# P: puntos de venta
+# E: escenarios
+# step: tamaño del paso para la búsqueda local
+# epsilon: tolerancia para la convergencia, es un valor muy pequeño
+# max_iterations_allowed: número máximo de iteraciones permitidas, es un valor grande
+#
+# Devuelve una lista con los siguientes elementos:
+# 1. X_current: mejor solución encontrada
+# 2. algo?
+# 3. algo?
+# 4. algo?
+# 5. limit_is_not_reached: si se alcanzó el límite de iteraciones. Si es True significa que
+#    hizo pocas iteraciones y encontró la mejor solución. Si es False puede ser indicativo de
+#    que no encontró la mejor solución.
+def optimization_heuristic_with_strategy(strategy: str = "uniform",  F: list, S: list, P: list, E: list, step: float = 1e-3, epsilon: float = 1e-12, max_iterations_allowed: int = 1e12, max_stuck_allowed: int = 1e3) -> list:
+    probabilities = get_probability_of_occurrence(E)
+
+    for i in range(len(E)):
+        scenario = E[i]
+        scenario["probability"] = probabilities[i]
+
+    E = sorted(E, key=lambda x: x['probability'], reverse=True)
+
+    X_initial = get_initial_X_with_strategy(F, E, strategy)
+    X_current = X
+
+    ####################################################################
+    # Criterios de parada
+    previous_sol = None
+    sol_current = get_objective_value(F, S, P, E, X_current)
+    sol_current_is_better = True
+    it = 0
+    limit_is_not_reached = True
+    stuck = 0
+    ####################################################################
+
+    while sol_current_is_better and limit_is_not_reached and stuck < max_stuck_allowed:
+        # Generating a new solution...
+        # X = get_x()       para random restart
+        # Y = get_objective_value(F, S, P, E, X)
+
+        # Basic creation of neighbourhood
+        # first improvement - multi change, con un step 20, 100.000 iteraciones, y 32 vecinos. 
+        neighbors = create_multi_change_neighbors(X_current, step, 32)
+        evaluated_neighbors = [(n, get_objective_value(F, S, P, E, n)) for n in neighbors]
+
+        # Evaluation of the neighbourhood
+        best_n, best_sol = first_improvement_eval(evaluated_neighbors, current_sol)
+
+        # Comparing the best solution with the current one
+        if best_n is not None:
+            X_current = best_n
+            sol_current = best_sol
+
+        ################################################################
+        # Criterios de parada
+        sol_previous = sol_current
+        sol_current = get_objective_value(F, S, P, E, X_current)
+        it += 1
+        limit_is_not_reached = it < max_iterations_allowed
+        if sol_current == sol_previous: # esto puede traer problemas por floating point precision
+            stuck += 1
+            print("[warning] stuck in local optimum")
+        elif sol_current > sol_previous:
+            stuck = 0
+            sol_current_is_better = abs(sol_current - sol_previous) > epsilon
+        else: # sol_current < sol_previous
+            stuck = 0
+            print("[warning] previous solution is better than the current one")
+
+        if sol_current < 0:
+            print(f"[warning] current solution is negative: {current_sol}")
+        ################################################################
+
+    return [X_current, sol_current] + get_objective_function_values(F, S, P, E, X_current) + [get_objective_value(F, S, P, E, X_current)] + [limit_is_not_reached]
+
+########################################################################
 
 def get_initial_X(E: list) -> list:
     return [488 for _ in range(len(E))]
