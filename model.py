@@ -516,9 +516,10 @@ def optimization_heuristic_with_strategy(F: list, S: list, P: list, E: list, ste
     it = 0
     limit_is_not_reached = True
     stuck = 0
+    is_not_stuck = True
     ####################################################################
 
-    while sol_current_is_better and limit_is_not_reached and stuck < max_stuck_allowed:
+    while sol_current_is_better and limit_is_not_reached and is_not_stuck:
         # first improvement - multi change, con un step 20, 100.000 iteraciones, y 32 vecinos. 
         neighbors = create_multi_change_neighbors(X_current, step, 32)
         evaluated_neighbors = [(n, get_objective_value(F, S, P, E, n)) for n in neighbors]
@@ -537,6 +538,7 @@ def optimization_heuristic_with_strategy(F: list, S: list, P: list, E: list, ste
         sol_current = get_objective_value(F, S, P, E, X_current)
         it += 1
         limit_is_not_reached = it < max_iterations_allowed
+        is_not_stuck = stuck < max_stuck_allowed
         if sol_current == sol_previous: # esto puede traer problemas por floating point precision
             stuck += 1
             print("[warning] stuck in local optimum")
