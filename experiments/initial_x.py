@@ -72,11 +72,26 @@ def get_posible_X_sorted(F: list, S: list, P: list, E: list) -> list:
     X_list = [  get_initial_X_uniform(F, E), 
                 get_initial_X_average_demand(F, E),
                 get_initial_X_from_most_probable_scenario(F, E), 
-                get_initial_X_minimal(F),
+                get_initial_X_minimal(F, 10),
+                get_initial_X_minimal(F, 20),
+                get_initial_X_minimal(F, 30),
+                get_initial_X_minimal(F, 40),
+                get_initial_X_minimal(F, 50),
                 get_initial_X_higher_demand(F, E),
                 get_initial_X_pseudorandom(F, E)    ]
     
-    strategies = ["uniform", "average_demand", "most_probable_scenario", "minimal", "higher_demand", "pseudorandom"]
+    strategies = [
+                    "uniform", 
+                    "average_demand", 
+                    "most_probable_scenario", 
+                    "minimal_10", 
+                    "minimal_20", 
+                    "minimal_30", 
+                    "minimal_40", 
+                    "minimal_50", 
+                    "higher_demand", 
+                    "pseudorandom"
+                ]
 
     Y_list = [model.get_objective_value(F, S, P, E, X) for X in X_list]
     
@@ -194,7 +209,7 @@ def main():
     conn.close()
     print("[okay] Connection to supply_chain closed")
 
-    num_iterations = [100, 10000, 100000, 1000000, 10000000]
+    num_iterations = [100, 10000, 100000]
     num_step = [0.05, 0.5, 1, 5, 10, 20, 40, 60, 80, 100]
 
     for iteration in num_iterations:
