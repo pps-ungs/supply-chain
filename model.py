@@ -2,7 +2,6 @@ import random, sys
 import re
 from db.config import load_config
 from db.database import *
-from criteria import *
 import warnings
 warnings.filterwarnings('ignore') # get rid of annoying pandas warnings
 
@@ -516,36 +515,37 @@ def optimization_heuristic(
     E = sorted(E, key=lambda x: x['probability'], reverse=True)
 
     X_initial = get_initial_X_minimal(F, 30)
-    sol_initial = get_objective_value(F, S, P, E, X_initial)
+    Z_initial = get_objective_value(F, S, P, E, X_initial)
+
     X_current = X_initial
-    sol_current = sol_initial
+    Z_current = Z_initial
 
     it = 0
     stuck = 0
 
     ####################################################################
     # Criterios de parada
-    sol_current_is_better = True
+    Z_current_is_better = True
     limit_is_not_reached = True
     is_not_stuck = True
     ####################################################################
 
-    while sol_current_is_better and limit_is_not_reached and is_not_stuck:
+    while Z_current_is_better and limit_is_not_reached and is_not_stuck:
         # first improvement - multi change, con un step 20, 100.000 iteraciones, y 32 vecinos. 
         neighbors = create_multi_change_neighbors(X_current, step, 32)
         evaluated_neighbors = [(n, get_objective_value(F, S, P, E, n)) for n in neighbors]
 
         # Evaluation of the neighbourhood
-        best_n, best_sol = first_improvement_eval(evaluated_neighbors, sol_current)
+        best_n, best_z = first_improvement_eval(evaluated_neighbors, Z_current)
 
         # Comparing the best solution with the current one
         if best_n is not None:
             X_current = best_n
-            sol_previous = sol_current
-            sol_current = best_sol
+            Z_previous = Z_current
+            Z_current = best_z
 
-        print(f"[debugging] it: {it} sol_current : {sol_current}")
-        print(f"[debugging] it: {it} sol_previous: {sol_previous}")
+        print(f"[debugging] it: {it} Z_current : {Z_current}")
+        print(f"[debugging] it: {it} Z_previous: {Z_previous}")
 
         ################################################################
         # Criterios de parada
@@ -555,18 +555,18 @@ def optimization_heuristic(
         limit_is_not_reached = it < max_iterations_allowed
         #
         # 2. Estancamiento:
-        if sol_current == sol_previous:
+        if Z_current == Z_previous:
             stuck += 1
-            print(f"[warning] stuck in local optimum {sol_current} for {stuck} iterations")
-        elif sol_current > sol_previous:
+            print(f"[warning] stuck in local optimum {Z_current} for {stuck} iterations")
+        elif Z_current > Z_previous:
             stuck = 0
             # 3. Mejora entre las iteraciones
             #
             # Si la mejora es mayor a epsilon, se considera que la
             # solución actual es mejor que la anterior, y se sigue
             # buscando.
-            sol_current_is_better = abs(sol_current - sol_previous) > epsilon
-        else: # sol_current < sol_previous
+            Z_current_is_better = abs(Z_current - Z_previous) > epsilon
+        else: # Z_current < Z_previous
             # Este es el caso en el que la solución anterior es mejor.
             # Si pasa esto no está claro qué hacer, por el momento, no
             # se hace nada, simplemente continua con la siguiente
@@ -574,19 +574,50 @@ def optimization_heuristic(
             stuck = 0
             print("[warning] previous solution is better than the current one")
 
-        if sol_current < 0:
-            print(f"[warning] current solution is negative: {sol_current}")
+        if Z_current < 0:
+            print(f"[warning] current solution is negative: {Z_current}")
 
         is_not_stuck = stuck < max_stuck_allowed
         ################################################################
 
-    return [X_current, sol_current] + get_objective_function_values(F, S, P, E, X_current) + [get_objective_value(F, S, P, E, X_current)] + [limit_is_not_reached]
+        print("coso", Z_current)
+
+    return [X_current, Z_current] + get_objective_function_values(F, S, P, E, X_current) + [get_objective_value(F, S, P, E, X_current)] + [limit_is_not_reached]
 #
 ########################################################################
 
 # Mínimo valor de stock inicial para cada centro de fabricación
 def get_initial_X_minimal(F: list, min_value: int = 30) -> list:
     return [min_value + i**2 for i in range(len(F))]
+
+# Retorna una lista de vecindarios, en los cuales entre 1 y 3 de los
+# vecinos es ligeramente diferente al valor de X en el mismo índice.
+# Crea num_neighbors vecindarios.
+#
+# Ejemplo de return para num_neighbors=2:
+#   [[100, 100.5, 100, 100, 100, 100, 100, 100, 100, 100.5], [100, 100, 100, 99.5, 100, 99.5, 100, 100, 99.5, 100]]
+def create_multi_change_neighbors(X, step, num_neighbors):
+    neighbors = []
+    for _ in range(num_neighbors):
+        neighbor = X[:]
+        for _ in range(random.randint(1, 3)):
+            i = random.randint(0, len(X)-1)
+            delta = random.choice([-step, step])
+            if neighbor[i] + delta >= 0:
+                neighbor[i] += delta
+        neighbors.append(neighbor)
+    return neighbors
+
+# Retorna la primera solución que mejora la solución actual.
+#
+# evaluated: lista de tuplas --> [(vecino1, valor obj), (vecino2, valor obj), ..., (vecinoN, valor obj)]
+# current_value: mejor valor objetivo actual.
+# Retorna una tupla: (mejor vecino, mejor funcion objetivo) o (None, valor objetivo actual)
+def first_improvement_eval(evaluated, current_value):
+    for n, z in evaluated:
+        if z > current_value:
+            return n, z
+    return None, current_value
 
 """ DELETE ME?
 def get_initial_X_random_restart(F: list, E: list) -> list:

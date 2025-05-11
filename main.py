@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import time
 from db.config import *
 from db.database import *
@@ -22,11 +24,11 @@ def main():
     print("[okay] Connection to supply_chain closed")
 
     t = time.time()
-    X, Y, margin, pStk, pDIn, CTf2s, CTs2p, objective_value, limit_is_not_reached = optimization_heuristic_with_strategy(F, S, P, E, 0.5, 100000)
+    X, Z, margin, pStk, pDIn, CTf2s, CTs2p, objective_value, limit_is_not_reached = optimization_heuristic(F, S, P, E, 0.5, 100000)
 
     print("################ RESULT ################")
     print("X:", X)
-    print("Y:", Y)
+    print("Z:", Z)
     print("Margin:", margin)
     print("pStk:", pStk)
     print("pDIn:", pDIn)
