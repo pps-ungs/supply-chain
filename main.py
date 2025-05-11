@@ -24,20 +24,19 @@ def main():
     print("[okay] Connection to supply_chain closed")
 
     t = time.time()
-    X, Z, margin, pStk, pDIn, CTf2s, CTs2p, objective_value, limit_is_not_reached = optimization_heuristic(F, S, P, E, 0.5, 100000)
+    X, Z, margin, pStk, pDIn, CTf2s, CTs2p, halting_condition = optimization_heuristic(F=F, S=S, P=P, E=E, step=20, epsilon=1e-12, max_iterations_allowed=1e2, max_stuck_allowed=1e3)
 
-    print("################ RESULT ################")
+    print("############################### RESULTS ################################")
     print("X:", X)
-    print("Z:", Z)
+    print("Z:", Z) # Objective function value
     print("Margin:", margin)
     print("pStk:", pStk)
     print("pDIn:", pDIn)
     print("CTf2s:", CTf2s)
     print("CTs2p:", CTs2p)
-    print("Objective value:", objective_value)
-    print("Limit is not reached:", limit_is_not_reached)
+    print("Halting condition:", halting_condition)
     print("Time:", time.time() - t)
-    print("########################################")
+    print("########################################################################")
 
 if __name__ == "__main__":
     main()

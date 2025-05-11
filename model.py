@@ -544,9 +544,6 @@ def optimization_heuristic(
             Z_previous = Z_current
             Z_current = best_z
 
-        print(f"[debugging] it: {it} Z_current : {Z_current}")
-        print(f"[debugging] it: {it} Z_previous: {Z_previous}")
-
         ################################################################
         # Criterios de parada
         #
@@ -572,17 +569,23 @@ def optimization_heuristic(
             # se hace nada, simplemente continua con la siguiente
             # iteración.
             stuck = 0
-            print("[warning] previous solution is better than the current one")
+            print("[warning] previous objective value is better than the current one")
 
         if Z_current < 0:
-            print(f"[warning] current solution is negative: {Z_current}")
+            print(f"[warning] current objective value is negative: {Z_current}")
 
         is_not_stuck = stuck < max_stuck_allowed
         ################################################################
 
-        print("coso", Z_current)
+    halting_condition = None
+    if not Z_current_is_better:
+        halting_condition = "Satisfactory solution found"
+    elif not limit_is_not_reached:
+        halting_condition = "Maximum number of iterations"
+    elif not is_not_stuck:
+        halting_condition = "Stuck in local optimum"
 
-    return [X_current, Z_current] + get_objective_function_values(F, S, P, E, X_current) + [get_objective_value(F, S, P, E, X_current)] + [limit_is_not_reached]
+    return [X_current, Z_current] + get_objective_function_values(F, S, P, E, X_current) + [halting_condition]
 #
 ########################################################################
 
@@ -645,11 +648,17 @@ def get_objective_function_values(F, S, P, E, X):
     wDS = generate_products_to_distribution_center(X, S, cf)
     wDP = generate_products_to_points_of_sale(F, S, P, wDS, cp)
     Y, Z = generate_stock_and_unsatisfied_demand(S, P, d, wDP)
-    
+
     margin = get_margin(E, P, S, wDP, Y, pi, m)
     pStk = get_penalty_stock(E, P, Y, pi, ps)
     pDIn = get_penalty_unsatisfied_demand(E, P, Z, pi, pdi)
     CTf2s = get_transportation_cost_from_fabrication_to_distribution(F, S, wDS, ct)
     CTs2p = get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv)
+
+    print(f"[debugging] margin: {margin}")
+    print(f"[debugging] pStk: {pStk}")
+    print(f"[debugging] pDIn: {pDIn}")
+    print(f"[debugging] CTf2s: {CTf2s}")
+    print(f"[debugging] CTs2p: {CTs2p}")
 
     return [margin, pStk, pDIn, CTf2s, CTs2p]
