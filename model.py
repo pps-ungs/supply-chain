@@ -590,7 +590,7 @@ def optimization_heuristic(
 ########################################################################
 
 # Mínimo valor de stock inicial para cada centro de fabricación
-def get_initial_X_minimal(F: list, min_value: int = 30) -> list:
+def get_initial_X_minimal(F: list, min_value: int = 10) -> list:
     return [min_value + i**2 for i in range(len(F))]
 
 # Retorna una lista de vecindarios, en los cuales entre 1 y 3 de los
