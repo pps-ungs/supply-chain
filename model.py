@@ -507,7 +507,7 @@ def optimization_heuristic_with_strategy(F: list, S: list, P: list, E: list, ste
     E = sorted(E, key=lambda x: x['probability'], reverse=True)
 
     X_initial = get_initial_X_minimal(F, 30)
-    X_current = X_initial   
+    X_current = X_initial
 
     ####################################################################
     # Criterios de parada

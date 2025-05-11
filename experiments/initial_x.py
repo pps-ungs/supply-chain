@@ -1,14 +1,12 @@
 import datetime
 import os, sys, time, random
-
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/')))
 import model
-
 from db.config import *
 from db.database import *
 
-# La demanda uniforme de cada centro de fabricacion se calcula como la suma de las demandas 
+# La demanda uniforme de cada centro de fabricación se calcula como la suma de las demandas 
 # de todos los escenarios dividida por el número de escenarios.
 def get_initial_X_uniform(F: list, E: list) -> list:
     total_demand = sum(sum(d.values()) for d in model.get_demand_per_point_of_sale(E))
@@ -17,7 +15,7 @@ def get_initial_X_uniform(F: list, E: list) -> list:
 
     return [base_value + i for i in range(num_fabrication_centers)]
 
-# La demanda promedio de cada centro de fabricacion se calcula como la suma de las demandas
+# La demanda promedio de cada centro de fabricación se calcula como la suma de las demandas
 # promedio de todos los punto de venta en todos los escenarios dividida por el número de escenarios.
 def get_initial_X_average_demand(F: list, E: list) -> list:
     average_demand = {}
@@ -36,7 +34,7 @@ def get_initial_X_average_demand(F: list, E: list) -> list:
     num_fabrication_centers = len(F)
     return [total_average_demand // num_fabrication_centers for _ in range(num_fabrication_centers)]
 
-# La demanda de cada centro de fabricacion se calcula como la suma de las demandas
+# La demanda de cada centro de fabricación se calcula como la suma de las demandas
 # Del escenario más probable
 def get_initial_X_from_most_probable_scenario(F: list, E: list) -> list:
     probabilities = model.get_probability_of_occurrence(E)
@@ -53,7 +51,7 @@ def get_initial_X_from_most_probable_scenario(F: list, E: list) -> list:
 
     return [total_demand // num_fabrication_centers for _ in range(num_fabrication_centers)]
 
-# Mínimo valor de stock inicial para cada centro de fabricacion
+# Mínimo valor de stock inicial para cada centro de fabricación
 def get_initial_X_minimal(F: list, min_value: int = 30) -> list:
     return [min_value + i**2 for i in range(len(F))]
 
