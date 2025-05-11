@@ -655,10 +655,4 @@ def get_objective_function_values(F, S, P, E, X):
     CTf2s = get_transportation_cost_from_fabrication_to_distribution(F, S, wDS, ct)
     CTs2p = get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv)
 
-    print(f"[debugging] margin: {margin}")
-    print(f"[debugging] pStk: {pStk}")
-    print(f"[debugging] pDIn: {pDIn}")
-    print(f"[debugging] CTf2s: {CTf2s}")
-    print(f"[debugging] CTs2p: {CTs2p}")
-
     return [margin, pStk, pDIn, CTf2s, CTs2p]

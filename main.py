@@ -24,7 +24,7 @@ def main():
     print("[okay] Connection to supply_chain closed")
 
     t = time.time()
-    X, Z, margin, pStk, pDIn, CTf2s, CTs2p, halting_condition = optimization_heuristic(F=F, S=S, P=P, E=E, step=20, epsilon=1e-12, max_iterations_allowed=1e2, max_stuck_allowed=1e3)
+    X, Z, margin, pStk, pDIn, CTf2s, CTs2p, halting_condition = optimization_heuristic(F=F, S=S, P=P, E=E, step=20, epsilon=1e-12, max_iterations_allowed=1e3, max_stuck_allowed=1e3)
 
     print("############################### RESULTS ################################")
     print("X:", X)
