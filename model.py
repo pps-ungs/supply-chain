@@ -497,7 +497,7 @@ def get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv):
 # 5. limit_is_not_reached: si se alcanzó el límite de iteraciones. Si es True significa que
 #    hizo pocas iteraciones y encontró la mejor solución. Si es False puede ser indicativo de
 #    que no encontró la mejor solución.
-def optimization_heuristic_with_strategy(F: list, S: list, P: list, E: list, step: float = 1e-3, epsilon: float = 1e-12, max_iterations_allowed: int = 1e12, max_stuck_allowed: int = 1e3, strategy: str = "uniform") -> list:
+def optimization_heuristic_with_strategy(F: list, S: list, P: list, E: list, step: float = 1e-3, epsilon: float = 1e-12, max_iterations_allowed: int = 1e12, max_stuck_allowed: int = 1e3) -> list:
     probabilities = get_probability_of_occurrence(E)
 
     for i in range(len(E)):
@@ -507,15 +507,17 @@ def optimization_heuristic_with_strategy(F: list, S: list, P: list, E: list, ste
     E = sorted(E, key=lambda x: x['probability'], reverse=True)
 
     X_initial = get_initial_X_minimal(F, 30)
+    sol_initial = get_objective_value(F, S, P, E, X_initial)
     X_current = X_initial
+    sol_current = sol_initial
+
+    it = 0
+    stuck = 0
 
     ####################################################################
     # Criterios de parada
-    sol_current = get_objective_value(F, S, P, E, X_current)
     sol_current_is_better = True
-    it = 0
     limit_is_not_reached = True
-    stuck = 0
     is_not_stuck = True
     ####################################################################
 
@@ -530,38 +532,57 @@ def optimization_heuristic_with_strategy(F: list, S: list, P: list, E: list, ste
         # Comparing the best solution with the current one
         if best_n is not None:
             X_current = best_n
+            sol_previous = sol_current
             sol_current = best_sol
+
+        print(f"[debugging] it: {it} sol_current : {sol_current}")
+        print(f"[debugging] it: {it} sol_previous: {sol_previous}")
 
         ################################################################
         # Criterios de parada
-        sol_previous = sol_current
-        sol_current = get_objective_value(F, S, P, E, X_current)
+        #
+        # Número máximo de iteraciones:
         it += 1
         limit_is_not_reached = it < max_iterations_allowed
-        is_not_stuck = stuck < max_stuck_allowed
-        if sol_current == sol_previous: # esto puede traer problemas por floating point precision
+        # Estancamiento:
+        if sol_current == sol_previous:
             stuck += 1
-            print("[warning] stuck in local optimum")
+            print(f"[warning] stuck in local optimum {sol_current} for {stuck} iterations")
         elif sol_current > sol_previous:
             stuck = 0
+            # Si la mejora es mayor a epsilon, se considera que la
+            # solución actual es mejor que la anterior, y se sigue
+            # buscando.
             sol_current_is_better = abs(sol_current - sol_previous) > epsilon
         else: # sol_current < sol_previous
+            # Este es el caso en el que la solución anterior es mejor.
+            # Si pasa esto no está claro qué hacer, por el momento, no
+            # se hace nada, simplemente continua con la siguiente
+            # iteración.
             stuck = 0
             print("[warning] previous solution is better than the current one")
 
         if sol_current < 0:
             print(f"[warning] current solution is negative: {sol_current}")
+
+        is_not_stuck = stuck < max_stuck_allowed
         ################################################################
 
     return [X_current, sol_current] + get_objective_function_values(F, S, P, E, X_current) + [get_objective_value(F, S, P, E, X_current)] + [limit_is_not_reached]
 
 ########################################################################
 
+# Mínimo valor de stock inicial para cada centro de fabricación
+def get_initial_X_minimal(F: list, min_value: int = 30) -> list:
+    return [min_value + i**2 for i in range(len(F))]
+
+""" DELETE ME?
 def get_initial_X_random_restart(F: list, E: list) -> list:
     total_demand = sum(sum(d.values()) for d in get_demand_per_point_of_sale(E))
 
     base_value = total_demand // (len(F) * len(E))
     return [base_value + random.uniform(0, 10) for _ in range(len(F))]
+"""
 
 def get_objective_value(F, S, P, E, X):
     margin, pStk, pDIn, CTf2s, CTs2p = get_objective_function_values(F, S, P, E, X)
