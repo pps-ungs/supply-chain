@@ -479,7 +479,7 @@ def get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv):
     return CTs2p
 
 ########################################################################
-# Metaheurística de optimización
+# Escalador de colinas
 #
 # F: centros de fabricación
 # S: centros de distribución
@@ -497,7 +497,16 @@ def get_transportation_cost_from_distribution_to_sale(S, P, wDP, cv):
 # 5. limit_is_not_reached: si se alcanzó el límite de iteraciones. Si es True significa que
 #    hizo pocas iteraciones y encontró la mejor solución. Si es False puede ser indicativo de
 #    que no encontró la mejor solución.
-def optimization_heuristic_with_strategy(F: list, S: list, P: list, E: list, step: float = 1e-3, epsilon: float = 1e-12, max_iterations_allowed: int = 1e12, max_stuck_allowed: int = 1e3) -> list:
+def optimization_heuristic(
+        F: list,
+        S: list,
+        P: list,
+        E: list,
+        step: int = 20, # ?
+        epsilon: float = 1e-12,
+        max_iterations_allowed: int = 1e12,
+        max_stuck_allowed: int = 1e3) -> list:
+
     probabilities = get_probability_of_occurrence(E)
 
     for i in range(len(E)):
@@ -541,15 +550,18 @@ def optimization_heuristic_with_strategy(F: list, S: list, P: list, E: list, ste
         ################################################################
         # Criterios de parada
         #
-        # Número máximo de iteraciones:
+        # 1. Número máximo de iteraciones:
         it += 1
         limit_is_not_reached = it < max_iterations_allowed
-        # Estancamiento:
+        #
+        # 2. Estancamiento:
         if sol_current == sol_previous:
             stuck += 1
             print(f"[warning] stuck in local optimum {sol_current} for {stuck} iterations")
         elif sol_current > sol_previous:
             stuck = 0
+            # 3. Mejora entre las iteraciones
+            #
             # Si la mejora es mayor a epsilon, se considera que la
             # solución actual es mejor que la anterior, y se sigue
             # buscando.
@@ -569,7 +581,7 @@ def optimization_heuristic_with_strategy(F: list, S: list, P: list, E: list, ste
         ################################################################
 
     return [X_current, sol_current] + get_objective_function_values(F, S, P, E, X_current) + [get_objective_value(F, S, P, E, X_current)] + [limit_is_not_reached]
-
+#
 ########################################################################
 
 # Mínimo valor de stock inicial para cada centro de fabricación
