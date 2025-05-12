@@ -565,11 +565,11 @@ def optimization_heuristic(
             Z_current_is_better = abs(Z_current - Z_previous) > epsilon
         else: # Z_current < Z_previous
             # Este es el caso en el que la solución anterior es mejor.
-            # Si pasa esto no está claro qué hacer, por el momento, no
-            # se hace nada, simplemente continua con la siguiente
-            # iteración.
+            # Nosotros usamos greedy local search, por ende, no se
+            # debería dar este caso. Pero si se da, es porque la
+            # solución anterior es mejor que la actual.
             stuck = 0
-            print("[warning] previous objective value is better than the current one")
+            raise Exception(f"?previous objective value {Z_previous} is better than the current one {Z_current}")
 
         if Z_current < 0:
             print(f"[warning] current objective value is negative: {Z_current}")
