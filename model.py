@@ -514,7 +514,7 @@ def optimization_heuristic(
 
     E = sorted(E, key=lambda x: x['probability'], reverse=True)
 
-    X_initial = get_initial_X_minimal(F, 30)
+    X_initial = get_initial_X_minimal(F, 50)
     Z_initial = get_objective_value(F, S, P, E, X_initial)
 
     X_current = X_initial
@@ -590,7 +590,7 @@ def optimization_heuristic(
 ########################################################################
 
 # Mínimo valor de stock inicial para cada centro de fabricación
-def get_initial_X_minimal(F: list, min_value: int = 30) -> list:
+def get_initial_X_minimal(F: list, min_value: int = 10) -> list:
     return [min_value + i**2 for i in range(len(F))]
 
 # Retorna una lista de vecindarios, en los cuales entre 1 y 3 de los
