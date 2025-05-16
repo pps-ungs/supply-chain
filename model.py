@@ -1,5 +1,5 @@
 import random, sys
-import re
+# import re
 from db.config import load_config
 from db.database import *
 import warnings
