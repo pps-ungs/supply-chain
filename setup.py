@@ -53,7 +53,7 @@ print("[okay] Connection closed")
 
 # Mock
 # a = input("Do you want to dump (backup to a file) the database? (y/n): ")
-# dump("db/data/supply_chain_dump.sql")
+# dump("db/data/supply_chain_dump.sql", conn)
 
 # a = input("Do you want to restore the database from the dump file? (y/n): ")
 # restore("db/data/supply_chain_dump.sql")
