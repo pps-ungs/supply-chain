@@ -140,25 +140,35 @@ def insert_data_from_dataframe(conn: psycopg.Connection, insert_statement: str, 
     except (psycopg.DatabaseError, Exception) as e:
         print(f"?error inserting data: {e}")
 
-def dump(filepath: str) -> None:
-    if os.name == 'posix':
-        command = f"pg_dump -U postgres supply_chain"
-    elif os.name == 'nt':  # Windows?
-        command = f"pg_dump -U postgres supply_chain"  # Windows command?
-    else:
-        raise Exception("?unsupported operating system")
+def dump(filepath: str, config: dict) -> None:
+    dbname = "supply_chain"
+    user = config["user"]
+    password = config["password"]
+
+    env = os.environ.copy()
+    env["PGPASSWORD"] = password
+
+    command = [
+        "pg_dump",
+        "-U", user,
+        dbname
+    ]
 
     try:
-        database_dump = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
-        print(database_dump.stdout)
-        with open(filepath, "w") as f:
-            f.write(database_dump.stdout)
-    except subprocess.CalledProcessError as e:
-        print(f"?error executing command: {e}")
-        print(e.stderr)
-    finally:
+        result = subprocess.run(
+            command,
+            env=env,
+            check=True,
+            capture_output=True,
+            text=True,
+            shell=(os.name == 'nt')
+        )
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(result.stdout)
         print("[okay] database dumped")
-
+    except subprocess.CalledProcessError as e:
+        print(f"[error] Error ejecutando pg_dump: {e}")
+        print(e.stderr)
 
 def restore(filepath: str) -> None:
     config = load_config('db/database.ini', 'postgres')
