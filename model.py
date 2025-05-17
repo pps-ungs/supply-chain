@@ -356,7 +356,7 @@ def get_unit_transportation_cost_from_fabrication_to_distribution(F: list, S: li
 def get_unit_transportation_cost_from_distribution_to_sale(S: list, P: list) -> list:
     base_cost = 1.5
     base_values = [1, 2, 3, 4, 5, 6]
-    return [[base_values[(j + k) % len(base_values)] * 2 + base_cost for j in range(len(S))] for k in range(len(P))]
+    return [[base_values[(j + k) % len(base_values)] * 2 + base_cost for k in range(len(P))] for j in range(len(S))]
 #
 ########################################################################
 
