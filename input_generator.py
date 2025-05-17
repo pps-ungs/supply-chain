@@ -112,7 +112,7 @@ def generate(path_to_files: str) -> None:
         for l in range(kE):
             E.append([])
             for k in P:
-                demand = np.random.uniform(min_demand, max_demand)
+                demand = int(np.random.uniform(min_demand, max_demand))
                 E[l].append((k[0], demand))
         return None
     #
@@ -123,27 +123,26 @@ def generate(path_to_files: str) -> None:
     # ------------------------------------------------------------------
     #
     #
-    path_to_files = "./db/data/conjuntos"
 
     # Conjunto de centros de fabricación
     F = list()
-    for i in range(0, 10):
+    for i in range(0, 4):
         add_fabrication_center(F, f"f_{i}")
-    write_csv.add_rows(f"{path_to_files}/centros_de_fabricacion.csv",["nombre", "data"], F)
+    write_csv.add_rows(f"{path_to_files}/fabrication_centers.csv",["nombre", "data"], F)
     print_fabrication_centers(F)
 
     # Conjunto de centros de distribución
     S = list()
     for i in range(0, 10):
         add_distribution_center(S, f"s_{i}")
-    write_csv.add_rows(f"{path_to_files}/centros_de_distribucion.csv",["nombre", "data"], S)
+    write_csv.add_rows(f"{path_to_files}/distribution_centers.csv",["nombre", "data"], S)
     print_distribution_centers(S)
 
     # Conjunto de puntos de venta
     P = list()
-    for i in range(0, 10):
+    for i in range(0, 50):
         add_point_of_sale(P, f"p_{i}")
-    write_csv.add_rows(f"{path_to_files}/puntos_de_venta.csv",["nombre", "data"], P)
+    write_csv.add_rows(f"{path_to_files}/points_of_sale.csv",["nombre", "data"], P)
     print_points_of_sale(P)
 
     # Conjunto de escenarios de demanda
@@ -151,9 +150,11 @@ def generate(path_to_files: str) -> None:
     # demandas mínima y máxima es arbitraria, por ahora. Estos valores se deberían
     # definir en base a la heurística, y a las pruebas que hagamos.
     E = list()
-    generate_demand_scenarios_with_monte_carlo(E=E, P=P, kE=500, min_demand=1, max_demand=100)
-    write_csv.add_rows_json(f"{path_to_files}/escenarios.csv",["nombre", "data"], E)
+    generate_demand_scenarios_with_monte_carlo(E=E, P=P, kE=500, min_demand=100, max_demand=500)
+    write_csv.add_rows_json(f"{path_to_files}/scenarios.csv",["nombre", "data"], E)
     # print_demand_scenarios(E)
     print("500 scenarios have been created.")
     #
     ####################################################################
+
+generate(path_to_files="./db/data/conjuntos")
