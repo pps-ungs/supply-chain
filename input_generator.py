@@ -16,15 +16,16 @@ def generate(path_to_files: str) -> None:
             F.append([fabrication_center, None])
         return None
 
+    # NOT USED: Esta función no se utiliza en el código actual.
     # Elimina un centro de fabricación de la lista F.
-    def remove_fabrication_center(F: list, fabrication_center: str) -> None:
-        try:
-            for fab_center in F:
-                if fab_center[0] == fabrication_center:
-                    F.remove(fab_center)
-        except ValueError:
-            raise ValueError(f"?centro de fabricación {fabrication_center} no está en la lista.")
-        return None
+    # def remove_fabrication_center(F: list, fabrication_center: str) -> None:
+    #     try:
+    #         for fab_center in F:
+    #             if fab_center[0] == fabrication_center:
+    #                 F.remove(fab_center)
+    #     except ValueError:
+    #         raise ValueError(f"?centro de fabricación {fabrication_center} no está en la lista.")
+    #     return None
 
     # Imprime los centros de fabricación en la lista F.
     def print_fabrication_centers(F: list) -> None:
@@ -43,15 +44,16 @@ def generate(path_to_files: str) -> None:
             S.append([distribution_center, None])
         return None
 
+    # NOT USED: Esta función no se utiliza en el código actual.
     # Elimina un centro de distribución de la lista S.
-    def remove_distribution_center(S: list, distribution_center: str) -> None:
-        try:
-            for dis_center in S:
-                if dis_center[0] == distribution_center:
-                    S.remove(dis_center)
-        except ValueError:
-            raise ValueError(f"?centro de distribución {distribution_center} no está en la lista.")
-        return None
+    # def remove_distribution_center(S: list, distribution_center: str) -> None:
+    #     try:
+    #         for dis_center in S:
+    #             if dis_center[0] == distribution_center:
+    #                 S.remove(dis_center)
+    #     except ValueError:
+    #         raise ValueError(f"?centro de distribución {distribution_center} no está en la lista.")
+    #     return None
 
     # Imprime los centros de distribución en la lista S.
     def print_distribution_centers(S: list) -> None:
@@ -70,15 +72,16 @@ def generate(path_to_files: str) -> None:
             P.append([point_of_sale, None])
         return None
 
+    # NOT USED: Esta función no se utiliza en el código actual.
     # Elimina un punto de venta de la lista P.
-    def remove_point_of_sale(P: list, point_of_sale: str) -> None:
-        try:
-            for point in P:
-                if point[0] == point_of_sale:
-                    P.remove(point)
-        except ValueError:
-            raise ValueError(f"?punto de venta {point_of_sale} no está en la lista.")
-        return None
+    # def remove_point_of_sale(P: list, point_of_sale: str) -> None:
+    #     try:
+    #         for point in P:
+    #             if point[0] == point_of_sale:
+    #                 P.remove(point)
+    #     except ValueError:
+    #         raise ValueError(f"?punto de venta {point_of_sale} no está en la lista.")
+    #     return None
 
     # Imprime los puntos de venta en la lista P.
     def print_points_of_sale(P: list) -> None:
@@ -122,8 +125,6 @@ def generate(path_to_files: str) -> None:
     # Generacion de conjuntos
     # ------------------------------------------------------------------
     #
-    #
-
     # Conjunto de centros de fabricación
     F = list()
     for i in range(0, 4):
