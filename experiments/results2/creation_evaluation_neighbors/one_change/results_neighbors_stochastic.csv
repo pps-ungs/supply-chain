@@ -1,0 +1,25 @@
+Evaluation strategy,Neighbor strategy,Best Y,Num neighbors,Num. iterations,Step,Time
+stochastic_selection_eval,create_one_change_neighbors,123751.4233500024,64,10000,10,67.69342017173767
+stochastic_selection_eval,create_one_change_neighbors,123669.08161756367,64,10000,20,24.403900861740112
+stochastic_selection_eval,create_one_change_neighbors,123080.95709185679,64,10000,40,6.033937931060791
+stochastic_selection_eval,create_one_change_neighbors,121865.78873786413,64,10000,60,1.1943292617797852
+stochastic_selection_eval,create_one_change_neighbors,123167.13432530573,64,10000,80,3.577038049697876
+stochastic_selection_eval,create_one_change_neighbors,123605.08872583156,64,10000,100,6.784245014190674
+stochastic_selection_eval,create_one_change_neighbors,123836.54647195511,64,100000,10,75.17548608779907
+stochastic_selection_eval,create_one_change_neighbors,123778.01566143749,64,100000,20,31.895097970962524
+stochastic_selection_eval,create_one_change_neighbors,123050.05486195302,64,100000,40,6.812902212142944
+stochastic_selection_eval,create_one_change_neighbors,122221.76491261287,64,100000,60,1.8057129383087158
+stochastic_selection_eval,create_one_change_neighbors,123361.23317861707,64,100000,80,5.588418006896973
+stochastic_selection_eval,create_one_change_neighbors,123583.178179934,64,100000,100,5.105093002319336
+stochastic_selection_eval,create_one_change_neighbors,123798.0576455551,64,1000000,10,84.853266954422
+stochastic_selection_eval,create_one_change_neighbors,123794.376868314,64,1000000,20,33.04610776901245
+stochastic_selection_eval,create_one_change_neighbors,123137.17438870462,64,1000000,40,6.872513055801392
+stochastic_selection_eval,create_one_change_neighbors,122157.5065461572,64,1000000,60,1.8301961421966553
+stochastic_selection_eval,create_one_change_neighbors,123183.00439584679,64,1000000,80,3.631272792816162
+stochastic_selection_eval,create_one_change_neighbors,123583.178179934,64,1000000,100,4.613882303237915
+stochastic_selection_eval,create_one_change_neighbors,123936.65552492334,64,10000000,10,88.37535285949707
+stochastic_selection_eval,create_one_change_neighbors,123749.07668017347,64,10000000,20,33.40418982505798
+stochastic_selection_eval,create_one_change_neighbors,123064.77441240432,64,10000000,40,6.964707136154175
+stochastic_selection_eval,create_one_change_neighbors,122492.06366213386,64,10000000,60,1.8928303718566895
+stochastic_selection_eval,create_one_change_neighbors,123029.82893067392,64,10000000,80,3.1430819034576416
+stochastic_selection_eval,create_one_change_neighbors,123623.27836160896,64,10000000,100,6.613550901412964

@@ -1,0 +1,25 @@
+Evaluation strategy,Neighbor strategy,Best Y,Num neighbors,Num. iterations,Step,Time
+greedy_selection_eval,create_one_change_neighbors,123882.51165065936,64,10000,10,46.3860878944397
+greedy_selection_eval,create_one_change_neighbors,123827.03492429116,64,10000,20,20.934834957122803
+greedy_selection_eval,create_one_change_neighbors,123258.3645623453,64,10000,40,5.946949005126953
+greedy_selection_eval,create_one_change_neighbors,122374.86888350963,64,10000,60,1.1997580528259277
+greedy_selection_eval,create_one_change_neighbors,122867.82383660068,64,10000,80,1.794306993484497
+greedy_selection_eval,create_one_change_neighbors,123765.48945253406,64,10000,100,4.479276895523071
+greedy_selection_eval,create_one_change_neighbors,123793.9497540956,64,100000,10,37.90383195877075
+greedy_selection_eval,create_one_change_neighbors,123887.8631452679,64,100000,20,23.33620309829712
+greedy_selection_eval,create_one_change_neighbors,123258.3645623453,64,100000,40,5.93576979637146
+greedy_selection_eval,create_one_change_neighbors,122374.86888350963,64,100000,60,1.1850459575653076
+greedy_selection_eval,create_one_change_neighbors,122867.82383660068,64,100000,80,1.7760028839111328
+greedy_selection_eval,create_one_change_neighbors,123725.38927085884,64,100000,100,4.432512044906616
+greedy_selection_eval,create_one_change_neighbors,123935.80730900734,64,1000000,10,53.51985287666321
+greedy_selection_eval,create_one_change_neighbors,123875.69750107221,64,1000000,20,23.340468883514404
+greedy_selection_eval,create_one_change_neighbors,123274.75365082562,64,1000000,40,6.13399076461792
+greedy_selection_eval,create_one_change_neighbors,122374.86888350963,64,1000000,60,1.1666500568389893
+greedy_selection_eval,create_one_change_neighbors,122867.82383660068,64,1000000,80,42.32739019393921
+greedy_selection_eval,create_one_change_neighbors,123765.48945253406,64,1000000,100,3.9941298961639404
+greedy_selection_eval,create_one_change_neighbors,123806.13631663127,64,10000000,10,937.9324440956116
+greedy_selection_eval,create_one_change_neighbors,123859.49827595742,64,10000000,20,920.0838589668274
+greedy_selection_eval,create_one_change_neighbors,123258.3645623453,64,10000000,40,6.627846956253052
+greedy_selection_eval,create_one_change_neighbors,122374.86888350963,64,10000000,60,1.338974952697754
+greedy_selection_eval,create_one_change_neighbors,122867.82383660068,64,10000000,80,2.011234998703003
+greedy_selection_eval,create_one_change_neighbors,123725.38927085884,64,10000000,100,5.00466775894165
