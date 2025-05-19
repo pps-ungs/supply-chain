@@ -66,8 +66,9 @@ def run_creation_aval_neighbors_experiment(F: list, S:list, P:list, E:list):
                         if name_c != "exhaustive":
                             for n in range(len(num_neigbors)):
                                 result = neighborhood.run_heuristic_with_all_strategies(F=F, S=S, P=P, E=E, step=num_step[s], neighbor_strategy=func_c, eval_strategy=func_e, num_neighbors=num_neigbors[n], max_iterations=num_iterations[i])
+                                results.append(result)
                         else:
                             result = neighborhood.run_heuristic_with_all_strategies(F=F, S=S, P=P, E=E, step=num_step[s], neighbor_strategy=func_c, eval_strategy=func_e, num_neighbors=0, max_iterations=num_iterations[i])
-                        results.append(result)
+                            results.append(result)
 
                 writeCSV(filename=f"{dir}/{name_c}/results_neighbors_{name_e}.csv", rows=results)
