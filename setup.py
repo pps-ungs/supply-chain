@@ -2,8 +2,8 @@
 
 from db.config import load_config
 from db.database import *
-from db import write_csv
-import numpy as np
+# from db import write_csv # no se usa?
+# import numpy as np # no se usa?
 
 ####################################################################
 # DB
