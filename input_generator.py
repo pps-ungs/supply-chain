@@ -67,23 +67,44 @@ def print_demand_scenarios(E: list) -> None:
     return None
 
 # Genera escenarios de demanda utilizando el método de Monte Carlo.
-# Se generan $kE$ escenarios de demanda aleatorios entre un mínimo y un
-# máximo, para cada punto de venta $k$.
+# Se generan $kE$ escenarios de demanda aleatorios para cada punto de venta $k$.
 #
+# probability_distribution: función que genera un número aleatorio siguendo una
+#                           distribución de probabilidad.
 # E: escenarios de demanda
 # kE: número de escenarios a generar
 # P: puntos de venta
-# min_demand: demanda mínima
-# max_demand: demanda máxima.
-def generate_demand_scenarios_with_monte_carlo(E: list, kE: int, P: list, min_demand: int, max_demand: int) -> None:
+def generate_demand_scenarios_with_monte_carlo(probability_distribution: callable, E: list, kE: int, P: list) -> None:
     for l in range(kE):
         E.append([])
         for k in P:
-            demand = int(np.random.uniform(min_demand, max_demand))
+            demand = probability_distribution()
             E[l].append((k[0], demand))
     return None
 #
 ####################################################################
+
+# Genera un número aleatorio siguiendo una distribución uniforme entre min_demand y max_demand.
+# min_demand: demanda mínima
+# max_demand: demanda máxima.
+def uniform_distribution(min_demand: int, max_demand: int) -> int:
+    return int(np.random.uniform(min_demand, max_demand))
+
+# Genera un número aleatorio siguiendo una distribución normal con media y
+# desviación estándar.
+#
+# mean_demand: demanda promedio esperada
+# std_dev_demand: desviación estándar de la demanda.
+def normal_distribution(mean_demand: float, std_dev_demand: float) -> float:
+    return np.random.normal(mean_demand, std_dev_demand)
+
+# Genera un número aleatorio siguiendo una distribución de Poisson con parámetro lam.
+def poisson_distribution(lam: float) -> float:
+    return np.random.poisson(lam)
+
+# Genera un número aleatorio siguiendo una distribución binomial con n ensayos y probabilidad p.
+def binomial_distribution(n: int, p: float) -> float:
+    return np.random.binomial(n, p)
 
 ####################################################################
 # Generacion de conjuntos
@@ -114,7 +135,14 @@ def generate(path_to_files: str) -> None:
     # demandas mínima y máxima es arbitraria, por ahora. Estos valores se deberían
     # definir en base a la heurística, y a las pruebas que hagamos.
     E = list()
-    generate_demand_scenarios_with_monte_carlo(E=E, P=P, kE=500, min_demand=100, max_demand=500)
+
+    # Generamos 500 escenarios de demanda aleatorios
+    number_of_scenarios = 500
+    generate_demand_scenarios_with_monte_carlo(lambda: uniform_distribution(min_demand=100, max_demand=500), E=E, P=P, kE=number_of_scenarios)
+    # generate_demand_scenarios_with_monte_carlo(lambda: normal_distribution(mean_demand=678, std_dev_demand=25), E=E, P=P, kE=number_of_scenarios)
+    # generate_demand_scenarios_with_monte_carlo(lambda: poisson_distribution(100), E=E, P=P, kE=number_of_scenarios)
+    # generate_demand_scenarios_with_monte_carlo(lambda: binomial_distribution(100, 0.5), E=E, P=P, kE=number_of_scenarios)
+
     write_csv.add_rows_json(f"{path_to_files}/scenarios.csv",["nombre", "data"], E)
     print_demand_scenarios(E)
     print("500 scenarios have been created.")
