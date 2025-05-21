@@ -1,8 +1,9 @@
 import csv
 import json
 
-def add_rows_json(file_path: str, headers: list, rows: list[str]) -> list[list[str]]:
-    with open(file_path, 'w', newline='') as f:
+
+def add_rows_json(file_path: str, headers: list, rows: list[str]) -> None:
+    with open(file_path, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(headers)
 
@@ -10,10 +11,12 @@ def add_rows_json(file_path: str, headers: list, rows: list[str]) -> list[list[s
             e_name = f"e_{idx}"
             p_dict = {p: d for p, d in escenario}
             json_data = json.dumps(p_dict)
-            writer.writerow([e_name,json_data])
+            writer.writerow([e_name, json_data])
+
 
 def add_rows(file_path: str, headers: list, rows: list):
-    with open(file_path, 'w', newline='') as f:
+    with open(file_path, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(headers)
         writer.writerows(rows)
+

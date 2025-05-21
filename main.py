@@ -3,8 +3,8 @@
 import time
 
 import model
-from db.config import load_config
-from db.database import get_connection
+import db.database as db
+import db.config as dbconfig
 
 
 def main():
@@ -12,13 +12,13 @@ def main():
     # Conjuntos
     ####################################################################
 
-    config = load_config('db/database.ini', 'supply_chain')
-    conn = get_connection(config)
+    config = dbconfig.load_config('db/database.ini', 'supply_chain')
+    conn = db.get_connection(config)
 
-    F = model.read_fabrication_centers(conn)
-    S = model.read_distribution_centers(conn)
-    P = model.read_points_of_sale(conn)
-    E = model.read_scenarios(conn)
+    F = db.read(conn, model.fabrication_centers_read()).to_dict(orient='records')
+    S = db.read(conn, model.distribution_centers_read()).to_dict(orient='records')
+    P = db.read(conn, model.points_of_sale_read()).to_dict(orient='records')
+    E = db.read(conn, model.scenarios_read()).to_dict(orient='records')
 
     conn.close()
     print("[okay] Connection to supply_chain closed")
