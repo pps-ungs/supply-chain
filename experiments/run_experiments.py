@@ -2,9 +2,9 @@ from experiments import neighborhood
 from experiments.writeCSV import *
 
 
-def run_creation_neighbors_experiment(F: list, S:list, P:list, E:list):
+def run_creation_neighbors_experiment(dir:str, F: list, S:list, P:list, E:list):
     
-    dir = "experiments/results2/creation_neighbors"
+    # dir = "experiments/results2/creation_neighbors"
     headers = ["Neighbor strategy", "Num neighbors", "Best Y", "Num. iterations", "Step", "Time"]
 
     neighbor_strategies = neighborhood.get_neighbor_strategies()
@@ -25,9 +25,9 @@ def run_creation_neighbors_experiment(F: list, S:list, P:list, E:list):
         writeCSV(filename=f"{dir}/results_neighbors_{name}.csv", rows=results)
 
 
-def run_eval_neighbors_experiment(F: list, S:list, P:list, E:list):
+def run_eval_neighbors_experiment(dir:str, F: list, S:list, P:list, E:list):
     
-    dir = "experiments/results/evaluation_neighbors"
+    # dir = "experiments/results/evaluation_neighbors"
     headers = ["Evaluation strategy", "Best Y", "Num. iterations", "Step", "Time"]
 
     eval_strategies = neighborhood.get_eval_strategies()
@@ -45,9 +45,8 @@ def run_eval_neighbors_experiment(F: list, S:list, P:list, E:list):
 
         writeCSV(filename=f"{dir}/results_neighbors_{name}.csv", rows=results)
 
-def run_creation_aval_neighbors_experiment(F: list, S:list, P:list, E:list):
+def run_creation_aval_neighbors_experiment(dir:str, F: list, S:list, P:list, E:list):
     
-    dir = "experiments/results2/creation_evaluation_neighbors"
     headers = ["Evaluation strategy", "Neighbor strategy", "Best Y", "Num neighbors", "Num. iterations", "Step", "Time"]
 
     eval_strategies = neighborhood.get_eval_strategies()

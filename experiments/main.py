@@ -22,11 +22,10 @@ def main():
     conn.close()
     print("[okay] Connection to supply_chain closed")
 
-    # run_creation_neighbors_experiment(F=F, S=S, P=P, E=E)
-    # run_eval_neighbors_experiment(F=F, S=S, P=P, E=E)
-    run_creation_aval_neighbors_experiment(F=F, S=S, P=P, E=E)
-
-
+    dir = "experiments/results_new_db/creation_evaluation_neighbors"
+    # run_creation_neighbors_experiment(dir=dir, F=F, S=S, P=P, E=E)
+    # run_eval_neighbors_experiment(dir=dir, F=F, S=S, P=P, E=E)
+    run_creation_aval_neighbors_experiment(dir=dir, F=F, S=S, P=P, E=E)
 
 if __name__ == "__main__":
     main()
