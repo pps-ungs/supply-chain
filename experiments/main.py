@@ -15,7 +15,7 @@ import db.database as db
 
 from db.database import *
 from model import *
-from experiments.run_experiments import *
+import experiments.run_experiments as neighborhood
 
 def main():
     ## viva peron ##########################################################
@@ -31,9 +31,9 @@ def main():
     conn.close()
     print("[okay] Connection to supply_chain closed")
 
-    # run_creation_neighbors_experiment(F=F, S=S, P=P, E=E)
-    # run_eval_neighbors_experiment(F=F, S=S, P=P, E=E)
-    run_creation_aval_neighbors_experiment(F=F, S=S, P=P, E=E)
+    #neighborhood.run_creation_neighbors_experiment(F=F, S=S, P=P, E=E)
+    #neighborhood.run_eval_neighbors_experiment(F=F, S=S, P=P, E=E)
+    neighborhood.run_creation_aval_neighbors_experiment(F=F, S=S, P=P, E=E)
 
 
 
