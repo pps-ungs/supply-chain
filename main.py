@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
 import time
-from db.config import *
-from db.database import *
-from model import *
+
+import model
+from db.config import load_config
+from db.database import get_connection
 
 
 def main():
-
     ####################################################################
     # Conjuntos
     ####################################################################
@@ -15,16 +15,16 @@ def main():
     config = load_config('db/database.ini', 'supply_chain')
     conn = get_connection(config)
 
-    F = read_fabrication_centers(conn)
-    S = read_distribution_centers(conn)
-    P = read_points_of_sale(conn)
-    E = read_scenarios(conn)
+    F = model.read_fabrication_centers(conn)
+    S = model.read_distribution_centers(conn)
+    P = model.read_points_of_sale(conn)
+    E = model.read_scenarios(conn)
 
     conn.close()
     print("[okay] Connection to supply_chain closed")
 
     t = time.time()
-    X, Z, margin, pStk, pDIn, CTf2s, CTs2p, halting_condition = optimization_heuristic(F=F, S=S, P=P, E=E, step=20, epsilon=1e-3, max_iterations_allowed=1e1000, max_stuck_allowed=1)
+    X, Z, margin, pStk, pDIn, CTf2s, CTs2p, halting_condition = model.optimization_heuristic(F=F, S=S, P=P, E=E, step=20, epsilon=1e-3, max_iterations_allowed=100, max_stuck_allowed=1)
 
     print("############################### RESULTS ################################")
     print("X:", X)
