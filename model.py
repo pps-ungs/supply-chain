@@ -514,7 +514,7 @@ def optimization_heuristic(
 
     E = sorted(E, key=lambda x: x['probability'], reverse=True)
 
-    X_initial = get_initial_X_minimal(F, 50)
+    X_initial = get_initial_X_minimal(F, 100)
     Z_initial = get_objective_value(F, S, P, E, X_initial)
 
     X_current = X_initial

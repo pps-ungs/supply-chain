@@ -113,88 +113,64 @@ def get_best_sol(X_list: list, Y_list: list) -> tuple:
 
     return best_X, best_Y
 
-def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: float, max_iterations: int = 1000) -> list:
-    X_list, obj_list, strategies = get_posible_X_sorted(F, S, P, E)
-    results = []
-
+def log_f(X, obj, step, max_iterations, it, best_X, best_obj, initial_time, strategy):
     conn = get_connection(load_config('db/database.ini', 'supply_chain'))
-    for i in range(len(X_list)):
-        initial_time = time.time()
-
-        X = X_list[i]
-        obj = obj_list[i]
-
-        best_X = X
-        best_obj = obj
-
-        it = 0
-        print(f"X inicial {best_X}, Obj inicial = {best_obj}")
-
-        while it < max_iterations:
-            X_neighbour_1 = [X[i] - step for i in range(len(X))]
-            X_neighbour_2 = [X[i] + step for i in range(len(X))]
-
-            obj_1 = model.get_objective_value(F, S, P, E, X_neighbour_1)
-            obj_2 = model.get_objective_value(F, S, P, E, X_neighbour_2)
-
-            X_best_neighbour, Y_best_neighbour = get_best_sol([best_X, X_neighbour_1, X_neighbour_2], [best_obj, obj_1, obj_2])
-
-            if X_best_neighbour > best_X and Y_best_neighbour > 0:
-                best_X = X_best_neighbour
-                best_obj = Y_best_neighbour
-
-                print(f"X = {best_X}, Y = {best_obj}, iteración = {it}")
-                
-                query = f"""
-                            insert into experimentos_x_inicial (
-                                x_inicial, 
-                                obj_inicial,
-                                step,
-                                cant_iteraciones,
-                                iteracion,
-                                x_optimo, 
-                                obj, 
-                                tiempo, 
-                                estrategia) 
-                            values (
-                                '{json.dumps(X)}',
-                                {obj},
-                                {step},
-                                {max_iterations},
-                                {it},
-                                '{json.dumps(best_X)}', 
-                                {best_obj}, 
-                                {time.time() - initial_time:.2f}, 
-                                '{strategies[i]}');
-                            """
-                execute(conn, query)
-
-            it += 1
-
-        total_time = time.time() - initial_time
-        print(f"Sol X = {best_X}, Obj = {best_obj}, tiempo = {total_time:.2f} segundos")
-        results.append((best_X, best_obj, total_time))
-
+    query = f"""
+            insert into experimentos_x_inicial (
+                x_inicial, 
+                obj_inicial,
+                step,
+                cant_iteraciones,
+                iteracion,
+                x_optimo, 
+                obj, 
+                tiempo, 
+                estrategia) 
+            values (
+                '{json.dumps(X)}',
+                {obj},
+                {step},
+                {max_iterations},
+                {it},
+                '{json.dumps(best_X)}', 
+                {best_obj}, 
+                {time.time() - initial_time:.2f}, 
+                '{strategy}');
+            """
+    execute(conn, query)
     conn.close()
-    print("[okay] Connection to supply_chain closed")
-    
-    complete_results = {}
-    for i in range(len(X_list)):
-        X = X_list[i]
-        obj = obj_list[i]
-        strategy = strategies[i]
-        result = results[i]
-        
-        complete_results[i] = {
-            "X": X,
-            "Obj": obj,
-            "new_x": result[0],
-            "new obj": result[1],
-            "time": result[2],
-            "strategy": strategy
-        }
 
-    return complete_results
+def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: float, initial_obj: tuple, log_f: callable, strategy: str, max_iterations: int = 1000) -> list:
+    initial_time = time.time()
+
+    X = initial_obj[0]
+    obj = initial_obj[1]
+
+    best_X = X
+    best_obj = obj
+
+    it = 0
+   
+    while it < max_iterations:
+        X_neighbour_1 = [X[i] - step for i in range(len(X))]
+        X_neighbour_2 = [X[i] + step for i in range(len(X))]
+
+        obj_1 = model.get_objective_value(F, S, P, E, X_neighbour_1)
+        obj_2 = model.get_objective_value(F, S, P, E, X_neighbour_2)
+
+        X_best_neighbour, Y_best_neighbour = get_best_sol([best_X, X_neighbour_1, X_neighbour_2], [best_obj, obj_1, obj_2])
+
+        if X_best_neighbour > best_X and Y_best_neighbour > 0:
+            best_X = X_best_neighbour
+            best_obj = Y_best_neighbour
+
+            # print(f"X = {best_X}, Y = {best_obj}, iteración = {it}, tiempo = {time.time() - initial_time:.2f} segundos")
+            log_f(X, obj, step, max_iterations, it, best_X, best_obj, initial_time, strategy)
+
+        it += 1
+
+    total_time = time.time() - initial_time
+    return (best_X, best_obj, total_time)
 
 def main():
     conn = get_connection(load_config('db/database.ini', 'supply_chain'))
@@ -225,16 +201,35 @@ def main():
 
     num_iterations = [100, 10000, 100000]
     num_step = [0.05, 0.5, 1, 5, 10, 20, 40, 60, 80, 100]
+    X_list, obj_list, strategies  = get_posible_X_sorted(F, S, P, E)
 
-    for iteration in num_iterations:
-        for step in num_step:
-            print("################ EXECUTION ################")
-            print(f"Running with {iteration} iterations and step {step}")
+    results = {}
 
-            results = optimization_heuristic_initial_x(F, S, P, E, step=step, max_iterations=iteration)
-            
-            print("################ RESULT ################")
-            print(results)
+    for i in range(len(X_list)):
+        for iteration in num_iterations:
+            for step in num_step:
+                print("################ EXECUTION ################")
+                
+                initial_x = X_list[i]
+                initial_obj = obj_list[i]
+                strategy = strategies[i]
+
+                print(f"Strategy {strategy} running with {iteration} iterations and step {step}")
+                print(f"X inicial {initial_x}, Obj inicial = {initial_obj}")
+
+                result = optimization_heuristic_initial_x(F, S, P, E, step=step, initial_obj=(initial_x, initial_obj), log_f=log_f, strategy=strategy, max_iterations=iteration)
+                print(f"Sol X = {result[0]}, Obj = {result[1]}, tiempo = {result[2]:.2f} segundos")
+
+                results[(iteration, step, strategy)] = {
+                    "X inicial": initial_x,
+                    "Obj inicial": initial_obj,
+                    "X": result[0],
+                    "Obj": result[1],
+                    "Tiempo": result[2]
+                }
+
+    print("################ RESULT ################")
+    print(results)
 
 if __name__ == "__main__":
     main()
