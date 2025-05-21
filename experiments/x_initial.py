@@ -140,7 +140,9 @@ def log_f(X, obj, step, max_iterations, it, best_X, best_obj, initial_time, stra
     execute(conn, query)
     conn.close()
 
-def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: float, initial_obj: tuple, log_f: callable, strategy: str, max_iterations: int = 1000) -> list:
+def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: float, 
+                                     initial_obj: tuple, log_f: callable, strategy: str, 
+                                     max_iterations: int = 1000) -> list:
     initial_time = time.time()
 
     X = initial_obj[0]
@@ -152,6 +154,7 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
     it = 0
    
     while it < max_iterations:
+        # añadir la mejor manera de obtener los vecinos segun los experimentos
         X_neighbour_1 = [X[i] - step for i in range(len(X))]
         X_neighbour_2 = [X[i] + step for i in range(len(X))]
 
