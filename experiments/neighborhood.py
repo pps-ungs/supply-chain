@@ -41,6 +41,7 @@ def create_multi_change_neighbors(X, step, num_neighbors):
             if neighbor[i] + delta >= 0:
                 neighbor[i] += delta
         neighbors.append(neighbor)
+    ("Vecinos con multi change:", neighbors)
     return neighbors
 
 
@@ -56,6 +57,7 @@ def create_exhaustive_neighbors(X, step, *args):
                 neighbor = X[:]
                 neighbor[i] += delta
                 neighbors.append(neighbor)
+    ("Vecinos con exhaustive change:", neighbors)
     return neighbors
 
 def get_neighbor_strategies():
@@ -159,7 +161,7 @@ def optimization_heuristic_eval_exp(F: list, S: list, P: list, E: list, step:20,
 #* Evaluación de vecinos: strategy.
 #* Creación de vecinos: strategy.
 def optimization_heuristic_neighbors_eval_exp(F: list, S: list, P: list, E: list, step: float, neighbor_strategy: callable, eval_strategy: callable, num_neighbors=5, max_iterations=1000) -> list:
-    X = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100] 
+    X = [100 for _ in F] 
     Y = model.get_objective_value(F, S, P, E, X)
     X_best = X
     Y_best = Y
