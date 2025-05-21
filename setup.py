@@ -1,49 +1,28 @@
 #!/usr/bin/env python3
 
-from db.config import load_config
-from db.database import *
-# from db import write_csv # no se usa?
-# import numpy as np # no se usa?
+import model
+import db.config as dbconfig
+import db.database as db
 
 ####################################################################
 # DB
-# ------------------------------------------------------------------
-#
-#
-config = load_config('db/database.ini', 'postgres')
-create_supply_chain_database(config)
+config = dbconfig.load_config('db/database.ini', 'postgres')
+db.create_supply_chain_database(config)
 
-config = load_config('db/database.ini', 'supply_chain')
-conn = get_connection(config)
+config = dbconfig.load_config('db/database.ini', 'supply_chain')
+conn = db.get_connection(config)
 
-create_tables(conn)
+db.create_tables(conn)
 
 ####################################################################
 # Centros de fabricación
-fabrication_center_insert_statement = "insert into centro_de_fabricacion (nombre, data) values (%s, %s)"
-fabrication_center_csv_file = "./db/data/conjuntos/fabrication_centers.csv"
-insert_data_from_csv(conn, fabrication_center_insert_statement, fabrication_center_csv_file)
-####################################################################
-
-####################################################################
+db.insert_data_from_csv(conn, model.fabrication_centers_write(), "./db/data/conjuntos/fabrication_centers.csv")
 # Centros de distribución
-distribution_center_insert_statement = "insert into centro_de_distribucion (nombre, data) values (%s, %s)"
-distribution_center_csv_file = "./db/data/conjuntos/distribution_centers.csv"
-insert_data_from_csv(conn, distribution_center_insert_statement, distribution_center_csv_file)
-####################################################################
-
-####################################################################
+db.insert_data_from_csv(conn, model.distribution_centers_write(), "./db/data/conjuntos/distribution_centers.csv")
 # Puntos de venta
-point_of_sale_insert_statement = "insert into punto_de_venta(nombre, data) values (%s, %s)"
-point_of_sale_csv_file = "./db/data/conjuntos/points_of_sale.csv"
-insert_data_from_csv(conn, point_of_sale_insert_statement, point_of_sale_csv_file)
-####################################################################
-
-####################################################################
+db.insert_data_from_csv(conn, model.points_of_sale_write(), "./db/data/conjuntos/points_of_sale.csv")
 # Escenarios
-scenario_insert_statement = "insert into escenario (nombre, data) values (%s, %s)"
-scenario_csv_file = "./db/data/conjuntos/scenarios.csv"
-insert_data_from_csv_json(conn, scenario_insert_statement, scenario_csv_file)
+db.insert_data_from_csv_json(conn, model.scenarios_write(), "./db/data/conjuntos/scenarios.csv")
 ####################################################################
 
 conn.close()
@@ -51,9 +30,21 @@ print("[okay] Connection closed")
 #
 ####################################################################
 
-# Mock
-# a = input("Do you want to dump (backup to a file) the database? (y/n): ")
-# dump("db/data/supply_chain_dump.sql", conn)
+# Dump the database
+ans = input("Do you want to dump (backup to a file) the database? (y/n): ")
+if ans == "y":
+    db.dump("db/data/supply_chain_dump.sql", {
+        "user": "postgres",
+        "password": "postgres"
+    })
+    print("[okay] Database dumped to db/data/supply_chain_dump.sql")
+else:
+    print("[okay] Database not dumped")
 
-# a = input("Do you want to restore the database from the dump file? (y/n): ")
-# restore("db/data/supply_chain_dump.sql")
+# Restore the database
+ans = input("Do you want to restore the database from the dump file? (y/n): ")
+if ans == "y":
+    db.restore("db/data/supply_chain_dump.sql")
+    print("[okay] Database restored from db/data/supply_chain_dump.sql")
+else:
+    print("[okay] Database not restored")

@@ -1,19 +1,15 @@
-import random, sys
-# import re
-from db.config import load_config
-from db.database import *
-import warnings
-warnings.filterwarnings('ignore') # get rid of annoying pandas warnings
-
 ########################################################################
 # Modelo de Cadena de Distribución Básica
 ########################################################################
 
-########################################################################
-# 1. Conjuntos de datos
-########################################################################
+import random
+import db.database as db
+import warnings
+warnings.filterwarnings('ignore') # get rid of annoying pandas warnings
 
 ########################################################################
+# 1. Conjuntos de datos
+#
 # Conjunto de $kF$ centros de fabricación
 # ---------------------------------------
 #
@@ -25,8 +21,18 @@ warnings.filterwarnings('ignore') # get rid of annoying pandas warnings
 #
 # Importante: los centros de fabricación van con $i$.
 # i → centros de fabricación
-def read_fabrication_centers(conn: psycopg.Connection) -> list:
-    fabrication_centers = read(conn, "select * from centro_de_fabricacion;")
+def fabrication_centers_read() -> str:
+    return "select * from centro_de_fabricacion;"
+
+def fabrication_centers_write() -> str:
+    return """
+        insert into centro_de_fabricacion (nombre, data)
+        values (%s, %s);
+    """
+
+# REMOVE ME
+def read_fabrication_centers(conn: db.psycopg.Connection) -> list:
+    fabrication_centers = db.read(conn, "select * from centro_de_fabricacion;")
     return fabrication_centers.to_dict(orient='records')
 #
 ########################################################################
@@ -43,8 +49,18 @@ def read_fabrication_centers(conn: psycopg.Connection) -> list:
 #
 # Importante: los centros de distribución van con $j$.
 # j → centros de distribución
-def read_distribution_centers(conn: psycopg.Connection) -> list:
-    distribution_centers = read(conn, "select * from centro_de_distribucion;")
+def distribution_centers_read() -> str:
+    return "select * from centro_de_distribucion;"
+
+def distribution_centers_write() -> str:
+    return """
+        insert into centro_de_distribucion (nombre, data)
+        values (%s, %s);
+    """
+
+# REMOVE ME
+def read_distribution_centers(conn: db.psycopg.Connection) -> list:
+    distribution_centers = db.read(conn, "select * from centro_de_distribucion;")
     return distribution_centers.to_dict(orient='records')
 #
 ########################################################################
@@ -61,8 +77,18 @@ def read_distribution_centers(conn: psycopg.Connection) -> list:
 #
 # Importante: los puntos de venta van con $k$.
 # k → puntos de venta
-def read_points_of_sale(conn: psycopg.Connection) -> list:
-    points_of_sale = read(conn, "select * from punto_de_venta;")
+def points_of_sale_read() -> str:
+    return "select * from punto_de_venta;"
+
+def points_of_sale_write() -> str:
+    return """
+        insert into punto_de_venta (nombre, data)
+        values (%s, %s);
+    """
+
+# REMOVE ME
+def read_points_of_sale(conn: db.psycopg.Connection) -> list:
+    points_of_sale = db.read(conn, "select * from punto_de_venta;")
     return points_of_sale.to_dict(orient='records')
 #
 ########################################################################
@@ -74,8 +100,18 @@ def read_points_of_sale(conn: psycopg.Connection) -> list:
 # E = {e_1, e_2, ..., e_l, ..., e_kE}
 # E = [][]
 # l → escenarios
-def read_scenarios(conn: psycopg.Connection) -> list:
-    scenarios = read(conn, "select * from escenario;")
+def scenarios_read() -> str:
+    return "select * from escenario;"
+
+def scenarios_write() -> str:
+    return """
+        insert into escenario (nombre, data)
+        values (%s, %s);
+    """
+
+# REMOVE ME
+def read_scenarios(conn: db.psycopg.Connection) -> list:
+    scenarios = db.read(conn, "select * from escenario;")
     return scenarios.to_dict(orient='records')
 #
 ########################################################################
@@ -514,7 +550,7 @@ def optimization_heuristic(
 
     E = sorted(E, key=lambda x: x['probability'], reverse=True)
 
-    X_initial = get_initial_X_minimal(F, 50)
+    X_initial = get_initial_X_minimal(F, 100)
     Z_initial = get_objective_value(F, S, P, E, X_initial)
 
     X_current = X_initial

@@ -1,5 +1,6 @@
 from configparser import ConfigParser
 
+
 # DONE
 # This function loads a configuration file and returns the parameters in
 # the specified section as a dictionary.
@@ -14,8 +15,7 @@ def load_config(file_path: str, section: str) -> dict:
     parser.read(file_path)
 
     if not parser.has_section(section):
-        raise Exception(
-            f'?section {section} not found in the {file_path} file')
+        raise Exception(f"?section {section} not found in the {file_path} file")
 
     parameters = parser.items(section)
     config = {}
