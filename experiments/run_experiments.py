@@ -45,7 +45,7 @@ def run_eval_neighbors_experiment(dir:str, F: list, S:list, P:list, E:list):
 
         writeCSV(filename=f"{dir}/results_neighbors_{name}.csv", rows=results)
 
-def run_creation_aval_neighbors_experiment(dir:str, F: list, S:list, P:list, E:list):
+def run_creation_eval_neighbors_experiment(dir:str, F: list, S:list, P:list, E:list):
     
     headers = ["Evaluation strategy", "Neighbor strategy", "Best Y", "Num neighbors", "Num. iterations", "Step", "Time"]
 
