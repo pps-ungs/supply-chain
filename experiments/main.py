@@ -7,12 +7,21 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../db')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../modelo')))
 
+## viva peron ##########################################################
+# Si agrego esto, no me tira error de importación
+import db.config as dbconfig
+import db.database as db
+## viva peron ##########################################################
+
 from db.database import *
 from model import *
 from experiments.run_experiments import *
 
 def main():
-    conn = get_connection(load_config('db/database.ini', 'supply_chain'))
+    ## viva peron ##########################################################
+    # modifiqué esta línea y ahora no me tire error de importación
+    conn = db.get_connection(dbconfig.load_config('../db/database.ini', 'supply_chain')) # el path "../db/database.ini" es la clave
+    ## viva peron ##########################################################
 
     F = read_fabrication_centers(conn)
     S = read_distribution_centers(conn)
