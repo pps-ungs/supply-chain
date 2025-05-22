@@ -125,7 +125,7 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
     }
 
 # ESTA HARDCODEADA LA DISTRIBUCION
-def log_optimization_heuristic(X, Z, step, it, actual_time, halting_condition, strategy):
+def log_optimization_heuristic(X_initial, Z_initial, X, Z, step, it, actual_time, halting_condition, strategy):
     conn = get_connection(load_config('db/database.ini', 'supply_chain'))
     query = f"""
             insert into experimentos_hill_climbing (
@@ -141,8 +141,8 @@ def log_optimization_heuristic(X, Z, step, it, actual_time, halting_condition, s
                 estrategia,
                 distribucion) 
             values (
-                '{json.dumps(X)}',
-                {Z:.2f},
+                '{json.dumps(X_initial)}',
+                {Z_initial:.2f},
                 {step:.2f},
                 {it},
                 {it},
@@ -242,7 +242,7 @@ def optimization_heuristic(
         halting_condition = "Stuck in local optimum"
 
     actual_time = time.time() - initial_time
-    log_f(X_current, Z_current, step, it, actual_time, halting_condition, strategy)
+    log_f(X_initial, Z_initial, X_current, Z_current, step, it, actual_time, halting_condition, strategy)
 
     return {
         "X": X_current,
