@@ -42,7 +42,7 @@ def create_tables():
     conn.close()
     print("[okay] Connection to supply_chain closed")
 
-def log_f(X, obj, step, max_iterations, it, best_X, best_obj, initial_time, strategy):
+def log_x_initial(X, obj, step, max_iterations, it, best_X, best_obj, initial_time, strategy):
     conn = get_connection(load_config('db/database.ini', 'supply_chain'))
     query = f"""
             insert into experimentos_x_inicial (
@@ -68,6 +68,43 @@ def log_f(X, obj, step, max_iterations, it, best_X, best_obj, initial_time, stra
             """
     execute(conn, query)
     conn.close()
+
+def test(F, S, P, E, heuristic: callable, log_f: callable):
+    num_iterations = [100, 10000, 100000]
+    num_step = [0.05, 0.5, 1, 5, 10, 20, 40, 60, 80, 100]
+    X_list, obj_list, strategies  = x_initial.get_posible_X_sorted(F, S, P, E)
+
+    print("################ X INICIAL ################")
+    for i in range(len(X_list)):
+        print(f"X inicial {X_list[i]}, Obj inicial = {obj_list[i]}, Estrategia = {strategies[i]}")
+
+    results = {}
+
+    for i in range(len(X_list)):
+        for iteration in num_iterations:
+            for step in num_step:
+                print("################ EXECUTION ################")
+                
+                initial_x = X_list[i]
+                initial_obj = obj_list[i]
+                strategy = strategies[i]
+
+                print(f"Strategy {strategy} running with {iteration} iterations and step {step}")
+                print(f"X inicial {initial_x}, Obj inicial = {initial_obj}")
+
+                result = heuristic(F, S, P, E, step=step, initial_obj=(initial_x, initial_obj), log_f=log_f, strategy=strategy, max_iterations=iteration)
+                print(f"Sol X = {result[0]}, Obj = {result[1]}, tiempo = {result[2]:.2f} segundos")
+
+                results[(iteration, step, strategy)] = {
+                    "X inicial": initial_x,
+                    "Obj inicial": initial_obj,
+                    "X": result[0],
+                    "Obj": result[1],
+                    "Tiempo": result[2]
+                }
+
+    print("################ RESULT ################")
+    print(results)
 
 def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: float, 
                                      initial_obj: tuple, log_f: callable, strategy: str, 
@@ -113,42 +150,9 @@ def main():
     E = model.read_scenarios(conn)
 
     create_tables()
+    conn.close()
 
-    num_iterations = [100, 10000, 100000]
-    num_step = [0.05, 0.5, 1, 5, 10, 20, 40, 60, 80, 100]
-    X_list, obj_list, strategies  = x_initial.get_posible_X_sorted(F, S, P, E)
-
-    print("################ X INICIAL ################")
-    for i in range(len(X_list)):
-        print(f"X inicial {X_list[i]}, Obj inicial = {obj_list[i]}, Estrategia = {strategies[i]}")
-
-    results = {}
-
-    # for i in range(len(X_list)):
-    #     for iteration in num_iterations:
-    #         for step in num_step:
-    #             print("################ EXECUTION ################")
-                
-    #             initial_x = X_list[i]
-    #             initial_obj = obj_list[i]
-    #             strategy = strategies[i]
-
-    #             print(f"Strategy {strategy} running with {iteration} iterations and step {step}")
-    #             print(f"X inicial {initial_x}, Obj inicial = {initial_obj}")
-
-    #             result = optimization_heuristic_initial_x(F, S, P, E, step=step, initial_obj=(initial_x, initial_obj), log_f=log_f, strategy=strategy, max_iterations=iteration)
-    #             print(f"Sol X = {result[0]}, Obj = {result[1]}, tiempo = {result[2]:.2f} segundos")
-
-    #             results[(iteration, step, strategy)] = {
-    #                 "X inicial": initial_x,
-    #                 "Obj inicial": initial_obj,
-    #                 "X": result[0],
-    #                 "Obj": result[1],
-    #                 "Tiempo": result[2]
-    #             }
-
-    print("################ RESULT ################")
-    print(results)
+    test(F, S, P, E, optimization_heuristic_initial_x, log_x_initial)
 
 if __name__ == "__main__":
     main()
