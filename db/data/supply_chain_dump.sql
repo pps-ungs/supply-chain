@@ -951,6 +951,60 @@ COPY public.experimentos_hill_climbing (id, x_inicial, obj_inicial, step, cant_i
 82	[122, 122, 122, 122]	7735.12	16.00	100	100	[1722, 122, 122, 122]	556057.97	32.09	Maximum number of iterations	higher_demand	normal
 83	[122, 122, 122, 122]	7735.12	18.00	100	100	[1922, 122, 122, 122]	624598.33	32.13	Maximum number of iterations	higher_demand	normal
 84	[122, 122, 122, 122]	7735.12	20.00	100	100	[2122, 122, 122, 122]	693138.68	31.93	Maximum number of iterations	higher_demand	normal
+85	[3762, 4702, 7524, 12226]	3660325.57	22.00	100	100	[1562, 4702, 7524, 12226]	3673267.67	22.72	Maximum number of iterations	minimal_2_3762	normal
+86	[3762, 4702, 7524, 12226]	3660325.57	24.00	100	100	[1362, 4702, 7524, 12226]	3673760.15	24.34	Maximum number of iterations	minimal_2_3762	normal
+87	[3762, 4702, 7524, 12226]	3660325.57	28.00	100	100	[962, 4702, 7524, 12226]	3674405.55	24.41	Maximum number of iterations	minimal_2_3762	normal
+88	[3762, 4702, 7524, 12226]	3660325.57	36.00	100	100	[558, 4702, 7524, 12622]	3675332.60	23.50	Maximum number of iterations	minimal_2_3762	normal
+89	[3762, 4702, 7524, 12226]	3660325.57	52.00	100	100	[18, 4702, 7264, 13422]	3677129.68	23.35	Maximum number of iterations	minimal_2_3762	normal
+90	[3762, 4702, 7524, 12226]	3660325.57	84.00	100	100	[66, 4702, 5592, 14998]	3680482.24	22.42	Maximum number of iterations	minimal_2_3762	normal
+91	[3779, 4723, 7558, 12281]	3659391.75	22.00	100	100	[1579, 4723, 7558, 12281]	3673022.72	23.49	Maximum number of iterations	minimal_1_3779	normal
+92	[3779, 4723, 7558, 12281]	3659391.75	24.00	100	100	[1379, 4723, 7558, 12281]	3673608.03	23.50	Maximum number of iterations	minimal_1_3779	normal
+93	[3779, 4723, 7558, 12281]	3659391.75	28.00	100	100	[979, 4723, 7558, 12281]	3674383.53	23.39	Maximum number of iterations	minimal_1_3779	normal
+94	[3779, 4723, 7558, 12281]	3659391.75	36.00	100	100	[503, 4723, 7558, 12605]	3675331.31	23.99	Maximum number of iterations	minimal_1_3779	normal
+95	[3779, 4723, 7558, 12281]	3659391.75	52.00	100	100	[35, 4723, 7246, 13425]	3677114.37	23.09	Maximum number of iterations	minimal_1_3779	normal
+96	[3779, 4723, 7558, 12281]	3659391.75	84.00	100	100	[83, 4723, 5626, 15053]	3680465.07	22.62	Maximum number of iterations	minimal_1_3779	normal
+97	[3779, 3779, 3779, 3779]	3382470.19	22.00	100	100	[3779, 3779, 3779, 5979]	3514516.98	24.34	Maximum number of iterations	most_probable_scenario	normal
+98	[3779, 3779, 3779, 3779]	3382470.19	24.00	100	100	[3779, 3779, 3779, 6179]	3523871.13	24.20	Maximum number of iterations	most_probable_scenario	normal
+99	[3779, 3779, 3779, 3779]	3382470.19	28.00	100	100	[3779, 3779, 3779, 6579]	3541438.97	24.23	Maximum number of iterations	most_probable_scenario	normal
+100	[3779, 3779, 3779, 3779]	3382470.19	36.00	100	100	[3779, 3779, 3779, 7379]	3572382.46	24.04	Maximum number of iterations	most_probable_scenario	normal
+101	[3779, 3779, 3779, 3779]	3382470.19	52.00	100	100	[3779, 3779, 3779, 8979]	3618870.72	23.88	Maximum number of iterations	most_probable_scenario	normal
+102	[3779, 3779, 3779, 3779]	3382470.19	84.00	100	100	[3779, 3779, 3779, 12179]	3668703.31	23.71	Maximum number of iterations	most_probable_scenario	normal
+103	[4208, 3804, 3471, 3630]	3381730.33	22.00	100	100	[4208, 3804, 3471, 5830]	3513828.02	23.73	Maximum number of iterations	cost_sensitive	normal
+104	[4208, 3804, 3471, 3630]	3381730.33	24.00	100	100	[4208, 3804, 3471, 6030]	3523188.28	24.06	Maximum number of iterations	cost_sensitive	normal
+105	[4208, 3804, 3471, 3630]	3381730.33	28.00	100	100	[4208, 3804, 3471, 6430]	3540769.65	23.76	Maximum number of iterations	cost_sensitive	normal
+106	[4208, 3804, 3471, 3630]	3381730.33	36.00	100	100	[4208, 3804, 3471, 7230]	3571740.54	24.60	Maximum number of iterations	cost_sensitive	normal
+107	[4208, 3804, 3471, 3630]	3381730.33	52.00	100	100	[4208, 3804, 3471, 8830]	3618286.13	24.51	Maximum number of iterations	cost_sensitive	normal
+108	[4208, 3804, 3471, 3630]	3381730.33	84.00	100	100	[4208, 3804, 3471, 12030]	3668230.62	24.06	Maximum number of iterations	cost_sensitive	normal
+109	[3772, 3767, 3768, 3771]	3379721.44	22.00	100	100	[3772, 3767, 3768, 5971]	3512762.73	23.98	Maximum number of iterations	pseudorandom_5	normal
+110	[3772, 3767, 3768, 3771]	3379721.44	24.00	100	100	[3772, 3767, 3768, 6171]	3522191.85	23.82	Maximum number of iterations	pseudorandom_5	normal
+111	[3772, 3767, 3768, 3771]	3379721.44	28.00	100	100	[3772, 3767, 3768, 6571]	3539896.83	23.95	Maximum number of iterations	pseudorandom_5	normal
+112	[3772, 3767, 3768, 3771]	3379721.44	36.00	100	100	[3772, 3767, 3768, 7371]	3571109.31	24.17	Maximum number of iterations	pseudorandom_5	normal
+113	[3772, 3767, 3768, 3771]	3379721.44	52.00	100	100	[3772, 3767, 3768, 8971]	3618036.11	24.24	Maximum number of iterations	pseudorandom_5	normal
+114	[3772, 3767, 3768, 3771]	3379721.44	84.00	100	100	[3772, 3767, 3768, 12171]	3668446.43	23.88	Maximum number of iterations	pseudorandom_5	normal
+115	[3770, 3753, 3765, 3767]	3378043.75	22.00	100	100	[3770, 3753, 3765, 5967]	3511695.02	24.25	Maximum number of iterations	hybrid_demand_probabilistic	normal
+116	[3770, 3753, 3765, 3767]	3378043.75	24.00	100	100	[3770, 3753, 3765, 6167]	3521168.60	24.70	Maximum number of iterations	hybrid_demand_probabilistic	normal
+117	[3770, 3753, 3765, 3767]	3378043.75	28.00	100	100	[3770, 3753, 3765, 6567]	3538957.73	24.78	Maximum number of iterations	hybrid_demand_probabilistic	normal
+118	[3770, 3753, 3765, 3767]	3378043.75	36.00	100	100	[3770, 3753, 3765, 7367]	3570329.84	24.19	Maximum number of iterations	hybrid_demand_probabilistic	normal
+119	[3770, 3753, 3765, 3767]	3378043.75	52.00	100	100	[3770, 3753, 3765, 8967]	3617526.45	24.37	Maximum number of iterations	hybrid_demand_probabilistic	normal
+120	[3770, 3753, 3765, 3767]	3378043.75	84.00	100	100	[3770, 3753, 3765, 12167]	3668287.93	23.81	Maximum number of iterations	hybrid_demand_probabilistic	normal
+121	[3762, 3763, 3764, 3765]	3377972.25	22.00	100	100	[3762, 3763, 3764, 5965]	3511650.39	24.13	Maximum number of iterations	uniform	normal
+122	[3762, 3763, 3764, 3765]	3377972.25	24.00	100	100	[3762, 3763, 3764, 6165]	3521125.94	23.98	Maximum number of iterations	uniform	normal
+123	[3762, 3763, 3764, 3765]	3377972.25	28.00	100	100	[3762, 3763, 3764, 6565]	3538918.71	24.18	Maximum number of iterations	uniform	normal
+124	[3762, 3763, 3764, 3765]	3377972.25	36.00	100	100	[3762, 3763, 3764, 7365]	3570297.74	24.12	Maximum number of iterations	uniform	normal
+125	[3762, 3763, 3764, 3765]	3377972.25	52.00	100	100	[3762, 3763, 3764, 8965]	3617505.96	24.42	Maximum number of iterations	uniform	normal
+126	[3762, 3763, 3764, 3765]	3377972.25	84.00	100	100	[3762, 3763, 3764, 12165]	3668282.33	24.74	Maximum number of iterations	uniform	normal
+127	[3762, 3762, 3762, 3762]	3377528.58	22.00	100	100	[3762, 3762, 3762, 5962]	3511366.80	24.76	Maximum number of iterations	average_demand	normal
+128	[3762, 3762, 3762, 3762]	3377528.58	24.00	100	100	[3762, 3762, 3762, 6162]	3520854.18	23.98	Maximum number of iterations	average_demand	normal
+129	[3762, 3762, 3762, 3762]	3377528.58	28.00	100	100	[3762, 3762, 3762, 6562]	3538668.79	24.12	Maximum number of iterations	average_demand	normal
+130	[3762, 3762, 3762, 3762]	3377528.58	36.00	100	100	[3762, 3762, 3762, 7362]	3570089.21	23.78	Maximum number of iterations	average_demand	normal
+131	[3762, 3762, 3762, 3762]	3377528.58	52.00	100	100	[3762, 3762, 3762, 8962]	3617368.40	23.87	Maximum number of iterations	average_demand	normal
+132	[3762, 3762, 3762, 3762]	3377528.58	84.00	100	100	[3762, 3762, 3762, 12162]	3668236.87	23.87	Maximum number of iterations	average_demand	normal
+133	[1197, 1496, 2394, 3890]	2541024.90	22.00	100	100	[1197, 1496, 2394, 6090]	2948873.33	24.16	Maximum number of iterations	minimal_3*3_1197	normal
+134	[1197, 1496, 2394, 3890]	2541024.90	24.00	100	100	[1197, 1496, 2394, 6290]	2980337.58	23.94	Maximum number of iterations	minimal_3*3_1197	normal
+135	[1197, 1496, 2394, 3890]	2541024.90	28.00	100	100	[1197, 1496, 2394, 6690]	3040256.30	24.35	Maximum number of iterations	minimal_3*3_1197	normal
+136	[1197, 1496, 2394, 3890]	2541024.90	36.00	100	100	[1197, 1496, 2394, 7490]	3148298.27	24.66	Maximum number of iterations	minimal_3*3_1197	normal
+137	[1197, 1496, 2394, 3890]	2541024.90	52.00	100	100	[1197, 1496, 2394, 9090]	3319728.85	24.54	Maximum number of iterations	minimal_3*3_1197	normal
+138	[1197, 1496, 2394, 3890]	2541024.90	84.00	100	100	[1197, 1496, 2394, 12290]	3532129.63	24.27	Maximum number of iterations	minimal_3*3_1197	normal
 \.
 
 
@@ -1053,7 +1107,7 @@ SELECT pg_catalog.setval('public.escenario_id_seq', 500, true);
 -- Name: experimentos_hill_climbing_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.experimentos_hill_climbing_id_seq', 84, true);
+SELECT pg_catalog.setval('public.experimentos_hill_climbing_id_seq', 138, true);
 
 
 --

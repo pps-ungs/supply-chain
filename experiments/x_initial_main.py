@@ -320,7 +320,7 @@ def main():
     conn.close()
 
     num_iterations = [100] # [100, 10000, 100000]
-    num_step = [10, 12, 14, 16, 18, 20]
+    num_step = [22, 24, 28, 36, 52, 84] # 20 + 2**(i+1)
 
     # test(F, S, P, E, num_iterations, num_step, optimization_heuristic_initial_x, log_x_initial)
     test(F, S, P, E, num_iterations, num_step, optimization_heuristic, log_optimization_heuristic)
