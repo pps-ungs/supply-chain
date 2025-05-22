@@ -319,7 +319,7 @@ def main():
     create_tables()
     conn.close()
 
-    num_iterations = [100, 10000, 100000]
+    num_iterations = [100] # [100, 10000, 100000]
     num_step = [10, 12, 14, 16, 18, 20]
 
     # test(F, S, P, E, num_iterations, num_step, optimization_heuristic_initial_x, log_x_initial)

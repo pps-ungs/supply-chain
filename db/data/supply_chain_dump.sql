@@ -127,6 +127,90 @@ ALTER SEQUENCE public.escenario_id_seq OWNED BY public.escenario.id;
 
 
 --
+-- Name: experimentos_hill_climbing; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.experimentos_hill_climbing (
+    id integer NOT NULL,
+    x_inicial text,
+    obj_inicial numeric(15,2),
+    step numeric(15,2),
+    cant_iteraciones integer,
+    iteracion integer,
+    x_optimo text,
+    obj numeric(15,2),
+    tiempo numeric(15,2),
+    motivo_parada text,
+    estrategia text,
+    distribucion text
+);
+
+
+ALTER TABLE public.experimentos_hill_climbing OWNER TO postgres;
+
+--
+-- Name: experimentos_hill_climbing_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.experimentos_hill_climbing_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.experimentos_hill_climbing_id_seq OWNER TO postgres;
+
+--
+-- Name: experimentos_hill_climbing_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.experimentos_hill_climbing_id_seq OWNED BY public.experimentos_hill_climbing.id;
+
+
+--
+-- Name: experimentos_x_inicial; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.experimentos_x_inicial (
+    id integer NOT NULL,
+    id_x_inicial integer,
+    step numeric(15,2),
+    cant_iteraciones integer,
+    iteracion integer,
+    x_optimo text,
+    obj numeric(15,2),
+    tiempo numeric(15,2)
+);
+
+
+ALTER TABLE public.experimentos_x_inicial OWNER TO postgres;
+
+--
+-- Name: experimentos_x_inicial_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.experimentos_x_inicial_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.experimentos_x_inicial_id_seq OWNER TO postgres;
+
+--
+-- Name: experimentos_x_inicial_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.experimentos_x_inicial_id_seq OWNED BY public.experimentos_x_inicial.id;
+
+
+--
 -- Name: punto_de_venta; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -162,6 +246,42 @@ ALTER SEQUENCE public.punto_de_venta_id_seq OWNED BY public.punto_de_venta.id;
 
 
 --
+-- Name: x_inicial; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.x_inicial (
+    id integer NOT NULL,
+    x_inicial text,
+    obj_inicial numeric(15,9),
+    estrategia text
+);
+
+
+ALTER TABLE public.x_inicial OWNER TO postgres;
+
+--
+-- Name: x_inicial_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.x_inicial_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.x_inicial_id_seq OWNER TO postgres;
+
+--
+-- Name: x_inicial_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.x_inicial_id_seq OWNED BY public.x_inicial.id;
+
+
+--
 -- Name: centro_de_distribucion id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -183,10 +303,31 @@ ALTER TABLE ONLY public.escenario ALTER COLUMN id SET DEFAULT nextval('public.es
 
 
 --
+-- Name: experimentos_hill_climbing id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.experimentos_hill_climbing ALTER COLUMN id SET DEFAULT nextval('public.experimentos_hill_climbing_id_seq'::regclass);
+
+
+--
+-- Name: experimentos_x_inicial id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.experimentos_x_inicial ALTER COLUMN id SET DEFAULT nextval('public.experimentos_x_inicial_id_seq'::regclass);
+
+
+--
 -- Name: punto_de_venta id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.punto_de_venta ALTER COLUMN id SET DEFAULT nextval('public.punto_de_venta_id_seq'::regclass);
+
+
+--
+-- Name: x_inicial id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.x_inicial ALTER COLUMN id SET DEFAULT nextval('public.x_inicial_id_seq'::regclass);
 
 
 --
@@ -728,6 +869,100 @@ COPY public.escenario (id, nombre, data) FROM stdin;
 
 
 --
+-- Data for Name: experimentos_hill_climbing; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.experimentos_hill_climbing (id, x_inicial, obj_inicial, step, cant_iteraciones, iteracion, x_optimo, obj, tiempo, motivo_parada, estrategia, distribucion) FROM stdin;
+7	[3762, 4702, 7524, 12226]	3660325.57	10.00	100	100	[2762, 4702, 7524, 12226]	3667690.04	22.97	Maximum number of iterations	minimal_2_3762	normal
+8	[3762, 4702, 7524, 12226]	3660325.57	12.00	100	100	[2562, 4702, 7524, 12226]	3668892.06	23.70	Maximum number of iterations	minimal_2_3762	normal
+9	[3762, 4702, 7524, 12226]	3660325.57	14.00	100	100	[2362, 4702, 7524, 12226]	3669995.65	23.99	Maximum number of iterations	minimal_2_3762	normal
+10	[3762, 4702, 7524, 12226]	3660325.57	16.00	100	100	[2162, 4702, 7524, 12226]	3670989.19	24.22	Maximum number of iterations	minimal_2_3762	normal
+11	[3762, 4702, 7524, 12226]	3660325.57	18.00	100	100	[1962, 4702, 7524, 12226]	3671871.08	24.13	Maximum number of iterations	minimal_2_3762	normal
+12	[3762, 4702, 7524, 12226]	3660325.57	20.00	100	100	[1762, 4702, 7524, 12226]	3672635.93	24.08	Maximum number of iterations	minimal_2_3762	normal
+13	[3779, 4723, 7558, 12281]	3659391.75	10.00	100	100	[2779, 4723, 7558, 12281]	3667013.14	24.00	Maximum number of iterations	minimal_1_3779	normal
+14	[3779, 4723, 7558, 12281]	3659391.75	12.00	100	100	[2579, 4723, 7558, 12281]	3668274.01	24.35	Maximum number of iterations	minimal_1_3779	normal
+15	[3779, 4723, 7558, 12281]	3659391.75	14.00	100	100	[2379, 4723, 7558, 12281]	3669446.28	24.53	Maximum number of iterations	minimal_1_3779	normal
+16	[3779, 4723, 7558, 12281]	3659391.75	16.00	100	100	[2179, 4723, 7558, 12281]	3670508.21	24.78	Maximum number of iterations	minimal_1_3779	normal
+17	[3779, 4723, 7558, 12281]	3659391.75	18.00	100	100	[1979, 4723, 7558, 12281]	3671464.35	23.98	Maximum number of iterations	minimal_1_3779	normal
+18	[3779, 4723, 7558, 12281]	3659391.75	20.00	100	100	[1779, 4723, 7558, 12281]	3672304.57	24.21	Maximum number of iterations	minimal_1_3779	normal
+19	[3779, 3779, 3779, 3779]	3382470.19	10.00	100	100	[3779, 3779, 3779, 4779]	3449680.74	25.19	Maximum number of iterations	most_probable_scenario	normal
+20	[3779, 3779, 3779, 3779]	3382470.19	12.00	100	100	[3779, 3779, 3779, 4979]	3461624.53	24.13	Maximum number of iterations	most_probable_scenario	normal
+21	[3779, 3779, 3779, 3779]	3382470.19	14.00	100	100	[3779, 3779, 3779, 5179]	3473103.49	24.05	Maximum number of iterations	most_probable_scenario	normal
+22	[3779, 3779, 3779, 3779]	3382470.19	16.00	100	100	[3779, 3779, 3779, 5379]	3484095.45	24.00	Maximum number of iterations	most_probable_scenario	normal
+23	[3779, 3779, 3779, 3779]	3382470.19	18.00	100	100	[3779, 3779, 3779, 5579]	3494652.61	23.87	Maximum number of iterations	most_probable_scenario	normal
+24	[3779, 3779, 3779, 3779]	3382470.19	20.00	100	100	[3779, 3779, 3779, 5779]	3504780.59	24.02	Maximum number of iterations	most_probable_scenario	normal
+25	[4208, 3804, 3471, 3630]	3381730.33	10.00	100	100	[4208, 3804, 3471, 4630]	3448962.07	23.99	Maximum number of iterations	cost_sensitive	normal
+26	[4208, 3804, 3471, 3630]	3381730.33	12.00	100	100	[4208, 3804, 3471, 4830]	3460911.70	24.01	Maximum number of iterations	cost_sensitive	normal
+27	[4208, 3804, 3471, 3630]	3381730.33	14.00	100	100	[4208, 3804, 3471, 5030]	3472395.75	23.83	Maximum number of iterations	cost_sensitive	normal
+28	[4208, 3804, 3471, 3630]	3381730.33	16.00	100	100	[4208, 3804, 3471, 5230]	3483391.64	23.96	Maximum number of iterations	cost_sensitive	normal
+29	[4208, 3804, 3471, 3630]	3381730.33	18.00	100	100	[4208, 3804, 3471, 5430]	3493953.79	23.93	Maximum number of iterations	cost_sensitive	normal
+30	[4208, 3804, 3471, 3630]	3381730.33	20.00	100	100	[4208, 3804, 3471, 5630]	3504086.02	23.67	Maximum number of iterations	cost_sensitive	normal
+31	[3772, 3767, 3768, 3771]	3379721.44	10.00	100	100	[3772, 3767, 3768, 4771]	3447424.78	23.87	Maximum number of iterations	pseudorandom_5	normal
+32	[3772, 3767, 3768, 3771]	3379721.44	12.00	100	100	[3772, 3767, 3768, 4971]	3459458.69	693.38	Maximum number of iterations	pseudorandom_5	normal
+33	[3772, 3767, 3768, 3771]	3379721.44	14.00	100	100	[3772, 3767, 3768, 5171]	3471024.04	32.75	Maximum number of iterations	pseudorandom_5	normal
+34	[3772, 3767, 3768, 3771]	3379721.44	16.00	100	100	[3772, 3767, 3768, 5371]	3482106.92	83.02	Maximum number of iterations	pseudorandom_5	normal
+35	[3772, 3767, 3768, 3771]	3379721.44	18.00	100	100	[3772, 3767, 3768, 5571]	3492748.72	95.63	Maximum number of iterations	pseudorandom_5	normal
+36	[3772, 3767, 3768, 3771]	3379721.44	20.00	100	100	[3772, 3767, 3768, 5771]	3502950.61	88.73	Maximum number of iterations	pseudorandom_5	normal
+37	[3770, 3753, 3765, 3767]	3378043.75	10.00	100	100	[3770, 3753, 3765, 4767]	3446048.97	77.73	Maximum number of iterations	hybrid_demand_probabilistic	normal
+38	[3770, 3753, 3765, 3767]	3378043.75	12.00	100	100	[3770, 3753, 3765, 4967]	3458140.96	50.26	Maximum number of iterations	hybrid_demand_probabilistic	normal
+39	[3770, 3753, 3765, 3767]	3378043.75	14.00	100	100	[3770, 3753, 3765, 5167]	3469757.28	32.98	Maximum number of iterations	hybrid_demand_probabilistic	normal
+40	[3770, 3753, 3765, 3767]	3378043.75	16.00	100	100	[3770, 3753, 3765, 5367]	3480895.71	33.22	Maximum number of iterations	hybrid_demand_probabilistic	normal
+41	[3770, 3753, 3765, 3767]	3378043.75	18.00	100	100	[3770, 3753, 3765, 5567]	3491588.92	32.94	Maximum number of iterations	hybrid_demand_probabilistic	normal
+42	[3770, 3753, 3765, 3767]	3378043.75	20.00	100	100	[3770, 3753, 3765, 5767]	3501834.96	33.09	Maximum number of iterations	hybrid_demand_probabilistic	normal
+43	[3762, 3763, 3764, 3765]	3377972.25	10.00	100	100	[3762, 3763, 3764, 4765]	3445990.90	33.11	Maximum number of iterations	uniform	normal
+44	[3762, 3763, 3764, 3765]	3377972.25	12.00	100	100	[3762, 3763, 3764, 4965]	3458085.34	70.97	Maximum number of iterations	uniform	normal
+45	[3762, 3763, 3764, 3765]	3377972.25	14.00	100	100	[3762, 3763, 3764, 5165]	3469703.88	101.82	Maximum number of iterations	uniform	normal
+46	[3762, 3763, 3764, 3765]	3377972.25	16.00	100	100	[3762, 3763, 3764, 5365]	3480844.83	100.56	Maximum number of iterations	uniform	normal
+47	[3762, 3763, 3764, 3765]	3377972.25	18.00	100	100	[3762, 3763, 3764, 5565]	3491540.26	95.13	Maximum number of iterations	uniform	normal
+48	[3762, 3763, 3764, 3765]	3377972.25	20.00	100	100	[3762, 3763, 3764, 5765]	3501788.28	92.20	Maximum number of iterations	uniform	normal
+49	[3762, 3762, 3762, 3762]	3377528.58	10.00	100	100	[3762, 3762, 3762, 4762]	3445626.84	91.67	Maximum number of iterations	average_demand	normal
+50	[3762, 3762, 3762, 3762]	3377528.58	12.00	100	100	[3762, 3762, 3762, 4962]	3457735.98	152.71	Maximum number of iterations	average_demand	normal
+51	[3762, 3762, 3762, 3762]	3377528.58	14.00	100	100	[3762, 3762, 3762, 5162]	3469367.89	76.37	Maximum number of iterations	average_demand	normal
+52	[3762, 3762, 3762, 3762]	3377528.58	16.00	100	100	[3762, 3762, 3762, 5362]	3480523.85	32.78	Maximum number of iterations	average_demand	normal
+53	[3762, 3762, 3762, 3762]	3377528.58	18.00	100	100	[3762, 3762, 3762, 5562]	3491232.21	32.78	Maximum number of iterations	average_demand	normal
+54	[3762, 3762, 3762, 3762]	3377528.58	20.00	100	100	[3762, 3762, 3762, 5762]	3501492.35	33.14	Maximum number of iterations	average_demand	normal
+55	[1197, 1496, 2394, 3890]	2541024.90	10.00	100	100	[1197, 1496, 2394, 4890]	2740761.54	32.71	Maximum number of iterations	minimal_3*3_1197	normal
+56	[1197, 1496, 2394, 3890]	2541024.90	12.00	100	100	[1197, 1496, 2394, 5090]	2777781.54	32.93	Maximum number of iterations	minimal_3*3_1197	normal
+57	[1197, 1496, 2394, 3890]	2541024.90	14.00	100	100	[1197, 1496, 2394, 5290]	2813857.03	32.62	Maximum number of iterations	minimal_3*3_1197	normal
+58	[1197, 1496, 2394, 3890]	2541024.90	16.00	100	100	[1197, 1496, 2394, 5490]	2849018.88	32.74	Maximum number of iterations	minimal_3*3_1197	normal
+59	[1197, 1496, 2394, 3890]	2541024.90	18.00	100	100	[1197, 1496, 2394, 5690]	2883245.33	33.00	Maximum number of iterations	minimal_3*3_1197	normal
+60	[1197, 1496, 2394, 3890]	2541024.90	20.00	100	100	[1197, 1496, 2394, 5890]	2916526.55	32.84	Maximum number of iterations	minimal_3*3_1197	normal
+61	[798, 997, 1596, 2593]	1800849.43	10.00	100	100	[798, 997, 1596, 3593]	2072503.00	33.16	Maximum number of iterations	minimal_3*2_798	normal
+62	[798, 997, 1596, 2593]	1800849.43	12.00	100	100	[798, 997, 1596, 3793]	2124074.82	32.43	Maximum number of iterations	minimal_3*2_798	normal
+63	[798, 997, 1596, 2593]	1800849.43	14.00	100	100	[798, 997, 1596, 3993]	2174655.50	32.77	Maximum number of iterations	minimal_3*2_798	normal
+64	[798, 997, 1596, 2593]	1800849.43	16.00	100	100	[798, 997, 1596, 4193]	2224265.19	32.09	Maximum number of iterations	minimal_3*2_798	normal
+65	[798, 997, 1596, 2593]	1800849.43	18.00	100	100	[798, 997, 1596, 4393]	2272898.93	32.32	Maximum number of iterations	minimal_3*2_798	normal
+66	[798, 997, 1596, 2593]	1800849.43	20.00	100	100	[798, 997, 1596, 4593]	2320607.82	32.37	Maximum number of iterations	minimal_3*2_798	normal
+67	[399, 498, 798, 1296]	862307.94	10.00	100	100	[1399, 498, 798, 1296]	1195068.04	32.02	Maximum number of iterations	minimal_3_399	normal
+68	[399, 498, 798, 1296]	862307.94	12.00	100	100	[1599, 498, 798, 1296]	1259642.88	32.56	Maximum number of iterations	minimal_3_399	normal
+69	[399, 498, 798, 1296]	862307.94	14.00	100	100	[1799, 498, 798, 1296]	1323513.47	32.56	Maximum number of iterations	minimal_3_399	normal
+70	[399, 498, 798, 1296]	862307.94	16.00	100	100	[1999, 498, 798, 1296]	1386623.12	1611.87	Maximum number of iterations	minimal_3_399	normal
+71	[399, 498, 798, 1296]	862307.94	18.00	100	100	[2199, 498, 798, 1296]	1448926.09	45.77	Maximum number of iterations	minimal_3_399	normal
+72	[399, 498, 798, 1296]	862307.94	20.00	100	100	[2399, 498, 798, 1296]	1510374.46	31.94	Maximum number of iterations	minimal_3_399	normal
+73	[474, 449, 424, 399]	437668.78	10.00	100	100	[1474, 449, 424, 399]	780319.77	31.86	Maximum number of iterations	based_on_demand	normal
+74	[474, 449, 424, 399]	437668.78	12.00	100	100	[1674, 449, 424, 399]	848529.19	31.93	Maximum number of iterations	based_on_demand	normal
+75	[474, 449, 424, 399]	437668.78	14.00	100	100	[1874, 449, 424, 399]	916340.22	31.95	Maximum number of iterations	based_on_demand	normal
+76	[474, 449, 424, 399]	437668.78	16.00	100	100	[2074, 449, 424, 399]	983610.53	31.99	Maximum number of iterations	based_on_demand	normal
+77	[474, 449, 424, 399]	437668.78	18.00	100	100	[2274, 449, 424, 399]	1050270.82	32.02	Maximum number of iterations	based_on_demand	normal
+78	[474, 449, 424, 399]	437668.78	20.00	100	100	[2474, 449, 424, 399]	1116282.55	31.83	Maximum number of iterations	based_on_demand	normal
+79	[122, 122, 122, 122]	7735.12	10.00	100	100	[1122, 122, 122, 122]	350436.90	32.27	Maximum number of iterations	higher_demand	normal
+80	[122, 122, 122, 122]	7735.12	12.00	100	100	[1322, 122, 122, 122]	418977.26	32.89	Maximum number of iterations	higher_demand	normal
+81	[122, 122, 122, 122]	7735.12	14.00	100	100	[1522, 122, 122, 122]	487517.61	32.07	Maximum number of iterations	higher_demand	normal
+82	[122, 122, 122, 122]	7735.12	16.00	100	100	[1722, 122, 122, 122]	556057.97	32.09	Maximum number of iterations	higher_demand	normal
+83	[122, 122, 122, 122]	7735.12	18.00	100	100	[1922, 122, 122, 122]	624598.33	32.13	Maximum number of iterations	higher_demand	normal
+84	[122, 122, 122, 122]	7735.12	20.00	100	100	[2122, 122, 122, 122]	693138.68	31.93	Maximum number of iterations	higher_demand	normal
+\.
+
+
+--
+-- Data for Name: experimentos_x_inicial; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.experimentos_x_inicial (id, id_x_inicial, step, cant_iteraciones, iteracion, x_optimo, obj, tiempo) FROM stdin;
+\.
+
+
+--
 -- Data for Name: punto_de_venta; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -786,6 +1021,14 @@ COPY public.punto_de_venta (id, nombre, data) FROM stdin;
 
 
 --
+-- Data for Name: x_inicial; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.x_inicial (id, x_inicial, obj_inicial, estrategia) FROM stdin;
+\.
+
+
+--
 -- Name: centro_de_distribucion_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -807,10 +1050,31 @@ SELECT pg_catalog.setval('public.escenario_id_seq', 500, true);
 
 
 --
+-- Name: experimentos_hill_climbing_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.experimentos_hill_climbing_id_seq', 84, true);
+
+
+--
+-- Name: experimentos_x_inicial_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.experimentos_x_inicial_id_seq', 1, false);
+
+
+--
 -- Name: punto_de_venta_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
 SELECT pg_catalog.setval('public.punto_de_venta_id_seq', 50, true);
+
+
+--
+-- Name: x_inicial_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.x_inicial_id_seq', 1, false);
 
 
 --
@@ -838,11 +1102,43 @@ ALTER TABLE ONLY public.escenario
 
 
 --
+-- Name: experimentos_hill_climbing experimentos_hill_climbing_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.experimentos_hill_climbing
+    ADD CONSTRAINT experimentos_hill_climbing_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: experimentos_x_inicial experimentos_x_inicial_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.experimentos_x_inicial
+    ADD CONSTRAINT experimentos_x_inicial_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: punto_de_venta punto_de_venta_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.punto_de_venta
     ADD CONSTRAINT punto_de_venta_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: x_inicial x_inicial_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.x_inicial
+    ADD CONSTRAINT x_inicial_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: experimentos_x_inicial experimentos_x_inicial_id_x_inicial_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.experimentos_x_inicial
+    ADD CONSTRAINT experimentos_x_inicial_id_x_inicial_fkey FOREIGN KEY (id_x_inicial) REFERENCES public.x_inicial(id);
 
 
 --
