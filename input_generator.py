@@ -117,7 +117,10 @@ def generate(path_to_files: str) -> None:
     number_of_fabrication_centers = 4
     number_of_distribution_centers = 10
     number_of_points_of_sale = 50
+
     number_of_scenarios = 500
+    mean_demand = 678
+    std_dev_demand = 170
 
     # Conjunto de centros de fabricación
     F = list()
@@ -146,7 +149,7 @@ def generate(path_to_files: str) -> None:
     # Conjunto de escenarios de demanda
     E = list()
 
-    generate_demand_scenarios_with_monte_carlo(lambda: normal_distribution(mean_demand=678, std_dev_demand=52), E=E, P=P, kE=number_of_scenarios)
+    generate_demand_scenarios_with_monte_carlo(lambda: normal_distribution(mean_demand, std_dev_demand), E=E, P=P, kE=number_of_scenarios)
     write_csv.add_rows_json(f"{path_to_files}/scenarios-normal.csv",["nombre", "data"], E)
     # print_demand_scenarios(E)
     print(f"[okay] {number_of_scenarios} scenarios using **normal distribution** have been created.")
