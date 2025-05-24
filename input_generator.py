@@ -95,40 +95,53 @@ def uniform_distribution(min_demand: int, max_demand: int) -> int:
 #
 # mean_demand: demanda promedio esperada
 # std_dev_demand: desviación estándar de la demanda.
-def normal_distribution(mean_demand: float, std_dev_demand: float) -> float:
-    return np.random.normal(mean_demand, std_dev_demand)
+# OBS: en el pdf de Enrique, dice que esto devuelve un número real, pero en un audio, me parece que
+# dice que devuelve un entero. 
+def normal_distribution(mean_demand: float, std_dev_demand: float) -> int:
+    return int(np.random.normal(mean_demand, std_dev_demand))
 
 # Genera un número aleatorio siguiendo una distribución de Poisson con parámetro lam.
+# lam: parámetro de la distribución de Poisson.
 def poisson_distribution(lam: float) -> float:
     return np.random.poisson(lam)
 
 # Genera un número aleatorio siguiendo una distribución binomial con n ensayos y probabilidad p.
+# n: número de ensayos
+# p: probabilidad de éxito en cada ensayo.
 def binomial_distribution(n: int, p: float) -> float:
     return np.random.binomial(n, p)
 
 ####################################################################
 # Generacion de conjuntos
 def generate(path_to_files: str) -> None:
+    number_of_fabrication_centers = 4
+    number_of_distribution_centers = 10
+    number_of_points_of_sale = 50
+    number_of_scenarios = 500
+
     # Conjunto de centros de fabricación
     F = list()
-    for i in range(0, 4):
+    for i in range(0, number_of_fabrication_centers):
         add_fabrication_center(F, f"f_{i}")
     write_csv.add_rows(f"{path_to_files}/fabrication_centers.csv",["nombre", "data"], F)
-    print_fabrication_centers(F)
+    # print_fabrication_centers(F)
+    print(f"[okay] {number_of_fabrication_centers} fabrication centers have been created.")
 
     # Conjunto de centros de distribución
     S = list()
-    for i in range(0, 10):
+    for i in range(0, number_of_distribution_centers):
         add_distribution_center(S, f"s_{i}")
     write_csv.add_rows(f"{path_to_files}/distribution_centers.csv",["nombre", "data"], S)
-    print_distribution_centers(S)
+    # print_distribution_centers(S)
+    print(f"[okay] {number_of_distribution_centers} distribution centers have been created.")
 
     # Conjunto de puntos de venta
     P = list()
-    for i in range(0, 50):
+    for i in range(0, number_of_points_of_sale):
         add_point_of_sale(P, f"p_{i}")
     write_csv.add_rows(f"{path_to_files}/points_of_sale.csv",["nombre", "data"], P)
-    print_points_of_sale(P)
+    # print_points_of_sale(P)
+    print(f"[okay] {number_of_points_of_sale} points of sale have been created.")
 
     # Conjunto de escenarios de demanda
     # Obs: la decision de la cantidad de escenarios a generar, junto con las
@@ -136,16 +149,19 @@ def generate(path_to_files: str) -> None:
     # definir en base a la heurística, y a las pruebas que hagamos.
     E = list()
 
-    # Generamos 500 escenarios de demanda aleatorios
-    number_of_scenarios = 500
-    generate_demand_scenarios_with_monte_carlo(lambda: uniform_distribution(min_demand=100, max_demand=500), E=E, P=P, kE=number_of_scenarios)
-    # generate_demand_scenarios_with_monte_carlo(lambda: normal_distribution(mean_demand=678, std_dev_demand=25), E=E, P=P, kE=number_of_scenarios)
-    # generate_demand_scenarios_with_monte_carlo(lambda: poisson_distribution(100), E=E, P=P, kE=number_of_scenarios)
-    # generate_demand_scenarios_with_monte_carlo(lambda: binomial_distribution(100, 0.5), E=E, P=P, kE=number_of_scenarios)
+    # Uniform distribution
+    # distribution_to_use, name_of_distro = uniform_distribution(min_demand=100, max_demand=500), "uniform"
+    # Normal distribution
+    distribution_to_use, name_of_distro = normal_distribution(mean_demand=678, std_dev_demand=52), "normal"
+    # Poisson distribution
+    # distribution_to_use, name_of_distro = poisson_distribution(lam=100), "poisson"
+    # Binomial distribution
+    # distribution_to_use, name_of_distro = binomial_distribution(n=100, p=0.5), "binomial"
 
-    write_csv.add_rows_json(f"{path_to_files}/scenarios.csv",["nombre", "data"], E)
-    print_demand_scenarios(E)
-    print("500 scenarios have been created.")
+    generate_demand_scenarios_with_monte_carlo(lambda: distribution_to_use, E=E, P=P, kE=number_of_scenarios)
+    write_csv.add_rows_json(f"{path_to_files}/scenarios-{name_of_distro}.csv",["nombre", "data"], E)
+    # print_demand_scenarios(E)
+    print(f"[okay] {number_of_scenarios} scenarios using **{name_of_distro} distribution** have been created.")
     #
     ####################################################################
 
