@@ -144,24 +144,12 @@ def generate(path_to_files: str) -> None:
     print(f"[okay] {number_of_points_of_sale} points of sale have been created.")
 
     # Conjunto de escenarios de demanda
-    # Obs: la decision de la cantidad de escenarios a generar, junto con las
-    # demandas mínima y máxima es arbitraria, por ahora. Estos valores se deberían
-    # definir en base a la heurística, y a las pruebas que hagamos.
     E = list()
 
-    # Uniform distribution
-    # distribution_to_use, name_of_distro = uniform_distribution(min_demand=100, max_demand=500), "uniform"
-    # Normal distribution
-    distribution_to_use, name_of_distro = normal_distribution(mean_demand=678, std_dev_demand=52), "normal"
-    # Poisson distribution
-    # distribution_to_use, name_of_distro = poisson_distribution(lam=100), "poisson"
-    # Binomial distribution
-    # distribution_to_use, name_of_distro = binomial_distribution(n=100, p=0.5), "binomial"
-
-    generate_demand_scenarios_with_monte_carlo(lambda: distribution_to_use, E=E, P=P, kE=number_of_scenarios)
-    write_csv.add_rows_json(f"{path_to_files}/scenarios-{name_of_distro}.csv",["nombre", "data"], E)
+    generate_demand_scenarios_with_monte_carlo(lambda: normal_distribution(mean_demand=678, std_dev_demand=52), E=E, P=P, kE=number_of_scenarios)
+    write_csv.add_rows_json(f"{path_to_files}/scenarios-normal.csv",["nombre", "data"], E)
     # print_demand_scenarios(E)
-    print(f"[okay] {number_of_scenarios} scenarios using **{name_of_distro} distribution** have been created.")
+    print(f"[okay] {number_of_scenarios} scenarios using **normal distribution** have been created.")
     #
     ####################################################################
 
