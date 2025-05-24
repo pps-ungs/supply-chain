@@ -2,12 +2,13 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.8
--- Dumped by pg_dump version 16.8
+-- Dumped from database version 17.4
+-- Dumped by pg_dump version 17.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -126,6 +127,91 @@ ALTER SEQUENCE public.escenario_id_seq OWNED BY public.escenario.id;
 
 
 --
+-- Name: experimento_hill_climbing; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.experimento_hill_climbing (
+    id integer NOT NULL,
+    experimento text,
+    x_inicial text,
+    obj_inicial numeric(15,2),
+    step numeric(15,2),
+    cant_iteraciones integer,
+    iteracion integer,
+    x_optimo text,
+    obj numeric(15,2),
+    tiempo numeric(15,2),
+    motivo_parada text,
+    estrategia text,
+    distribucion text
+);
+
+
+ALTER TABLE public.experimento_hill_climbing OWNER TO postgres;
+
+--
+-- Name: experimento_hill_climbing_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.experimento_hill_climbing_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.experimento_hill_climbing_id_seq OWNER TO postgres;
+
+--
+-- Name: experimento_hill_climbing_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.experimento_hill_climbing_id_seq OWNED BY public.experimento_hill_climbing.id;
+
+
+--
+-- Name: experimentos_x_inicial; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.experimentos_x_inicial (
+    id integer NOT NULL,
+    id_x_inicial integer,
+    step numeric(15,2),
+    cant_iteraciones integer,
+    iteracion integer,
+    x_optimo text,
+    obj numeric(15,2),
+    tiempo numeric(15,2)
+);
+
+
+ALTER TABLE public.experimentos_x_inicial OWNER TO postgres;
+
+--
+-- Name: experimentos_x_inicial_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.experimentos_x_inicial_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.experimentos_x_inicial_id_seq OWNER TO postgres;
+
+--
+-- Name: experimentos_x_inicial_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.experimentos_x_inicial_id_seq OWNED BY public.experimentos_x_inicial.id;
+
+
+--
 -- Name: punto_de_venta; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -161,6 +247,42 @@ ALTER SEQUENCE public.punto_de_venta_id_seq OWNED BY public.punto_de_venta.id;
 
 
 --
+-- Name: x_inicial; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.x_inicial (
+    id integer NOT NULL,
+    x_inicial text,
+    obj_inicial numeric(15,9),
+    estrategia text
+);
+
+
+ALTER TABLE public.x_inicial OWNER TO postgres;
+
+--
+-- Name: x_inicial_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.x_inicial_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.x_inicial_id_seq OWNER TO postgres;
+
+--
+-- Name: x_inicial_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.x_inicial_id_seq OWNED BY public.x_inicial.id;
+
+
+--
 -- Name: centro_de_distribucion id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -182,10 +304,31 @@ ALTER TABLE ONLY public.escenario ALTER COLUMN id SET DEFAULT nextval('public.es
 
 
 --
+-- Name: experimento_hill_climbing id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.experimento_hill_climbing ALTER COLUMN id SET DEFAULT nextval('public.experimento_hill_climbing_id_seq'::regclass);
+
+
+--
+-- Name: experimentos_x_inicial id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.experimentos_x_inicial ALTER COLUMN id SET DEFAULT nextval('public.experimentos_x_inicial_id_seq'::regclass);
+
+
+--
 -- Name: punto_de_venta id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.punto_de_venta ALTER COLUMN id SET DEFAULT nextval('public.punto_de_venta_id_seq'::regclass);
+
+
+--
+-- Name: x_inicial id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.x_inicial ALTER COLUMN id SET DEFAULT nextval('public.x_inicial_id_seq'::regclass);
 
 
 --
@@ -727,6 +870,106 @@ COPY public.escenario (id, nombre, data) FROM stdin;
 
 
 --
+-- Data for Name: experimento_hill_climbing; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.experimento_hill_climbing (id, experimento, x_inicial, obj_inicial, step, cant_iteraciones, iteracion, x_optimo, obj, tiempo, motivo_parada, estrategia, distribucion) FROM stdin;
+1	100_it_all_x	[8430, 10537, 16860, 27397]	8401544.14	10.00	100	100	[7430, 10537, 16860, 27397]	8411352.97	35.65	Maximum number of iterations	minimal_1_8430	normal
+2	100_it_all_x	[8430, 10537, 16860, 27397]	8401544.14	12.00	100	100	[7230, 10537, 16860, 27397]	8413204.22	34.51	Maximum number of iterations	minimal_1_8430	normal
+3	100_it_all_x	[8430, 10537, 16860, 27397]	8401544.14	14.00	100	100	[7030, 10537, 16860, 27397]	8415021.23	29.45	Maximum number of iterations	minimal_1_8430	normal
+4	100_it_all_x	[8430, 10537, 16860, 27397]	8401544.14	16.00	100	100	[6830, 10537, 16860, 27397]	8416803.12	22.56	Maximum number of iterations	minimal_1_8430	normal
+5	100_it_all_x	[8430, 10537, 16860, 27397]	8401544.14	18.00	100	100	[6630, 10537, 16860, 27397]	8418540.85	23.28	Maximum number of iterations	minimal_1_8430	normal
+6	100_it_all_x	[8430, 10537, 16860, 27397]	8401544.14	20.00	100	100	[6430, 10537, 16860, 27397]	8420234.06	23.46	Maximum number of iterations	minimal_1_8430	normal
+7	100_it_all_x	[8467, 10583, 16934, 27517]	8398967.62	10.00	100	100	[7467, 10583, 16934, 27517]	8409044.50	23.05	Maximum number of iterations	minimal_2_8467	normal
+8	100_it_all_x	[8467, 10583, 16934, 27517]	8398967.62	12.00	100	100	[7267, 10583, 16934, 27517]	8410942.50	23.40	Maximum number of iterations	minimal_2_8467	normal
+9	100_it_all_x	[8467, 10583, 16934, 27517]	8398967.62	14.00	100	100	[7067, 10583, 16934, 27517]	8412809.25	23.75	Maximum number of iterations	minimal_2_8467	normal
+10	100_it_all_x	[8467, 10583, 16934, 27517]	8398967.62	16.00	100	100	[6867, 10583, 16934, 27517]	8414640.64	23.77	Maximum number of iterations	minimal_2_8467	normal
+11	100_it_all_x	[8467, 10583, 16934, 27517]	8398967.62	18.00	100	100	[6667, 10583, 16934, 27517]	8416436.94	23.60	Maximum number of iterations	minimal_2_8467	normal
+12	100_it_all_x	[8467, 10583, 16934, 27517]	8398967.62	20.00	100	100	[6467, 10583, 16934, 27517]	8418194.92	23.56	Maximum number of iterations	minimal_2_8467	normal
+13	100_it_all_x	[8477, 8472, 8473, 8476]	7877227.30	10.00	100	100	[8477, 8472, 8473, 9476]	7941128.40	28.87	Maximum number of iterations	pseudorandom_5	normal
+14	100_it_all_x	[8477, 8472, 8473, 8476]	7877227.30	12.00	100	100	[8477, 8472, 8473, 9676]	7953199.88	27.92	Maximum number of iterations	pseudorandom_5	normal
+15	100_it_all_x	[8477, 8472, 8473, 8476]	7877227.30	14.00	100	100	[8477, 8472, 8473, 9876]	7965021.76	28.65	Maximum number of iterations	pseudorandom_5	normal
+16	100_it_all_x	[8477, 8472, 8473, 8476]	7877227.30	16.00	100	100	[8477, 8472, 8473, 10076]	7976584.13	24.32	Maximum number of iterations	pseudorandom_5	normal
+17	100_it_all_x	[8477, 8472, 8473, 8476]	7877227.30	18.00	100	100	[8477, 8472, 8473, 10276]	7987921.92	23.68	Maximum number of iterations	pseudorandom_5	normal
+18	100_it_all_x	[8477, 8472, 8473, 8476]	7877227.30	20.00	100	100	[8477, 8472, 8473, 10476]	7999067.46	23.73	Maximum number of iterations	pseudorandom_5	normal
+19	100_it_all_x	[8475, 8458, 8470, 8472]	7875731.04	10.00	100	100	[8475, 8458, 8470, 9472]	7939767.96	23.74	Maximum number of iterations	hybrid_demand_probabilistic	normal
+20	100_it_all_x	[8475, 8458, 8470, 8472]	7875731.04	12.00	100	100	[8475, 8458, 8470, 9672]	7951869.19	23.56	Maximum number of iterations	hybrid_demand_probabilistic	normal
+21	100_it_all_x	[8475, 8458, 8470, 8472]	7875731.04	14.00	100	100	[8475, 8458, 8470, 9872]	7963721.60	23.90	Maximum number of iterations	hybrid_demand_probabilistic	normal
+22	100_it_all_x	[8475, 8458, 8470, 8472]	7875731.04	16.00	100	100	[8475, 8458, 8470, 10072]	7975308.92	23.97	Maximum number of iterations	hybrid_demand_probabilistic	normal
+23	100_it_all_x	[8475, 8458, 8470, 8472]	7875731.04	18.00	100	100	[8475, 8458, 8470, 10272]	7986671.33	23.10	Maximum number of iterations	hybrid_demand_probabilistic	normal
+24	100_it_all_x	[8475, 8458, 8470, 8472]	7875731.04	20.00	100	100	[8475, 8458, 8470, 10472]	7997840.09	23.15	Maximum number of iterations	hybrid_demand_probabilistic	normal
+25	100_it_all_x	[8467, 8468, 8469, 8470]	7875668.58	10.00	100	100	[8467, 8468, 8469, 9470]	7939711.41	23.17	Maximum number of iterations	uniform	normal
+26	100_it_all_x	[8467, 8468, 8469, 8470]	7875668.58	12.00	100	100	[8467, 8468, 8469, 9670]	7951813.96	22.99	Maximum number of iterations	uniform	normal
+27	100_it_all_x	[8467, 8468, 8469, 8470]	7875668.58	14.00	100	100	[8467, 8468, 8469, 9870]	7963667.63	22.82	Maximum number of iterations	uniform	normal
+28	100_it_all_x	[8467, 8468, 8469, 8470]	7875668.58	16.00	100	100	[8467, 8468, 8469, 10070]	7975256.09	1434.03	Maximum number of iterations	uniform	normal
+29	100_it_all_x	[8467, 8468, 8469, 8470]	7875668.58	18.00	100	100	[8467, 8468, 8469, 10270]	7986619.60	388.41	Maximum number of iterations	uniform	normal
+30	100_it_all_x	[8467, 8468, 8469, 8470]	7875668.58	20.00	100	100	[8467, 8468, 8469, 10470]	7997789.37	23.09	Maximum number of iterations	uniform	normal
+31	100_it_all_x	[8467, 8467, 8467, 8467]	7875273.42	10.00	100	100	[8467, 8467, 8467, 9467]	7939351.21	22.73	Maximum number of iterations	average_demand	normal
+32	100_it_all_x	[8467, 8467, 8467, 8467]	7875273.42	12.00	100	100	[8467, 8467, 8467, 9667]	7951461.77	22.59	Maximum number of iterations	average_demand	normal
+33	100_it_all_x	[8467, 8467, 8467, 8467]	7875273.42	14.00	100	100	[8467, 8467, 8467, 9867]	7963322.67	22.42	Maximum number of iterations	average_demand	normal
+34	100_it_all_x	[8467, 8467, 8467, 8467]	7875273.42	16.00	100	100	[8467, 8467, 8467, 10067]	7974918.24	22.39	Maximum number of iterations	average_demand	normal
+35	100_it_all_x	[8467, 8467, 8467, 8467]	7875273.42	18.00	100	100	[8467, 8467, 8467, 10267]	7986288.32	22.77	Maximum number of iterations	average_demand	normal
+36	100_it_all_x	[8467, 8467, 8467, 8467]	7875273.42	20.00	100	100	[8467, 8467, 8467, 10467]	7997464.10	23.03	Maximum number of iterations	average_demand	normal
+37	100_it_all_x	[8467, 8467, 8467, 8467]	7875273.42	10.00	100	100	[8467, 8467, 8467, 9467]	7939351.21	23.03	Maximum number of iterations	weighted_by_scenario_prob	normal
+38	100_it_all_x	[8467, 8467, 8467, 8467]	7875273.42	12.00	100	100	[8467, 8467, 8467, 9667]	7951461.77	23.10	Maximum number of iterations	weighted_by_scenario_prob	normal
+39	100_it_all_x	[8467, 8467, 8467, 8467]	7875273.42	14.00	100	100	[8467, 8467, 8467, 9867]	7963322.67	23.36	Maximum number of iterations	weighted_by_scenario_prob	normal
+40	100_it_all_x	[8467, 8467, 8467, 8467]	7875273.42	16.00	100	100	[8467, 8467, 8467, 10067]	7974918.24	22.90	Maximum number of iterations	weighted_by_scenario_prob	normal
+41	100_it_all_x	[8467, 8467, 8467, 8467]	7875273.42	18.00	100	100	[8467, 8467, 8467, 10267]	7986288.32	23.01	Maximum number of iterations	weighted_by_scenario_prob	normal
+42	100_it_all_x	[8467, 8467, 8467, 8467]	7875273.42	20.00	100	100	[8467, 8467, 8467, 10467]	7997464.10	22.86	Maximum number of iterations	weighted_by_scenario_prob	normal
+43	100_it_all_x	[8430, 8430, 8430, 8430]	7865580.14	10.00	100	100	[8430, 8430, 8430, 9430]	7930514.31	22.88	Maximum number of iterations	most_probable_scenario	normal
+44	100_it_all_x	[8430, 8430, 8430, 8430]	7865580.14	12.00	100	100	[8430, 8430, 8430, 9630]	7942801.88	22.82	Maximum number of iterations	most_probable_scenario	normal
+45	100_it_all_x	[8430, 8430, 8430, 8430]	7865580.14	14.00	100	100	[8430, 8430, 8430, 9830]	7954846.14	22.90	Maximum number of iterations	most_probable_scenario	normal
+46	100_it_all_x	[8430, 8430, 8430, 8430]	7865580.14	16.00	100	100	[8430, 8430, 8430, 10030]	7966638.79	22.98	Maximum number of iterations	most_probable_scenario	normal
+47	100_it_all_x	[8430, 8430, 8430, 8430]	7865580.14	18.00	100	100	[8430, 8430, 8430, 10230]	7978177.48	22.95	Maximum number of iterations	most_probable_scenario	normal
+48	100_it_all_x	[8430, 8430, 8430, 8430]	7865580.14	20.00	100	100	[8430, 8430, 8430, 10430]	7989492.19	22.99	Maximum number of iterations	most_probable_scenario	normal
+49	100_it_all_x	[9389, 8487, 7744, 8099]	7864039.05	10.00	100	100	[9389, 8487, 7744, 9099]	7928967.02	22.99	Maximum number of iterations	cost_sensitive	normal
+50	100_it_all_x	[9389, 8487, 7744, 8099]	7864039.05	12.00	100	100	[9389, 8487, 7744, 9299]	7941252.24	22.79	Maximum number of iterations	cost_sensitive	normal
+51	100_it_all_x	[9389, 8487, 7744, 8099]	7864039.05	14.00	100	100	[9389, 8487, 7744, 9499]	7953294.91	22.60	Maximum number of iterations	cost_sensitive	normal
+52	100_it_all_x	[9389, 8487, 7744, 8099]	7864039.05	16.00	100	100	[9389, 8487, 7744, 9699]	7965085.87	22.65	Maximum number of iterations	cost_sensitive	normal
+53	100_it_all_x	[9389, 8487, 7744, 8099]	7864039.05	18.00	100	100	[9389, 8487, 7744, 9899]	7976623.84	22.87	Maximum number of iterations	cost_sensitive	normal
+54	100_it_all_x	[9389, 8487, 7744, 8099]	7864039.05	20.00	100	100	[9389, 8487, 7744, 10099]	7987939.22	22.61	Maximum number of iterations	cost_sensitive	normal
+55	100_it_all_x	[4089, 5111, 8178, 13289]	7646794.56	10.00	100	100	[4089, 5111, 8178, 14289]	7732828.54	22.92	Maximum number of iterations	minimal_3*3_4089	normal
+56	100_it_all_x	[4089, 5111, 8178, 13289]	7646794.56	12.00	100	100	[4089, 5111, 8178, 14489]	7749097.12	5995.80	Maximum number of iterations	minimal_3*3_4089	normal
+57	100_it_all_x	[4089, 5111, 8178, 13289]	7646794.56	14.00	100	100	[4089, 5111, 8178, 14689]	7765056.86	22.75	Maximum number of iterations	minimal_3*3_4089	normal
+58	100_it_all_x	[4089, 5111, 8178, 13289]	7646794.56	16.00	100	100	[4089, 5111, 8178, 14889]	7780752.27	23.15	Maximum number of iterations	minimal_3*3_4089	normal
+59	100_it_all_x	[4089, 5111, 8178, 13289]	7646794.56	18.00	100	100	[4089, 5111, 8178, 15089]	7796199.80	22.79	Maximum number of iterations	minimal_3*3_4089	normal
+60	100_it_all_x	[4089, 5111, 8178, 13289]	7646794.56	20.00	100	100	[4089, 5111, 8178, 15289]	7811355.17	22.65	Maximum number of iterations	minimal_3*3_4089	normal
+61	100_it_all_x	[2726, 3407, 5452, 8859]	6130430.30	10.00	100	100	[2726, 3407, 5452, 9859]	6348651.25	22.91	Maximum number of iterations	minimal_3*2_2726	normal
+62	100_it_all_x	[2726, 3407, 5452, 8859]	6130430.30	12.00	100	100	[2726, 3407, 5452, 10059]	6390214.73	23.08	Maximum number of iterations	minimal_3*2_2726	normal
+63	100_it_all_x	[2726, 3407, 5452, 8859]	6130430.30	14.00	100	100	[2726, 3407, 5452, 10259]	6431123.43	23.28	Maximum number of iterations	minimal_3*2_2726	normal
+64	100_it_all_x	[2726, 3407, 5452, 8859]	6130430.30	16.00	100	100	[2726, 3407, 5452, 10459]	6471377.19	23.08	Maximum number of iterations	minimal_3*2_2726	normal
+65	100_it_all_x	[2726, 3407, 5452, 8859]	6130430.30	18.00	100	100	[2726, 3407, 5452, 10659]	6510959.64	23.25	Maximum number of iterations	minimal_3*2_2726	normal
+66	100_it_all_x	[2726, 3407, 5452, 8859]	6130430.30	20.00	100	100	[2726, 3407, 5452, 10859]	6549888.93	23.30	Maximum number of iterations	minimal_3*2_2726	normal
+67	100_it_all_x	[1363, 1703, 2726, 4429]	3120307.78	10.00	100	100	[2363, 1703, 2726, 4429]	3454900.65	23.08	Maximum number of iterations	minimal_3_1363	normal
+68	100_it_all_x	[1363, 1703, 2726, 4429]	3120307.78	12.00	100	100	[2563, 1703, 2726, 4429]	3521322.54	23.55	Maximum number of iterations	minimal_3_1363	normal
+69	100_it_all_x	[1363, 1703, 2726, 4429]	3120307.78	14.00	100	100	[2763, 1703, 2726, 4429]	3587581.48	23.53	Maximum number of iterations	minimal_3_1363	normal
+70	100_it_all_x	[1363, 1703, 2726, 4429]	3120307.78	16.00	100	100	[2963, 1703, 2726, 4429]	3653680.72	23.17	Maximum number of iterations	minimal_3_1363	normal
+71	100_it_all_x	[1363, 1703, 2726, 4429]	3120307.78	18.00	100	100	[3163, 1703, 2726, 4429]	3719591.95	23.07	Maximum number of iterations	minimal_3_1363	normal
+72	100_it_all_x	[1363, 1703, 2726, 4429]	3120307.78	20.00	100	100	[3363, 1703, 2726, 4429]	3785306.57	22.38	Maximum number of iterations	minimal_3_1363	normal
+73	100_it_all_x	[1363, 1363, 1363, 1363]	1504268.24	10.00	100	100	[2363, 1363, 1363, 1363]	1846104.09	22.08	Maximum number of iterations	based_on_demand	normal
+74	100_it_all_x	[1363, 1363, 1363, 1363]	1504268.24	12.00	100	100	[2563, 1363, 1363, 1363]	1914392.82	22.03	Maximum number of iterations	based_on_demand	normal
+75	100_it_all_x	[1363, 1363, 1363, 1363]	1504268.24	14.00	100	100	[2763, 1363, 1363, 1363]	1982661.19	22.34	Maximum number of iterations	based_on_demand	normal
+76	100_it_all_x	[1363, 1363, 1363, 1363]	1504268.24	16.00	100	100	[2963, 1363, 1363, 1363]	2050905.71	22.34	Maximum number of iterations	based_on_demand	normal
+77	100_it_all_x	[1363, 1363, 1363, 1363]	1504268.24	18.00	100	100	[3163, 1363, 1363, 1363]	2119124.69	22.66	Maximum number of iterations	based_on_demand	normal
+78	100_it_all_x	[1363, 1363, 1363, 1363]	1504268.24	20.00	100	100	[3363, 1363, 1363, 1363]	2187293.92	23.05	Maximum number of iterations	based_on_demand	normal
+79	100_it_all_x	[266, 266, 266, 266]	5601.25	10.00	100	100	[1266, 266, 266, 266]	348260.44	23.07	Maximum number of iterations	higher_demand	normal
+80	100_it_all_x	[266, 266, 266, 266]	5601.25	12.00	100	100	[1466, 266, 266, 266]	416786.29	22.74	Maximum number of iterations	higher_demand	normal
+81	100_it_all_x	[266, 266, 266, 266]	5601.25	14.00	100	100	[1666, 266, 266, 266]	485305.89	22.51	Maximum number of iterations	higher_demand	normal
+82	100_it_all_x	[266, 266, 266, 266]	5601.25	16.00	100	100	[1866, 266, 266, 266]	553821.79	23.00	Maximum number of iterations	higher_demand	normal
+83	100_it_all_x	[266, 266, 266, 266]	5601.25	18.00	100	100	[2066, 266, 266, 266]	622337.70	817.77	Maximum number of iterations	higher_demand	normal
+84	100_it_all_x	[266, 266, 266, 266]	5601.25	20.00	100	100	[2266, 266, 266, 266]	690853.60	24.88	Maximum number of iterations	higher_demand	normal
+\.
+
+
+--
+-- Data for Name: experimentos_x_inicial; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.experimentos_x_inicial (id, id_x_inicial, step, cant_iteraciones, iteracion, x_optimo, obj, tiempo) FROM stdin;
+\.
+
+
+--
 -- Data for Name: punto_de_venta; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -785,6 +1028,14 @@ COPY public.punto_de_venta (id, nombre, data) FROM stdin;
 
 
 --
+-- Data for Name: x_inicial; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.x_inicial (id, x_inicial, obj_inicial, estrategia) FROM stdin;
+\.
+
+
+--
 -- Name: centro_de_distribucion_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -806,10 +1057,31 @@ SELECT pg_catalog.setval('public.escenario_id_seq', 500, true);
 
 
 --
+-- Name: experimento_hill_climbing_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.experimento_hill_climbing_id_seq', 84, true);
+
+
+--
+-- Name: experimentos_x_inicial_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.experimentos_x_inicial_id_seq', 1, false);
+
+
+--
 -- Name: punto_de_venta_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
 SELECT pg_catalog.setval('public.punto_de_venta_id_seq', 50, true);
+
+
+--
+-- Name: x_inicial_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.x_inicial_id_seq', 1, false);
 
 
 --
@@ -837,11 +1109,43 @@ ALTER TABLE ONLY public.escenario
 
 
 --
+-- Name: experimento_hill_climbing experimento_hill_climbing_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.experimento_hill_climbing
+    ADD CONSTRAINT experimento_hill_climbing_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: experimentos_x_inicial experimentos_x_inicial_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.experimentos_x_inicial
+    ADD CONSTRAINT experimentos_x_inicial_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: punto_de_venta punto_de_venta_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.punto_de_venta
     ADD CONSTRAINT punto_de_venta_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: x_inicial x_inicial_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.x_inicial
+    ADD CONSTRAINT x_inicial_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: experimentos_x_inicial experimentos_x_inicial_id_x_inicial_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.experimentos_x_inicial
+    ADD CONSTRAINT experimentos_x_inicial_id_x_inicial_fkey FOREIGN KEY (id_x_inicial) REFERENCES public.x_inicial(id);
 
 
 --

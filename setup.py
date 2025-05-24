@@ -22,7 +22,7 @@ db.insert_data_from_csv(conn, model.distribution_centers_write(), "./db/data/con
 # Puntos de venta
 db.insert_data_from_csv(conn, model.points_of_sale_write(), "./db/data/conjuntos/points_of_sale.csv")
 # Escenarios
-db.insert_data_from_csv_json(conn, model.scenarios_write(), "./db/data/conjuntos/scenarios.csv")
+db.insert_data_from_csv_json(conn, model.scenarios_write(), "./db/data/conjuntos/scenarios-normal.csv")
 ####################################################################
 
 conn.close()

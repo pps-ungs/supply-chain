@@ -13,9 +13,14 @@ import db.database as db
 import model
 import x_initial
 import neighborhood
+import json
 
 def create_tables():
-    conn = db.get_connection(dbconfig.load_config('../db/database.ini', 'supply_chain'))
+    conn = db.get_connection({
+        "user": "postgres",
+        "password": "1234",
+        "dbname": "supply_chain"
+    })
     query = """
         create table if not exists x_inicial (
             id serial primary key,
@@ -35,8 +40,9 @@ def create_tables():
             tiempo decimal(15, 2)
         );
 
-        create table if not exists experimentos_hill_climbing (
+        create table if not exists experimento_hill_climbing (
             id serial primary key,
+            experimento text,
             x_inicial text,
             obj_inicial decimal(15, 2),
             step decimal(15, 2),
@@ -134,10 +140,15 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
     }
 
 # ESTA HARDCODEADA LA DISTRIBUCION
-def log_optimization_heuristic(X_initial, Z_initial, X, Z, step, it, actual_time, halting_condition, strategy):
-    conn = db.get_connection(dbconfig.load_config('../db/database.ini', 'supply_chain'))
+def log_optimization_heuristic(experiment, X_initial, Z_initial, X, Z, step, it, actual_time, halting_condition, strategy):
+    conn = db.get_connection({
+        "user": "postgres",
+        "password": "1234",
+        "dbname": "supply_chain"
+    })
     query = f"""
-            insert into experimentos_hill_climbing (
+            insert into experimento_hill_climbing (
+                experimento,
                 x_inicial, 
                 obj_inicial,
                 step,
@@ -150,6 +161,7 @@ def log_optimization_heuristic(X_initial, Z_initial, X, Z, step, it, actual_time
                 estrategia,
                 distribucion) 
             values (
+                '{experiment}',
                 '{json.dumps(X_initial)}',
                 {Z_initial:.2f},
                 {step:.2f},
@@ -170,6 +182,7 @@ def optimization_heuristic(
         S: list,
         P: list,
         E: list,
+        experiment: str,
         log_f: callable,
         strategy: str,
         step: int = 20, # ?
@@ -251,7 +264,7 @@ def optimization_heuristic(
         halting_condition = "Stuck in local optimum"
 
     actual_time = time.time() - initial_time
-    log_f(X_initial, Z_initial, X_current, Z_current, step, it, actual_time, halting_condition, strategy)
+    log_f(experiment, X_initial, Z_initial, X_current, Z_current, step, it, actual_time, halting_condition, strategy)
 
     return {
         "X": X_current,
@@ -260,7 +273,7 @@ def optimization_heuristic(
         "halting_condition": halting_condition
     }
 
-def test(F, S, P, E, num_iterations, num_step, heuristic: callable, log_f: callable):
+def test(experiment, F, S, P, E, num_iterations, num_step, heuristic: callable, log_f: callable):
     X_list, obj_list, strategies  = x_initial.get_posible_X_sorted(F, S, P, E)
 
     print("################ X INICIAL ################")
@@ -300,6 +313,8 @@ def test(F, S, P, E, num_iterations, num_step, heuristic: callable, log_f: calla
                     kwargs["max_iterations"] = iteration
                 if "max_iterations_allowed" in params:
                     kwargs["max_iterations_allowed"] = iteration
+                if "experiment" in params:
+                    kwargs["experiment"] = experiment
 
                 result = heuristic(**kwargs)
 
@@ -318,7 +333,11 @@ def test(F, S, P, E, num_iterations, num_step, heuristic: callable, log_f: calla
     print(results)
 
 def main():
-    conn = db.get_connection(dbconfig.load_config('../db/database.ini', 'supply_chain'))
+    conn = db.get_connection({
+        "user": "postgres",
+        "password": "1234",
+        "dbname": "supply_chain"
+    })
 
     F = model.read_fabrication_centers(conn)
     S = model.read_distribution_centers(conn)
@@ -329,10 +348,10 @@ def main():
     conn.close()
 
     num_iterations = [100] # [100, 10000, 100000]
-    num_step = [22, 24, 28, 36, 52, 84] # 20 + 2**(i+1)
+    num_step = [10, 12, 14, 16, 18, 20]
 
     # test(F, S, P, E, num_iterations, num_step, optimization_heuristic_initial_x, log_x_initial)
-    test(F, S, P, E, num_iterations, num_step, optimization_heuristic, log_optimization_heuristic)
+    test("100_it_all_x", F, S, P, E, num_iterations, num_step, optimization_heuristic, log_optimization_heuristic)
 
     db.dump("db/data/supply_chain_dump.sql", {
         "user": "postgres",
