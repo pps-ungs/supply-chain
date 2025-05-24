@@ -1,12 +1,21 @@
-import os, sys, time, inspect
+#!/usr/bin/env python
+
+import os
+import sys
+import time
+import inspect
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/')))
-from db.config import *
-from db.database import *
-import model, x_initial, neighborhood
+
+import db.config as dbconfig
+import db.database as db
+import model
+import x_initial
+import neighborhood
 
 def create_tables():
-    conn = get_connection(load_config('db/database.ini', 'supply_chain'))
+    conn = db.get_connection(dbconfig.load_config('../db/database.ini', 'supply_chain'))
     query = """
         create table if not exists x_inicial (
             id serial primary key,
@@ -41,13 +50,13 @@ def create_tables():
             distribucion text
         );
         """
-    execute(conn, query)
+    db.execute(conn, query)
 
     conn.close()
     print("[okay] Connection to supply_chain closed")
 
 def log_x_initial(X, obj, step, max_iterations, it, best_X, best_obj, initial_time, strategy):
-    conn = get_connection(load_config('db/database.ini', 'supply_chain'))
+    conn = db.get_connection(dbconfig.load_config('../db/database.ini', 'supply_chain'))
     query = f"""
             insert into experimentos_x_inicial (
                 x_inicial, 
@@ -70,7 +79,7 @@ def log_x_initial(X, obj, step, max_iterations, it, best_X, best_obj, initial_ti
                 {time.time() - initial_time:.2f}, 
                 '{strategy}');
             """
-    execute(conn, query)
+    db.execute(conn, query)
     conn.close()
 
 def get_best_sol(X_list: list, Y_list: list) -> tuple:
@@ -86,7 +95,7 @@ def get_best_sol(X_list: list, Y_list: list) -> tuple:
 
 def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: float, 
                                      initial_obj: tuple, log_f: callable, strategy: str, 
-                                     max_iterations: int = 1000) -> list:
+                                     max_iterations: int = 1000) -> dict:
     initial_time = time.time()
 
     X = initial_obj[0]
@@ -126,7 +135,7 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
 
 # ESTA HARDCODEADA LA DISTRIBUCION
 def log_optimization_heuristic(X_initial, Z_initial, X, Z, step, it, actual_time, halting_condition, strategy):
-    conn = get_connection(load_config('db/database.ini', 'supply_chain'))
+    conn = db.get_connection(dbconfig.load_config('../db/database.ini', 'supply_chain'))
     query = f"""
             insert into experimentos_hill_climbing (
                 x_inicial, 
@@ -153,7 +162,7 @@ def log_optimization_heuristic(X_initial, Z_initial, X, Z, step, it, actual_time
                 '{strategy}',
                 'normal');
             """
-    execute(conn, query)
+    db.execute(conn, query)
     conn.close()
 
 def optimization_heuristic(
@@ -167,7 +176,7 @@ def optimization_heuristic(
         initial_obj: tuple = (None, None),
         epsilon: float = 1e-12,
         max_iterations_allowed: int = 1e12,
-        max_stuck_allowed: int = 1e3) -> list:
+        max_stuck_allowed: int = 1e3) -> dict:
 
     X_initial, Z_initial = initial_obj
 
@@ -309,7 +318,7 @@ def test(F, S, P, E, num_iterations, num_step, heuristic: callable, log_f: calla
     print(results)
 
 def main():
-    conn = get_connection(load_config('db/database.ini', 'supply_chain'))
+    conn = db.get_connection(dbconfig.load_config('../db/database.ini', 'supply_chain'))
 
     F = model.read_fabrication_centers(conn)
     S = model.read_distribution_centers(conn)
@@ -325,7 +334,7 @@ def main():
     # test(F, S, P, E, num_iterations, num_step, optimization_heuristic_initial_x, log_x_initial)
     test(F, S, P, E, num_iterations, num_step, optimization_heuristic, log_optimization_heuristic)
 
-    dump("db/data/supply_chain_dump.sql", {
+    db.dump("db/data/supply_chain_dump.sql", {
         "user": "postgres",
         "password": "1234"
     })
