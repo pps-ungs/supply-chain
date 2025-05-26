@@ -1,18 +1,19 @@
 select * from public.experimento_hill_climbing 
-where experimento = '1000_it_all_x' 
+where experimento = '100_it_all_x' 
 order by obj desc;
 
---mejores por estrategia
+--mejores por experimento, estrategia
 select * 
 from public.experimento_hill_climbing 
-where  (experimento, estrategia, obj) in (
+where experimento = '100_it_all_x' and (experimento, estrategia, obj) in (
 	select experimento, estrategia, max(obj) obj
 	from public.experimento_hill_climbing
 	group by experimento, estrategia
 )
-order by obj desc
+order by obj desc;
 
 
+--comparativa de malos, regulares y buenos, por experimento y estrategia
 select
 	coalesce(malos.experimento, regulares.experimento, buenos.experimento) experimento, 
 	coalesce(malos.estrategia, regulares.estrategia, buenos.estrategia) estrategia, 
@@ -23,7 +24,7 @@ from (
 	--cant malos por estrategia
 	select experimento, estrategia, count(*) cant_malos
 	from public.experimento_hill_climbing
-	where obj < 6736187.248 and experimento = '100_it_all_x' 
+	where obj < 3368093.624 and experimento = '100_it_all_x' 
 	group by experimento, estrategia
 ) as malos
 
@@ -44,4 +45,4 @@ full join (
 	group by experimento, estrategia
 ) as buenos
 on regulares.estrategia = buenos.estrategia
-order by cant_buenos desc, cant_regulares desc, cant_malos desc
+order by cant_buenos desc, cant_regulares desc, cant_malos;
