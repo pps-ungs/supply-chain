@@ -958,6 +958,12 @@ COPY public.experimento_hill_climbing (id, experimento, x_inicial, obj_inicial, 
 82	100_it_all_x	[266, 266, 266, 266]	5601.25	16.00	100	100	[1866, 266, 266, 266]	553821.79	23.00	Maximum number of iterations	higher_demand	normal
 83	100_it_all_x	[266, 266, 266, 266]	5601.25	18.00	100	100	[2066, 266, 266, 266]	622337.70	817.77	Maximum number of iterations	higher_demand	normal
 84	100_it_all_x	[266, 266, 266, 266]	5601.25	20.00	100	100	[2266, 266, 266, 266]	690853.60	24.88	Maximum number of iterations	higher_demand	normal
+85	1000_it_all_x	[8430, 10537, 16860, 27397]	8401544.14	10.00	1000	1000	[0, 10537, 16520, 28627]	8451628.45	230.08	Maximum number of iterations	minimal_1_8430	normal
+86	1000_it_all_x	[8430, 10537, 16860, 27397]	8401544.14	12.00	1000	1000	[6, 10537, 15516, 29629]	8453776.38	223.80	Maximum number of iterations	minimal_1_8430	normal
+87	1000_it_all_x	[8430, 10537, 16860, 27397]	8401544.14	14.00	1000	1000	[2, 10537, 14522, 30631]	8455927.57	2104.49	Maximum number of iterations	minimal_1_8430	normal
+88	1000_it_all_x	[8430, 10537, 16860, 27397]	8401544.14	16.00	1000	1000	[14, 10537, 13500, 31621]	8458073.30	217.80	Maximum number of iterations	minimal_1_8430	normal
+89	1000_it_all_x	[8430, 10537, 16860, 27397]	8401544.14	18.00	1000	1000	[6, 10537, 12504, 32617]	8460225.86	217.17	Maximum number of iterations	minimal_1_8430	normal
+90	1000_it_all_x	[8430, 10537, 16860, 27397]	8401544.14	20.00	1000	1000	[10, 10537, 11500, 33617]	8462373.99	20210.42	Maximum number of iterations	minimal_1_8430	normal
 \.
 
 
@@ -1060,7 +1066,7 @@ SELECT pg_catalog.setval('public.escenario_id_seq', 500, true);
 -- Name: experimento_hill_climbing_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.experimento_hill_climbing_id_seq', 84, true);
+SELECT pg_catalog.setval('public.experimento_hill_climbing_id_seq', 90, true);
 
 
 --
