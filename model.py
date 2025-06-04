@@ -624,6 +624,22 @@ def optimization_heuristic(
     return [X_current, Z_current] + get_objective_function_values(F, S, P, E, X_current) + [halting_condition]
 
 def ant_colony():
+    # init_phremones(T)
+    # best_ants = generate_solution(T, n)
+    # actual_ants = best_ants
+
+    # while not stopping_condition():
+    #     for j in range(len(ants)):
+    #         actual_ants[j] = generate_solution(T, n)
+    #         update_phremones(T, actual_ants[j])
+    #     evaporate_phremones(T)
+    #     update_global_phremones(T, actual_ants[j], best_ants)
+
+    #   for j in range(len(ants)):
+    #       if actual_ants[j].objective_value > best_ants.objective_value:
+    #           best_ants = actual_ants[j]
+    # return best_ants
+
     raise NotImplementedError("Ant colony optimization is not implemented yet.")
 #
 ########################################################################
