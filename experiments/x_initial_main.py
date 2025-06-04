@@ -350,7 +350,7 @@ def main():
     num_iterations = [100] # [100, 10000, 100000]
     num_step = [10, 12, 14, 16, 18, 20]
 
-    test("100_it_all_x", F, S, P, E, num_iterations, num_step, optimization_heuristic, log_optimization_heuristic)
+    # test("100_it_all_x", F, S, P, E, num_iterations, num_step, optimization_heuristic, log_optimization_heuristic)
 
     db.dump("db/data/supply_chain_dump.sql", {
         "user": "postgres",
