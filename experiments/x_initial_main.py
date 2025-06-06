@@ -353,6 +353,7 @@ def main():
     num_step = [936, 939, 940]
 
     test("multi_change_900_step", F, S, P, E, num_iterations, num_step, optimization_heuristic, log_optimization_heuristic)
+    # test("100_it_all_x", F, S, P, E, num_iterations, num_step, optimization_heuristic, log_optimization_heuristic)
 
     db.dump("db/data/supply_chain_dump.sql", {
         "user": "postgres",

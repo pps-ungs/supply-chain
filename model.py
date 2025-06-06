@@ -621,6 +621,25 @@ def optimization_heuristic(
         halting_condition = "Stuck in local optimum"
 
     return [X_current, Z_current] + get_objective_function_values(F, S, P, E, X_current) + [halting_condition]
+
+def ant_colony():
+    # init_phremones(T)
+    # best_ants = generate_solution(T, n)
+    # actual_ants = best_ants
+
+    # while not stopping_condition():
+    #     for j in range(len(ants)):
+    #         actual_ants[j] = generate_solution(T, n)
+    #         update_phremones(T, actual_ants[j])
+    #     evaporate_phremones(T)
+    #     update_global_phremones(T, actual_ants[j], best_ants)
+
+    #   for j in range(len(ants)):
+    #       if actual_ants[j].objective_value > best_ants.objective_value:
+    #           best_ants = actual_ants[j]
+    # return best_ants
+
+    raise NotImplementedError("Ant colony optimization is not implemented yet.")
 #
 ########################################################################
 
@@ -671,14 +690,6 @@ def first_improvement_eval(evaluated, current_value):
         if z > current_value:
             return n, z
     return None, current_value
-
-""" DELETE ME?
-def get_initial_X_random_restart(F: list, E: list) -> list:
-    total_demand = sum(sum(d.values()) for d in get_demand_per_point_of_sale(E))
-
-    base_value = total_demand // (len(F) * len(E))
-    return [base_value + random.uniform(0, 10) for _ in range(len(F))]
-"""
 
 def get_objective_value(F, S, P, E, X):
     margin, pStk, pDIn, CTf2s, CTs2p = get_objective_function_values(F, S, P, E, X)

@@ -165,23 +165,24 @@ def get_posible_X_sorted(F: list, S: list, P: list, E: list) -> list:
                     # get_initial_X_uniform(F, E),
                     # get_initial_X_average_demand(F, E),
                     get_initial_X_from_most_probable_scenario(F, E),
-                    # get_initial_X_minimal(F, minimal_1),
-                    # get_initial_X_minimal(F, minimal_2),
-                    # get_initial_X_minimal(F, minimal_3),
-                    # get_initial_X_minimal(F, minimal_3*2),
-                    # get_initial_X_minimal(F, minimal_3*3),
-                    # get_initial_X_higher_demand(F, E),
-                    # get_initial_X_pseudorandom(F, E, 5),
-                    # get_initial_X_weighted_by_scenario_prob(F, E),
-                    # get_initial_X_cost_sensitive(F, S, E),
-                    # get_initial_X_hybrid_demand_probabilistic(F, E, 10),
-                    # get_initial_X_based_on_demand(F, E)
+                    get_initial_X_minimal(F, minimal_1),
+                    get_initial_X_minimal(F, minimal_2),
+                    get_initial_X_minimal(F, minimal_3),
+                    get_initial_X_minimal(F, minimal_3*2),
+                    get_initial_X_minimal(F, minimal_3*3),
+                    get_initial_X_higher_demand(F, E),
+                    get_initial_X_pseudorandom(F, E, 5),
+                    get_initial_X_weighted_by_scenario_prob(F, E),
+                    get_initial_X_cost_sensitive(F, S, E),
+                    get_initial_X_hybrid_demand_probabilistic(F, E, 10),
+                    get_initial_X_based_on_demand(F, E)
                 ]
     
     strategies = [
                     # "uniform", 
                     # "average_demand", 
                     "most_probable_scenario", 
+<<<<<<< HEAD
                     # f"minimal_1_{minimal_1}",
                     # f"minimal_2_{minimal_2}",
                     # f"minimal_3_{minimal_3}",
@@ -193,6 +194,19 @@ def get_posible_X_sorted(F: list, S: list, P: list, E: list) -> list:
                     # "cost_sensitive",
                     # "hybrid_demand_probabilistic",
                     # "based_on_demand"
+=======
+                    f"minimal_1_{minimal_1}",
+                    f"minimal_2_{minimal_2}",
+                    f"minimal_3_{minimal_3}",
+                    f"minimal_3*2_{minimal_3*2}",
+                    f"minimal_3*3_{minimal_3*3}",
+                    "higher_demand", 
+                    "pseudorandom_5",
+                    "weighted_by_scenario_prob",
+                    "cost_sensitive",
+                    "hybrid_demand_probabilistic",
+                    "based_on_demand"
+>>>>>>> a27bd13e76c4d4b7f26c910ebcb5ce40f9c00b4c
                 ]
 
     obj_list = [model.get_objective_value(F, S, P, E, X) for X in X_list]
