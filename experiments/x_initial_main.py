@@ -18,7 +18,7 @@ import json
 def create_tables():
     conn = db.get_connection({
         "user": "postgres",
-        "password": "1234",
+        "password": "",
         "dbname": "supply_chain"
     })
     query = """
@@ -143,7 +143,7 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
 def log_optimization_heuristic(experiment, X_initial, Z_initial, X, Z, step, it, actual_time, halting_condition, strategy):
     conn = db.get_connection({
         "user": "postgres",
-        "password": "1234",
+        "password": "",
         "dbname": "supply_chain"
     })
     query = f"""
@@ -210,7 +210,9 @@ def optimization_heuristic(
 
     while Z_current_is_better and limit_is_not_reached and is_not_stuck:
         # first improvement - multi change, con un step 20, 100.000 iteraciones, y 32 vecinos. 
-        neighbors = neighborhood.create_exhaustive_neighbors(X_current, step, 32)
+        # neighbors = neighborhood.create_exhaustive_neighbors(X_current, step, 32)
+        neighbors = neighborhood.create_multi_change_neighbors(X_current, step, 64)
+
         evaluated_neighbors = [(n, model.get_objective_value(F, S, P, E, n)) for n in neighbors]
 
         # Evaluation of the neighbourhood
@@ -335,7 +337,7 @@ def test(experiment, F, S, P, E, num_iterations, num_step, heuristic: callable, 
 def main():
     conn = db.get_connection({
         "user": "postgres",
-        "password": "1234",
+        "password": "",
         "dbname": "supply_chain"
     })
 
@@ -348,13 +350,13 @@ def main():
     conn.close()
 
     num_iterations = [100] # [100, 10000, 100000]
-    num_step = [10, 12, 14, 16, 18, 20]
+    num_step = [936, 939, 940]
 
-    test("100_it_all_x", F, S, P, E, num_iterations, num_step, optimization_heuristic, log_optimization_heuristic)
+    test("multi_change_900_step", F, S, P, E, num_iterations, num_step, optimization_heuristic, log_optimization_heuristic)
 
     db.dump("db/data/supply_chain_dump.sql", {
         "user": "postgres",
-        "password": "1234"
+        "password": ""
     })
 
 if __name__ == "__main__":

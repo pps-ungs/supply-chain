@@ -544,13 +544,13 @@ def optimization_heuristic(
 
     probabilities = get_probability_of_occurrence(E)
 
-    for i in range(len(E)):
-        scenario = E[i]
-        scenario["probability"] = probabilities[i]
+    # for i in range(len(E)):
+    #     scenario = E[i]
+    #     scenario["probability"] = probabilities[i]
 
     E = sorted(E, key=lambda x: x['probability'], reverse=True)
 
-    X_initial = get_initial_X_minimal(F, 100)
+    X_initial = get_initial_X_from_most_probable_scenario(F, E)
     Z_initial = get_objective_value(F, S, P, E, X_initial)
 
     X_current = X_initial
@@ -567,8 +567,7 @@ def optimization_heuristic(
     ####################################################################
 
     while Z_current_is_better and limit_is_not_reached and is_not_stuck:
-        # first improvement - multi change, con un step 20, 100.000 iteraciones, y 32 vecinos. 
-        neighbors = create_multi_change_neighbors(X_current, step, 32)
+        neighbors = create_multi_change_neighbors(X_current, step, 64)
         evaluated_neighbors = [(n, get_objective_value(F, S, P, E, n)) for n in neighbors]
 
         # Evaluation of the neighbourhood
@@ -628,6 +627,21 @@ def optimization_heuristic(
 # Mínimo valor de stock inicial para cada centro de fabricación
 def get_initial_X_minimal(F: list, min_value: int = 10) -> list:
     return [min_value + i**2 for i in range(len(F))]
+
+def get_initial_X_from_most_probable_scenario(F: list, E: list) -> list:
+    probabilities = get_probability_of_occurrence(E)
+
+    for i in range(len(E)):
+        scenario = E[i]
+        scenario["probability"] = probabilities[i]
+
+    E = sorted(E, key=lambda x: x['probability'], reverse=True)
+
+    single_scenario = get_demand_per_point_of_sale(E)[0] # Escenario más probable
+    total_demand = sum(single_scenario.values())
+    num_fabrication_centers = len(F)
+
+    return [total_demand // num_fabrication_centers for _ in range(num_fabrication_centers)]
 
 # Retorna una lista de vecindarios, en los cuales entre 1 y 3 de los
 # vecinos es ligeramente diferente al valor de X en el mismo índice.

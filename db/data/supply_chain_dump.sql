@@ -2,13 +2,12 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 17.4
--- Dumped by pg_dump version 17.4
+-- Dumped from database version 14.17 (Homebrew)
+-- Dumped by pg_dump version 14.17 (Homebrew)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -47,7 +46,7 @@ CREATE SEQUENCE public.centro_de_distribucion_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.centro_de_distribucion_id_seq OWNER TO postgres;
+ALTER TABLE public.centro_de_distribucion_id_seq OWNER TO postgres;
 
 --
 -- Name: centro_de_distribucion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -82,7 +81,7 @@ CREATE SEQUENCE public.centro_de_fabricacion_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.centro_de_fabricacion_id_seq OWNER TO postgres;
+ALTER TABLE public.centro_de_fabricacion_id_seq OWNER TO postgres;
 
 --
 -- Name: centro_de_fabricacion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -117,7 +116,7 @@ CREATE SEQUENCE public.escenario_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.escenario_id_seq OWNER TO postgres;
+ALTER TABLE public.escenario_id_seq OWNER TO postgres;
 
 --
 -- Name: escenario_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -162,7 +161,7 @@ CREATE SEQUENCE public.experimento_hill_climbing_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.experimento_hill_climbing_id_seq OWNER TO postgres;
+ALTER TABLE public.experimento_hill_climbing_id_seq OWNER TO postgres;
 
 --
 -- Name: experimento_hill_climbing_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -202,7 +201,7 @@ CREATE SEQUENCE public.experimentos_x_inicial_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.experimentos_x_inicial_id_seq OWNER TO postgres;
+ALTER TABLE public.experimentos_x_inicial_id_seq OWNER TO postgres;
 
 --
 -- Name: experimentos_x_inicial_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -237,7 +236,7 @@ CREATE SEQUENCE public.punto_de_venta_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.punto_de_venta_id_seq OWNER TO postgres;
+ALTER TABLE public.punto_de_venta_id_seq OWNER TO postgres;
 
 --
 -- Name: punto_de_venta_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -273,7 +272,7 @@ CREATE SEQUENCE public.x_inicial_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.x_inicial_id_seq OWNER TO postgres;
+ALTER TABLE public.x_inicial_id_seq OWNER TO postgres;
 
 --
 -- Name: x_inicial_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -964,6 +963,382 @@ COPY public.experimento_hill_climbing (id, experimento, x_inicial, obj_inicial, 
 88	1000_it_all_x	[8430, 10537, 16860, 27397]	8401544.14	16.00	1000	1000	[14, 10537, 13500, 31621]	8458073.30	217.80	Maximum number of iterations	minimal_1_8430	normal
 89	1000_it_all_x	[8430, 10537, 16860, 27397]	8401544.14	18.00	1000	1000	[6, 10537, 12504, 32617]	8460225.86	217.17	Maximum number of iterations	minimal_1_8430	normal
 90	1000_it_all_x	[8430, 10537, 16860, 27397]	8401544.14	20.00	1000	1000	[10, 10537, 11500, 33617]	8462373.99	20210.42	Maximum number of iterations	minimal_1_8430	normal
+256	100_it_more_600	[8430, 10537, 16860, 27397]	8401544.14	600.00	100	100	[30, 2137, 60, 53797]	8503171.40	13.55	Maximum number of iterations	minimal_1_8430	normal
+262	100_it_900_step	[8430, 10537, 16860, 27397]	8401544.14	925.00	100	100	[105, 362, 210, 55147]	8505969.93	11.51	Maximum number of iterations	minimal_1_8430	normal
+267	100_it_900_step	[8467, 10583, 16934, 27517]	8398967.62	925.00	100	100	[142, 408, 284, 55267]	8505719.90	11.54	Maximum number of iterations	minimal_2_8467	normal
+272	100_it_900_step	[8477, 8472, 8473, 8476]	7877227.30	925.00	100	100	[152, 147, 148, 55651]	8506482.57	955.66	Maximum number of iterations	pseudorandom_5	normal
+277	100_it_900_step	[8475, 8458, 8470, 8472]	7875731.04	925.00	100	100	[150, 133, 145, 55647]	8506517.30	2983.57	Maximum number of iterations	hybrid_demand_probabilistic	normal
+282	100_it_900_step	[8467, 8468, 8469, 8470]	7875668.58	925.00	100	100	[142, 143, 144, 55645]	8506520.16	2350.82	Maximum number of iterations	uniform	normal
+287	100_it_900_step	[8467, 8467, 8467, 8467]	7875273.42	925.00	100	100	[142, 142, 142, 55642]	8506525.36	1573.08	Maximum number of iterations	average_demand	normal
+292	100_it_900_step	[8467, 8467, 8467, 8467]	7875273.42	925.00	100	100	[142, 142, 142, 55642]	8506525.36	468.59	Maximum number of iterations	weighted_by_scenario_prob	normal
+297	100_it_900_step	[8430, 8430, 8430, 8430]	7865580.14	925.00	100	100	[105, 105, 105, 55605]	8506725.30	12.67	Maximum number of iterations	most_probable_scenario	normal
+302	100_it_900_step	[9389, 8487, 7744, 8099]	7864039.05	925.00	100	100	[139, 162, 344, 55274]	8506018.87	12.77	Maximum number of iterations	cost_sensitive	normal
+307	100_it_900_step	[4089, 5111, 8178, 13289]	7646794.56	925.00	100	100	[389, 486, 778, 54914]	8503819.21	12.11	Maximum number of iterations	minimal_3*3_4089	normal
+312	100_it_900_step	[2726, 3407, 5452, 8859]	6130430.30	925.00	100	100	[876, 632, 827, 54184]	8502255.32	12.27	Maximum number of iterations	minimal_3*2_2726	normal
+317	100_it_900_step	[1363, 1703, 2726, 4429]	3120307.78	925.00	100	100	[438, 778, 876, 54379]	8502975.75	13.48	Maximum number of iterations	minimal_3_1363	normal
+322	100_it_936_945_step	[8430, 10537, 16860, 27397]	8401544.14	939.00	100	100	[918, 208, 897, 54628]	8502734.24	11.60	Maximum number of iterations	minimal_1_8430	normal
+327	100_it_936_945_step	[8467, 10583, 16934, 27517]	8398967.62	939.00	100	100	[16, 254, 32, 55687]	8506842.82	11.98	Maximum number of iterations	minimal_2_8467	normal
+332	100_it_936_945_step	[8477, 8472, 8473, 8476]	7877227.30	939.00	100	100	[26, 21, 22, 56365]	8507270.07	12.56	Maximum number of iterations	pseudorandom_5	normal
+337	100_it_936_945_step	[8475, 8458, 8470, 8472]	7875731.04	939.00	100	100	[24, 7, 19, 56361]	8507315.44	12.63	Maximum number of iterations	hybrid_demand_probabilistic	normal
+342	100_it_936_945_step	[8467, 8468, 8469, 8470]	7875668.58	939.00	100	100	[16, 17, 18, 56359]	8507318.74	12.63	Maximum number of iterations	uniform	normal
+347	100_it_936_945_step	[8467, 8467, 8467, 8467]	7875273.42	939.00	100	100	[16, 16, 16, 56356]	8507326.77	12.62	Maximum number of iterations	average_demand	normal
+352	100_it_936_945_step	[8467, 8467, 8467, 8467]	7875273.42	939.00	100	100	[16, 16, 16, 56356]	8507326.77	12.63	Maximum number of iterations	weighted_by_scenario_prob	normal
+357	100_it_936_945_step	[8430, 8430, 8430, 8430]	7865580.14	939.00	100	100	[918, 918, 918, 53502]	8501470.79	12.46	Maximum number of iterations	most_probable_scenario	normal
+362	100_it_936_945_step	[9389, 8487, 7744, 8099]	7864039.05	939.00	100	100	[938, 36, 232, 55049]	8504566.23	12.48	Maximum number of iterations	cost_sensitive	normal
+367	100_it_936_945_step	[4089, 5111, 8178, 13289]	7646794.56	939.00	100	100	[333, 416, 666, 54605]	8504393.97	11.99	Maximum number of iterations	minimal_3*3_4089	normal
+372	100_it_936_945_step	[2726, 3407, 5452, 8859]	6130430.30	939.00	100	100	[848, 590, 757, 53931]	8502607.05	12.25	Maximum number of iterations	minimal_3*2_2726	normal
+377	100_it_940_945_step	[8430, 10537, 16860, 27397]	8401544.14	944.00	100	100	[878, 153, 812, 54773]	8503140.90	11.34	Maximum number of iterations	minimal_1_8430	normal
+382	100_it_940_945_step	[8467, 10583, 16934, 27517]	8398967.62	943.00	100	100	[923, 210, 903, 53921]	8502786.78	11.32	Maximum number of iterations	minimal_2_8467	normal
+387	100_it_940_945_step	[8477, 8472, 8473, 8476]	7877227.30	942.00	100	100	[941, 936, 937, 53692]	8501288.27	911.25	Maximum number of iterations	pseudorandom_5	normal
+392	100_it_940_945_step	[8475, 8458, 8470, 8472]	7875731.04	941.00	100	100	[6, 930, 1, 55522]	8505633.59	14.14	Maximum number of iterations	hybrid_demand_probabilistic	normal
+397	100_it_940_945_step	[8467, 8468, 8469, 8470]	7875668.58	940.00	100	100	[7, 8, 9, 56410]	8507369.54	12.70	Maximum number of iterations	uniform	normal
+402	100_it_940_945_step	[8467, 8468, 8469, 8470]	7875668.58	945.00	100	100	[907, 908, 909, 53830]	8501465.96	12.41	Maximum number of iterations	uniform	normal
+407	100_it_940_945_step	[8467, 8467, 8467, 8467]	7875273.42	944.00	100	100	[915, 915, 915, 53779]	8501432.33	12.39	Maximum number of iterations	average_demand	normal
+412	100_it_940_945_step	[8467, 8467, 8467, 8467]	7875273.42	943.00	100	100	[923, 923, 923, 53731]	8501389.75	12.36	Maximum number of iterations	weighted_by_scenario_prob	normal
+417	100_it_940_945_step	[8430, 8430, 8430, 8430]	7865580.14	942.00	100	100	[894, 894, 894, 53646]	8501622.24	12.33	Maximum number of iterations	most_probable_scenario	normal
+422	100_it_940_945_step	[9389, 8487, 7744, 8099]	7864039.05	941.00	100	100	[920, 18, 216, 55149]	8504675.56	12.44	Maximum number of iterations	cost_sensitive	normal
+426	100_it_940_945_step	[9389, 8487, 7744, 8099]	7864039.05	945.00	100	100	[884, 927, 184, 54404]	8503092.04	12.46	Maximum number of iterations	cost_sensitive	normal
+430	100_it_940_945_step	[4089, 5111, 8178, 13289]	7646794.56	943.00	100	100	[317, 396, 634, 54781]	8504560.54	11.92	Maximum number of iterations	minimal_3*3_4089	normal
+434	100_it_940_945_step	[2726, 3407, 5452, 8859]	6130430.30	941.00	100	100	[844, 584, 747, 54027]	8502655.62	12.13	Maximum number of iterations	minimal_3*2_2726	normal
+257	100_it_more_600	[8430, 10537, 16860, 27397]	8401544.14	700.00	100	100	[30, 37, 60, 56097]	8507188.14	12.75	Maximum number of iterations	minimal_1_8430	normal
+263	100_it_900_step	[8430, 10537, 16860, 27397]	8401544.14	930.00	100	100	[60, 307, 120, 55297]	8506359.92	11.51	Maximum number of iterations	minimal_1_8430	normal
+268	100_it_900_step	[8467, 10583, 16934, 27517]	8398967.62	930.00	100	100	[97, 353, 194, 55417]	8506123.24	11.53	Maximum number of iterations	minimal_2_8467	normal
+273	100_it_900_step	[8477, 8472, 8473, 8476]	7877227.30	930.00	100	100	[107, 102, 103, 55906]	8506781.48	971.80	Maximum number of iterations	pseudorandom_5	normal
+278	100_it_900_step	[8475, 8458, 8470, 8472]	7875731.04	930.00	100	100	[105, 88, 100, 55902]	8506819.61	1942.98	Maximum number of iterations	hybrid_demand_probabilistic	normal
+283	100_it_900_step	[8467, 8468, 8469, 8470]	7875668.58	930.00	100	100	[97, 98, 99, 55900]	8506822.61	1968.93	Maximum number of iterations	uniform	normal
+288	100_it_900_step	[8467, 8467, 8467, 8467]	7875273.42	930.00	100	100	[97, 97, 97, 55897]	8506828.77	1956.12	Maximum number of iterations	average_demand	normal
+293	100_it_900_step	[8467, 8467, 8467, 8467]	7875273.42	930.00	100	100	[97, 97, 97, 55897]	8506828.77	12.93	Maximum number of iterations	weighted_by_scenario_prob	normal
+298	100_it_900_step	[8430, 8430, 8430, 8430]	7865580.14	930.00	100	100	[60, 60, 60, 55860]	8507056.34	12.78	Maximum number of iterations	most_probable_scenario	normal
+303	100_it_900_step	[9389, 8487, 7744, 8099]	7864039.05	930.00	100	100	[89, 117, 304, 55529]	8506352.33	12.65	Maximum number of iterations	cost_sensitive	normal
+308	100_it_900_step	[4089, 5111, 8178, 13289]	7646794.56	930.00	100	100	[369, 461, 738, 54209]	8503963.60	12.34	Maximum number of iterations	minimal_3*3_4089	normal
+313	100_it_900_step	[2726, 3407, 5452, 8859]	6130430.30	930.00	100	100	[866, 617, 802, 53499]	8502290.03	12.59	Maximum number of iterations	minimal_3*2_2726	normal
+318	100_it_900_step	[1363, 1703, 2726, 4429]	3120307.78	930.00	100	100	[433, 773, 866, 53719]	8502941.26	13.31	Maximum number of iterations	minimal_3_1363	normal
+323	100_it_936_945_step	[8430, 10537, 16860, 27397]	8401544.14	942.00	100	100	[894, 175, 846, 54715]	8502978.51	11.42	Maximum number of iterations	minimal_1_8430	normal
+328	100_it_936_945_step	[8467, 10583, 16934, 27517]	8398967.62	942.00	100	100	[931, 221, 920, 53893]	8502712.18	11.47	Maximum number of iterations	minimal_2_8467	normal
+333	100_it_936_945_step	[8477, 8472, 8473, 8476]	7877227.30	942.00	100	100	[941, 936, 937, 53692]	8501288.27	12.21	Maximum number of iterations	pseudorandom_5	normal
+338	100_it_936_945_step	[8475, 8458, 8470, 8472]	7875731.04	942.00	100	100	[939, 922, 934, 53688]	8501334.75	12.36	Maximum number of iterations	hybrid_demand_probabilistic	normal
+343	100_it_936_945_step	[8467, 8468, 8469, 8470]	7875668.58	942.00	100	100	[931, 932, 933, 53686]	8501338.07	12.66	Maximum number of iterations	uniform	normal
+348	100_it_936_945_step	[8467, 8467, 8467, 8467]	7875273.42	942.00	100	100	[931, 931, 931, 53683]	8501346.18	12.35	Maximum number of iterations	average_demand	normal
+353	100_it_936_945_step	[8467, 8467, 8467, 8467]	7875273.42	942.00	100	100	[931, 931, 931, 53683]	8501346.18	12.25	Maximum number of iterations	weighted_by_scenario_prob	normal
+358	100_it_936_945_step	[8430, 8430, 8430, 8430]	7865580.14	942.00	100	100	[894, 894, 894, 53646]	8501622.24	12.32	Maximum number of iterations	most_probable_scenario	normal
+363	100_it_936_945_step	[9389, 8487, 7744, 8099]	7864039.05	942.00	100	100	[911, 9, 208, 55199]	8504729.04	12.48	Maximum number of iterations	cost_sensitive	normal
+368	100_it_936_945_step	[4089, 5111, 8178, 13289]	7646794.56	942.00	100	100	[321, 401, 642, 54737]	8504520.65	11.88	Maximum number of iterations	minimal_3*3_4089	normal
+373	100_it_940_945_step	[8430, 10537, 16860, 27397]	8401544.14	940.00	100	100	[910, 197, 880, 54657]	8502815.77	11.48	Maximum number of iterations	minimal_1_8430	normal
+378	100_it_940_945_step	[8430, 10537, 16860, 27397]	8401544.14	945.00	100	100	[870, 142, 795, 54802]	8503221.97	11.39	Maximum number of iterations	minimal_1_8430	normal
+383	100_it_940_945_step	[8467, 10583, 16934, 27517]	8398967.62	944.00	100	100	[915, 199, 886, 53949]	8502861.33	11.35	Maximum number of iterations	minimal_2_8467	normal
+388	100_it_940_945_step	[8477, 8472, 8473, 8476]	7877227.30	943.00	100	100	[933, 928, 929, 53740]	8501330.77	12.43	Maximum number of iterations	pseudorandom_5	normal
+393	100_it_940_945_step	[8475, 8458, 8470, 8472]	7875731.04	942.00	100	100	[939, 922, 934, 53688]	8501334.75	13.87	Maximum number of iterations	hybrid_demand_probabilistic	normal
+398	100_it_940_945_step	[8467, 8468, 8469, 8470]	7875668.58	941.00	100	100	[939, 940, 0, 54579]	8503307.84	12.48	Maximum number of iterations	uniform	normal
+403	100_it_940_945_step	[8467, 8467, 8467, 8467]	7875273.42	940.00	100	100	[7, 7, 7, 56407]	8507377.71	12.61	Maximum number of iterations	average_demand	normal
+408	100_it_940_945_step	[8467, 8467, 8467, 8467]	7875273.42	945.00	100	100	[907, 907, 907, 53827]	8501474.61	12.26	Maximum number of iterations	average_demand	normal
+413	100_it_940_945_step	[8467, 8467, 8467, 8467]	7875273.42	944.00	100	100	[915, 915, 915, 53779]	8501432.33	12.24	Maximum number of iterations	weighted_by_scenario_prob	normal
+418	100_it_940_945_step	[8430, 8430, 8430, 8430]	7865580.14	943.00	100	100	[886, 886, 886, 53694]	8501671.11	12.39	Maximum number of iterations	most_probable_scenario	normal
+423	100_it_940_945_step	[9389, 8487, 7744, 8099]	7864039.05	942.00	100	100	[911, 9, 208, 55199]	8504729.04	12.52	Maximum number of iterations	cost_sensitive	normal
+427	100_it_940_945_step	[4089, 5111, 8178, 13289]	7646794.56	940.00	100	100	[329, 411, 658, 54649]	8504437.82	11.99	Maximum number of iterations	minimal_3*3_4089	normal
+431	100_it_940_945_step	[4089, 5111, 8178, 13289]	7646794.56	944.00	100	100	[313, 391, 626, 54825]	8504599.06	11.95	Maximum number of iterations	minimal_3*3_4089	normal
+435	100_it_940_945_step	[2726, 3407, 5452, 8859]	6130430.30	942.00	100	100	[842, 581, 742, 54075]	8502677.17	12.15	Maximum number of iterations	minimal_3*2_2726	normal
+438	100_it_940_945_step	[2726, 3407, 5452, 8859]	6130430.30	945.00	100	100	[836, 572, 727, 54219]	8502731.07	12.18	Maximum number of iterations	minimal_3*2_2726	normal
+441	100_it_940_945_step	[1363, 1703, 2726, 4429]	3120307.78	942.00	100	100	[421, 761, 842, 54355]	8503149.77	12.91	Maximum number of iterations	minimal_3_1363	normal
+444	100_it_940_945_step	[1363, 1703, 2726, 4429]	3120307.78	945.00	100	100	[418, 758, 836, 54514]	8503127.14	12.82	Maximum number of iterations	minimal_3_1363	normal
+447	1000_it_940_step	[8477, 8472, 8473, 8476]	7877227.30	940.00	1000	1000	[17, 12, 13, 56416]	8507320.52	97.39	Maximum number of iterations	pseudorandom_5	normal
+450	1000_it_940_step	[8467, 8467, 8467, 8467]	7875273.42	940.00	1000	1000	[7, 7, 7, 56407]	8507377.71	104.29	Maximum number of iterations	average_demand	normal
+258	100_it_more_600	[8430, 10537, 16860, 27397]	8401544.14	800.00	100	100	[430, 137, 60, 55397]	8505984.42	12.32	Maximum number of iterations	minimal_1_8430	normal
+264	100_it_900_step	[8430, 10537, 16860, 27397]	8401544.14	935.00	100	100	[15, 252, 30, 55447]	8506747.78	11.50	Maximum number of iterations	minimal_1_8430	normal
+269	100_it_900_step	[8467, 10583, 16934, 27517]	8398967.62	935.00	100	100	[52, 298, 104, 55567]	8506524.36	11.58	Maximum number of iterations	minimal_2_8467	normal
+274	100_it_900_step	[8477, 8472, 8473, 8476]	7877227.30	935.00	100	100	[62, 57, 58, 56161]	8507061.57	2042.84	Maximum number of iterations	pseudorandom_5	normal
+279	100_it_900_step	[8475, 8458, 8470, 8472]	7875731.04	935.00	100	100	[60, 43, 55, 56157]	8507103.47	2982.87	Maximum number of iterations	hybrid_demand_probabilistic	normal
+284	100_it_900_step	[8467, 8468, 8469, 8470]	7875668.58	935.00	100	100	[52, 53, 54, 56155]	8507106.62	1991.00	Maximum number of iterations	uniform	normal
+289	100_it_900_step	[8467, 8467, 8467, 8467]	7875273.42	935.00	100	100	[52, 52, 52, 56152]	8507113.76	772.20	Maximum number of iterations	average_demand	normal
+294	100_it_900_step	[8467, 8467, 8467, 8467]	7875273.42	935.00	100	100	[52, 52, 52, 56152]	8507113.76	12.62	Maximum number of iterations	weighted_by_scenario_prob	normal
+299	100_it_900_step	[8430, 8430, 8430, 8430]	7865580.14	935.00	100	100	[15, 15, 15, 56115]	8507363.34	12.57	Maximum number of iterations	most_probable_scenario	normal
+304	100_it_900_step	[9389, 8487, 7744, 8099]	7864039.05	935.00	100	100	[39, 72, 264, 55784]	8506661.89	12.67	Maximum number of iterations	cost_sensitive	normal
+309	100_it_900_step	[4089, 5111, 8178, 13289]	7646794.56	935.00	100	100	[349, 436, 698, 54429]	8504210.92	12.33	Maximum number of iterations	minimal_3*3_4089	normal
+314	100_it_900_step	[2726, 3407, 5452, 8859]	6130430.30	935.00	100	100	[856, 602, 777, 53739]	8502482.90	12.40	Maximum number of iterations	minimal_3*2_2726	normal
+319	100_it_900_step	[1363, 1703, 2726, 4429]	3120307.78	935.00	100	100	[428, 768, 856, 53984]	8503084.06	13.21	Maximum number of iterations	minimal_3_1363	normal
+324	100_it_936_945_step	[8430, 10537, 16860, 27397]	8401544.14	944.00	100	100	[878, 153, 812, 54773]	8503140.90	11.66	Maximum number of iterations	minimal_1_8430	normal
+329	100_it_936_945_step	[8467, 10583, 16934, 27517]	8398967.62	944.00	100	100	[915, 199, 886, 53949]	8502861.33	11.37	Maximum number of iterations	minimal_2_8467	normal
+334	100_it_936_945_step	[8477, 8472, 8473, 8476]	7877227.30	944.00	100	100	[925, 920, 921, 53788]	8501373.03	12.21	Maximum number of iterations	pseudorandom_5	normal
+339	100_it_936_945_step	[8475, 8458, 8470, 8472]	7875731.04	944.00	100	100	[923, 906, 918, 53784]	8501420.32	12.21	Maximum number of iterations	hybrid_demand_probabilistic	normal
+344	100_it_936_945_step	[8467, 8468, 8469, 8470]	7875668.58	944.00	100	100	[915, 916, 917, 53782]	8501423.71	12.25	Maximum number of iterations	uniform	normal
+349	100_it_936_945_step	[8467, 8467, 8467, 8467]	7875273.42	944.00	100	100	[915, 915, 915, 53779]	8501432.33	12.30	Maximum number of iterations	average_demand	normal
+354	100_it_936_945_step	[8467, 8467, 8467, 8467]	7875273.42	944.00	100	100	[915, 915, 915, 53779]	8501432.33	12.26	Maximum number of iterations	weighted_by_scenario_prob	normal
+359	100_it_936_945_step	[8430, 8430, 8430, 8430]	7865580.14	944.00	100	100	[878, 878, 878, 53742]	8501718.77	12.39	Maximum number of iterations	most_probable_scenario	normal
+364	100_it_936_945_step	[9389, 8487, 7744, 8099]	7864039.05	944.00	100	100	[893, 935, 192, 54355]	8503042.52	12.49	Maximum number of iterations	cost_sensitive	normal
+369	100_it_936_945_step	[4089, 5111, 8178, 13289]	7646794.56	944.00	100	100	[313, 391, 626, 54825]	8504599.06	11.98	Maximum number of iterations	minimal_3*3_4089	normal
+374	100_it_940_945_step	[8430, 10537, 16860, 27397]	8401544.14	941.00	100	100	[902, 186, 863, 54686]	8502897.21	11.47	Maximum number of iterations	minimal_1_8430	normal
+379	100_it_940_945_step	[8467, 10583, 16934, 27517]	8398967.62	940.00	100	100	[7, 243, 14, 55717]	8506922.35	11.50	Maximum number of iterations	minimal_2_8467	normal
+384	100_it_940_945_step	[8467, 10583, 16934, 27517]	8398967.62	945.00	100	100	[907, 188, 869, 53977]	8502935.83	11.40	Maximum number of iterations	minimal_2_8467	normal
+389	100_it_940_945_step	[8477, 8472, 8473, 8476]	7877227.30	944.00	100	100	[925, 920, 921, 53788]	8501373.03	13.30	Maximum number of iterations	pseudorandom_5	normal
+394	100_it_940_945_step	[8475, 8458, 8470, 8472]	7875731.04	943.00	100	100	[931, 914, 926, 53736]	8501377.85	12.48	Maximum number of iterations	hybrid_demand_probabilistic	normal
+399	100_it_940_945_step	[8467, 8468, 8469, 8470]	7875668.58	942.00	100	100	[931, 932, 933, 53686]	8501338.07	12.41	Maximum number of iterations	uniform	normal
+404	100_it_940_945_step	[8467, 8467, 8467, 8467]	7875273.42	941.00	100	100	[939, 939, 939, 53635]	8501301.83	12.41	Maximum number of iterations	average_demand	normal
+409	100_it_940_945_step	[8467, 8467, 8467, 8467]	7875273.42	940.00	100	100	[7, 7, 7, 56407]	8507377.71	12.65	Maximum number of iterations	weighted_by_scenario_prob	normal
+414	100_it_940_945_step	[8467, 8467, 8467, 8467]	7875273.42	945.00	100	100	[907, 907, 907, 53827]	8501474.61	12.29	Maximum number of iterations	weighted_by_scenario_prob	normal
+419	100_it_940_945_step	[8430, 8430, 8430, 8430]	7865580.14	944.00	100	100	[878, 878, 878, 53742]	8501718.77	12.27	Maximum number of iterations	most_probable_scenario	normal
+424	100_it_940_945_step	[9389, 8487, 7744, 8099]	7864039.05	943.00	100	100	[902, 0, 200, 55249]	8504781.86	12.46	Maximum number of iterations	cost_sensitive	normal
+428	100_it_940_945_step	[4089, 5111, 8178, 13289]	7646794.56	941.00	100	100	[325, 406, 650, 54693]	8504479.72	11.92	Maximum number of iterations	minimal_3*3_4089	normal
+432	100_it_940_945_step	[4089, 5111, 8178, 13289]	7646794.56	945.00	100	100	[309, 386, 618, 54869]	8504636.83	11.96	Maximum number of iterations	minimal_3*3_4089	normal
+436	100_it_940_945_step	[2726, 3407, 5452, 8859]	6130430.30	943.00	100	100	[840, 578, 737, 54123]	8502696.91	12.08	Maximum number of iterations	minimal_3*2_2726	normal
+439	100_it_940_945_step	[1363, 1703, 2726, 4429]	3120307.78	940.00	100	100	[423, 763, 846, 54249]	8503146.77	12.81	Maximum number of iterations	minimal_3_1363	normal
+442	100_it_940_945_step	[1363, 1703, 2726, 4429]	3120307.78	943.00	100	100	[420, 760, 840, 54408]	8503145.34	12.89	Maximum number of iterations	minimal_3_1363	normal
+445	1000_it_940_step	[8430, 10537, 16860, 27397]	8401544.14	940.00	1000	1000	[910, 197, 880, 54657]	8502815.77	95.51	Maximum number of iterations	minimal_1_8430	normal
+448	1000_it_940_step	[8475, 8458, 8470, 8472]	7875731.04	940.00	1000	1000	[15, 938, 10, 55472]	8505584.63	96.72	Maximum number of iterations	hybrid_demand_probabilistic	normal
+259	100_it_more_600	[8430, 10537, 16860, 27397]	8401544.14	900.00	100	100	[330, 637, 660, 54397]	8503994.53	11.71	Maximum number of iterations	minimal_1_8430	normal
+265	100_it_900_step	[8430, 10537, 16860, 27397]	8401544.14	940.00	100	100	[910, 197, 880, 54657]	8502815.77	11.38	Maximum number of iterations	minimal_1_8430	normal
+270	100_it_900_step	[8467, 10583, 16934, 27517]	8398967.62	940.00	100	100	[7, 243, 14, 55717]	8506922.35	11.51	Maximum number of iterations	minimal_2_8467	normal
+275	100_it_900_step	[8477, 8472, 8473, 8476]	7877227.30	940.00	100	100	[17, 12, 13, 56416]	8507320.52	1980.89	Maximum number of iterations	pseudorandom_5	normal
+280	100_it_900_step	[8475, 8458, 8470, 8472]	7875731.04	940.00	100	100	[15, 938, 10, 55472]	8505584.63	1965.98	Maximum number of iterations	hybrid_demand_probabilistic	normal
+285	100_it_900_step	[8467, 8468, 8469, 8470]	7875668.58	940.00	100	100	[7, 8, 9, 56410]	8507369.54	956.05	Maximum number of iterations	uniform	normal
+290	100_it_900_step	[8467, 8467, 8467, 8467]	7875273.42	940.00	100	100	[7, 7, 7, 56407]	8507377.71	1888.13	Maximum number of iterations	average_demand	normal
+295	100_it_900_step	[8467, 8467, 8467, 8467]	7875273.42	940.00	100	100	[7, 7, 7, 56407]	8507377.71	12.59	Maximum number of iterations	weighted_by_scenario_prob	normal
+300	100_it_900_step	[8430, 8430, 8430, 8430]	7865580.14	940.00	100	100	[910, 910, 910, 53550]	8501521.93	12.35	Maximum number of iterations	most_probable_scenario	normal
+305	100_it_900_step	[9389, 8487, 7744, 8099]	7864039.05	940.00	100	100	[929, 27, 224, 55099]	8504621.20	12.77	Maximum number of iterations	cost_sensitive	normal
+310	100_it_900_step	[4089, 5111, 8178, 13289]	7646794.56	940.00	100	100	[329, 411, 658, 54649]	8504437.82	12.14	Maximum number of iterations	minimal_3*3_4089	normal
+315	100_it_900_step	[2726, 3407, 5452, 8859]	6130430.30	940.00	100	100	[846, 587, 752, 53979]	8502632.39	12.22	Maximum number of iterations	minimal_3*2_2726	normal
+320	100_it_900_step	[1363, 1703, 2726, 4429]	3120307.78	940.00	100	100	[423, 763, 846, 54249]	8503146.77	13.04	Maximum number of iterations	minimal_3_1363	normal
+325	100_it_936_945_step	[8430, 10537, 16860, 27397]	8401544.14	945.00	100	100	[870, 142, 795, 54802]	8503221.97	11.46	Maximum number of iterations	minimal_1_8430	normal
+330	100_it_936_945_step	[8467, 10583, 16934, 27517]	8398967.62	945.00	100	100	[907, 188, 869, 53977]	8502935.83	12.14	Maximum number of iterations	minimal_2_8467	normal
+335	100_it_936_945_step	[8477, 8472, 8473, 8476]	7877227.30	945.00	100	100	[917, 912, 913, 53836]	8501414.10	12.24	Maximum number of iterations	pseudorandom_5	normal
+340	100_it_936_945_step	[8475, 8458, 8470, 8472]	7875731.04	945.00	100	100	[915, 898, 910, 53832]	8501462.56	12.20	Maximum number of iterations	hybrid_demand_probabilistic	normal
+345	100_it_936_945_step	[8467, 8468, 8469, 8470]	7875668.58	945.00	100	100	[907, 908, 909, 53830]	8501465.96	12.28	Maximum number of iterations	uniform	normal
+350	100_it_936_945_step	[8467, 8467, 8467, 8467]	7875273.42	945.00	100	100	[907, 907, 907, 53827]	8501474.61	12.24	Maximum number of iterations	average_demand	normal
+355	100_it_936_945_step	[8467, 8467, 8467, 8467]	7875273.42	945.00	100	100	[907, 907, 907, 53827]	8501474.61	12.34	Maximum number of iterations	weighted_by_scenario_prob	normal
+360	100_it_936_945_step	[8430, 8430, 8430, 8430]	7865580.14	945.00	100	100	[870, 870, 870, 53790]	8501765.82	12.37	Maximum number of iterations	most_probable_scenario	normal
+365	100_it_936_945_step	[9389, 8487, 7744, 8099]	7864039.05	945.00	100	100	[884, 927, 184, 54404]	8503092.04	12.34	Maximum number of iterations	cost_sensitive	normal
+370	100_it_936_945_step	[4089, 5111, 8178, 13289]	7646794.56	945.00	100	100	[309, 386, 618, 54869]	8504636.83	11.90	Maximum number of iterations	minimal_3*3_4089	normal
+375	100_it_940_945_step	[8430, 10537, 16860, 27397]	8401544.14	942.00	100	100	[894, 175, 846, 54715]	8502978.51	11.44	Maximum number of iterations	minimal_1_8430	normal
+380	100_it_940_945_step	[8467, 10583, 16934, 27517]	8398967.62	941.00	100	100	[939, 232, 937, 53865]	8502637.51	11.38	Maximum number of iterations	minimal_2_8467	normal
+385	100_it_940_945_step	[8477, 8472, 8473, 8476]	7877227.30	940.00	100	100	[17, 12, 13, 56416]	8507320.52	12.91	Maximum number of iterations	pseudorandom_5	normal
+390	100_it_940_945_step	[8477, 8472, 8473, 8476]	7877227.30	945.00	100	100	[917, 912, 913, 53836]	8501414.10	13.72	Maximum number of iterations	pseudorandom_5	normal
+395	100_it_940_945_step	[8475, 8458, 8470, 8472]	7875731.04	944.00	100	100	[923, 906, 918, 53784]	8501420.32	12.36	Maximum number of iterations	hybrid_demand_probabilistic	normal
+400	100_it_940_945_step	[8467, 8468, 8469, 8470]	7875668.58	943.00	100	100	[923, 924, 925, 53734]	8501381.22	12.37	Maximum number of iterations	uniform	normal
+405	100_it_940_945_step	[8467, 8467, 8467, 8467]	7875273.42	942.00	100	100	[931, 931, 931, 53683]	8501346.18	12.42	Maximum number of iterations	average_demand	normal
+410	100_it_940_945_step	[8467, 8467, 8467, 8467]	7875273.42	941.00	100	100	[939, 939, 939, 53635]	8501301.83	12.39	Maximum number of iterations	weighted_by_scenario_prob	normal
+415	100_it_940_945_step	[8430, 8430, 8430, 8430]	7865580.14	940.00	100	100	[910, 910, 910, 53550]	8501521.93	12.43	Maximum number of iterations	most_probable_scenario	normal
+420	100_it_940_945_step	[8430, 8430, 8430, 8430]	7865580.14	945.00	100	100	[870, 870, 870, 53790]	8501765.82	12.41	Maximum number of iterations	most_probable_scenario	normal
+425	100_it_940_945_step	[9389, 8487, 7744, 8099]	7864039.05	944.00	100	100	[893, 935, 192, 54355]	8503042.52	12.47	Maximum number of iterations	cost_sensitive	normal
+429	100_it_940_945_step	[4089, 5111, 8178, 13289]	7646794.56	942.00	100	100	[321, 401, 642, 54737]	8504520.65	11.97	Maximum number of iterations	minimal_3*3_4089	normal
+433	100_it_940_945_step	[2726, 3407, 5452, 8859]	6130430.30	940.00	100	100	[846, 587, 752, 53979]	8502632.39	12.22	Maximum number of iterations	minimal_3*2_2726	normal
+437	100_it_940_945_step	[2726, 3407, 5452, 8859]	6130430.30	944.00	100	100	[838, 575, 732, 54171]	8502715.03	12.19	Maximum number of iterations	minimal_3*2_2726	normal
+440	100_it_940_945_step	[1363, 1703, 2726, 4429]	3120307.78	941.00	100	100	[422, 762, 844, 54302]	8503150.02	12.89	Maximum number of iterations	minimal_3_1363	normal
+443	100_it_940_945_step	[1363, 1703, 2726, 4429]	3120307.78	944.00	100	100	[419, 759, 838, 54461]	8503138.19	12.87	Maximum number of iterations	minimal_3_1363	normal
+446	1000_it_940_step	[8467, 10583, 16934, 27517]	8398967.62	940.00	1000	1000	[7, 243, 14, 55717]	8506922.35	95.58	Maximum number of iterations	minimal_2_8467	normal
+449	1000_it_940_step	[8467, 8468, 8469, 8470]	7875668.58	940.00	1000	1000	[7, 8, 9, 56410]	8507369.54	100.87	Maximum number of iterations	uniform	normal
+451	1000_it_940_step	[8467, 8467, 8467, 8467]	7875273.42	940.00	1000	1000	[7, 7, 7, 56407]	8507377.71	96.85	Maximum number of iterations	weighted_by_scenario_prob	normal
+260	100_it_more_600	[8430, 10537, 16860, 27397]	8401544.14	1000.00	100	100	[430, 537, 860, 54397]	8503531.20	11.53	Maximum number of iterations	minimal_1_8430	normal
+221	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	45.00	100	100	[8467, 8467, 8467, 12967]	8121910.69	2036.52	Maximum number of iterations	weighted_by_scenario_prob	normal
+144	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	60.00	100	100	[8467, 8467, 8467, 14467]	8184223.00	490.44	Maximum number of iterations	average_demand	normal
+177	100_it_steps_lower_100	[2726, 3407, 5452, 8859]	6130430.30	115.00	100	100	[2726, 3407, 5452, 20359]	7769173.16	14.86	Maximum number of iterations	minimal_3*2_2726	normal
+227	100_it_steps_lower_100	[8430, 8430, 8430, 8430]	7865580.14	45.00	100	100	[8430, 8430, 8430, 12930]	8115567.60	2622.80	Maximum number of iterations	most_probable_scenario	normal
+117	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	115.00	100	100	[35, 10537, 15710, 29352]	8453224.88	14.24	Maximum number of iterations	minimal_1_8430	normal
+194	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	100.00	100	100	[67, 10583, 16434, 28617]	8451574.61	2985.07	Maximum number of iterations	minimal_2_8467	normal
+253	100_it_steps_lower_100	[1363, 1703, 2726, 4429]	3120307.78	75.00	100	100	[6838, 1703, 2726, 6454]	5454892.97	15.05	Maximum number of iterations	minimal_3_1363	normal
+242	100_it_steps_lower_100	[4089, 5111, 8178, 13289]	7646794.56	100.00	100	100	[4089, 5111, 8178, 23289]	8235094.56	15.55	Maximum number of iterations	minimal_3*3_4089	normal
+160	100_it_steps_lower_100	[9389, 8487, 7744, 8099]	7864039.05	30.00	100	100	[9389, 8487, 7744, 11099]	8041749.62	14.74	Maximum number of iterations	cost_sensitive	normal
+179	100_it_steps_lower_100	[1363, 1703, 2726, 4429]	3120307.78	45.00	100	100	[5863, 1703, 2726, 4429]	4582828.77	14.60	Maximum number of iterations	minimal_3_1363	normal
+161	100_it_steps_lower_100	[9389, 8487, 7744, 8099]	7864039.05	45.00	100	100	[9389, 8487, 7744, 12599]	8114035.77	14.64	Maximum number of iterations	cost_sensitive	normal
+100	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	75.00	100	100	[967, 10583, 16934, 27517]	8448487.79	14.85	Maximum number of iterations	minimal_2_8467	normal
+101	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	100.00	100	100	[67, 10583, 16434, 28617]	8451574.61	14.75	Maximum number of iterations	minimal_2_8467	normal
+240	100_it_steps_lower_100	[4089, 5111, 8178, 13289]	7646794.56	60.00	100	100	[4089, 5111, 8178, 19289]	8061736.47	15.25	Maximum number of iterations	minimal_3*3_4089	normal
+131	100_it_steps_lower_100	[8475, 8458, 8470, 8472]	7875731.04	45.00	100	100	[8475, 8458, 8470, 12972]	8122210.71	14.99	Maximum number of iterations	hybrid_demand_probabilistic	normal
+145	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	75.00	100	100	[8467, 8467, 8467, 15967]	8238129.39	14.82	Maximum number of iterations	average_demand	normal
+157	100_it_steps_lower_100	[8430, 8430, 8430, 8430]	7865580.14	75.00	100	100	[8430, 8430, 8430, 15930]	8233434.96	14.71	Maximum number of iterations	most_probable_scenario	normal
+147	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	115.00	100	100	[8467, 8467, 8467, 19967]	8345257.44	14.71	Maximum number of iterations	average_demand	normal
+146	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	100.00	100	100	[8467, 8467, 8467, 18467]	8310663.26	14.76	Maximum number of iterations	average_demand	normal
+119	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	45.00	100	100	[3967, 10583, 16934, 27517]	8436724.38	14.58	Maximum number of iterations	minimal_2_8467	normal
+241	100_it_steps_lower_100	[4089, 5111, 8178, 13289]	7646794.56	75.00	100	100	[4089, 5111, 8178, 20789]	8134279.25	15.19	Maximum number of iterations	minimal_3*3_4089	normal
+107	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	100.00	100	100	[8477, 8472, 8473, 18476]	8311357.50	14.95	Maximum number of iterations	pseudorandom_5	normal
+237	100_it_steps_lower_100	[9389, 8487, 7744, 8099]	7864039.05	115.00	100	100	[9389, 8487, 7744, 19599]	8340993.17	15.46	Maximum number of iterations	cost_sensitive	normal
+223	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	75.00	100	100	[8467, 8467, 8467, 15967]	8238129.39	2115.36	Maximum number of iterations	weighted_by_scenario_prob	normal
+150	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	60.00	100	100	[8467, 8467, 8467, 14467]	8184223.00	14.66	Maximum number of iterations	weighted_by_scenario_prob	normal
+104	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	45.00	100	100	[8477, 8472, 8473, 12976]	8123189.21	15.11	Maximum number of iterations	pseudorandom_5	normal
+115	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	75.00	100	100	[930, 10537, 16860, 27397]	8448598.85	14.85	Maximum number of iterations	minimal_1_8430	normal
+103	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	30.00	100	100	[8477, 8472, 8473, 11476]	8052050.15	15.04	Maximum number of iterations	pseudorandom_5	normal
+102	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	115.00	100	100	[72, 10583, 15669, 29357]	8453185.43	14.44	Maximum number of iterations	minimal_2_8467	normal
+178	100_it_steps_lower_100	[1363, 1703, 2726, 4429]	3120307.78	30.00	100	100	[4363, 1703, 2726, 4429]	4110026.60	14.51	Maximum number of iterations	minimal_3_1363	normal
+189	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	115.00	100	100	[35, 10537, 15710, 29352]	8453224.88	14.44	Maximum number of iterations	minimal_1_8430	normal
+236	100_it_steps_lower_100	[9389, 8487, 7744, 8099]	7864039.05	100.00	100	100	[9389, 8487, 7744, 18099]	8305794.03	15.41	Maximum number of iterations	cost_sensitive	normal
+226	100_it_steps_lower_100	[8430, 8430, 8430, 8430]	7865580.14	30.00	100	100	[8430, 8430, 8430, 11430]	8043298.19	1254.71	Maximum number of iterations	most_probable_scenario	normal
+220	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	30.00	100	100	[8467, 8467, 8467, 11467]	8050584.36	2987.36	Maximum number of iterations	weighted_by_scenario_prob	normal
+118	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	30.00	100	100	[5467, 10583, 16934, 27517]	8426342.64	14.58	Maximum number of iterations	minimal_2_8467	normal
+222	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	60.00	100	100	[8467, 8467, 8467, 14467]	8184223.00	3052.34	Maximum number of iterations	weighted_by_scenario_prob	normal
+106	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	75.00	100	100	[8477, 8472, 8473, 15976]	8239072.04	14.95	Maximum number of iterations	pseudorandom_5	normal
+116	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	100.00	100	100	[30, 10537, 16460, 28597]	8451612.51	14.47	Maximum number of iterations	minimal_1_8430	normal
+129	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	115.00	100	100	[8477, 8472, 8473, 19976]	8345838.63	14.74	Maximum number of iterations	pseudorandom_5	normal
+128	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	100.00	100	100	[8477, 8472, 8473, 18476]	8311357.50	14.79	Maximum number of iterations	pseudorandom_5	normal
+211	100_it_steps_lower_100	[8467, 8468, 8469, 8470]	7875668.58	75.00	100	100	[8467, 8468, 8469, 15970]	8238322.14	14.94	Maximum number of iterations	uniform	normal
+210	100_it_steps_lower_100	[8467, 8468, 8469, 8470]	7875668.58	60.00	100	100	[8467, 8468, 8469, 14470]	8184448.13	15.16	Maximum number of iterations	uniform	normal
+134	100_it_steps_lower_100	[8475, 8458, 8470, 8472]	7875731.04	100.00	100	100	[8475, 8458, 8470, 18472]	8310827.21	148.90	Maximum number of iterations	hybrid_demand_probabilistic	normal
+135	100_it_steps_lower_100	[8475, 8458, 8470, 8472]	7875731.04	115.00	100	100	[8475, 8458, 8470, 19972]	8345394.78	14.98	Maximum number of iterations	hybrid_demand_probabilistic	normal
+214	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	30.00	100	100	[8467, 8467, 8467, 11467]	8050584.36	2952.21	Maximum number of iterations	average_demand	normal
+181	100_it_steps_lower_100	[1363, 1703, 2726, 4429]	3120307.78	75.00	100	100	[6838, 1703, 2726, 6454]	5454892.97	14.65	Maximum number of iterations	minimal_3_1363	normal
+217	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	75.00	100	100	[8467, 8467, 8467, 15967]	8238129.39	2381.23	Maximum number of iterations	average_demand	normal
+254	100_it_steps_lower_100	[1363, 1703, 2726, 4429]	3120307.78	100.00	100	100	[6863, 1703, 2726, 8929]	6081723.19	15.04	Maximum number of iterations	minimal_3_1363	normal
+173	100_it_steps_lower_100	[2726, 3407, 5452, 8859]	6130430.30	45.00	100	100	[2726, 3407, 5452, 13359]	6981247.22	191.18	Maximum number of iterations	minimal_3*2_2726	normal
+230	100_it_steps_lower_100	[8430, 8430, 8430, 8430]	7865580.14	100.00	100	100	[8430, 8430, 8430, 18430]	8307210.00	15.47	Maximum number of iterations	most_probable_scenario	normal
+97	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	30.00	100	100	[5467, 10583, 16934, 27517]	8426342.64	14.85	Maximum number of iterations	minimal_2_8467	normal
+191	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	45.00	100	100	[3967, 10583, 16934, 27517]	8436724.38	14.91	Maximum number of iterations	minimal_2_8467	normal
+165	100_it_steps_lower_100	[9389, 8487, 7744, 8099]	7864039.05	115.00	100	100	[9389, 8487, 7744, 19599]	8340993.17	14.64	Maximum number of iterations	cost_sensitive	normal
+125	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	45.00	100	100	[8477, 8472, 8473, 12976]	8123189.21	33.67	Maximum number of iterations	pseudorandom_5	normal
+110	100_it_steps_lower_100	[8475, 8458, 8470, 8472]	7875731.04	45.00	100	100	[8475, 8458, 8470, 12972]	8122210.71	15.16	Maximum number of iterations	hybrid_demand_probabilistic	normal
+244	100_it_steps_lower_100	[2726, 3407, 5452, 8859]	6130430.30	30.00	100	100	[2726, 3407, 5452, 11859]	6734029.53	663.61	Maximum number of iterations	minimal_3*2_2726	normal
+143	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	45.00	100	100	[8467, 8467, 8467, 12967]	8121910.69	14.70	Maximum number of iterations	average_demand	normal
+149	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	45.00	100	100	[8467, 8467, 8467, 12967]	8121910.69	14.70	Maximum number of iterations	weighted_by_scenario_prob	normal
+246	100_it_steps_lower_100	[2726, 3407, 5452, 8859]	6130430.30	60.00	100	100	[2726, 3407, 5452, 14859]	7196729.58	15.48	Maximum number of iterations	minimal_3*2_2726	normal
+158	100_it_steps_lower_100	[8430, 8430, 8430, 8430]	7865580.14	100.00	100	100	[8430, 8430, 8430, 18430]	8307210.00	14.70	Maximum number of iterations	most_probable_scenario	normal
+151	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	75.00	100	100	[8467, 8467, 8467, 15967]	8238129.39	14.75	Maximum number of iterations	weighted_by_scenario_prob	normal
+141	100_it_steps_lower_100	[8467, 8468, 8469, 8470]	7875668.58	115.00	100	100	[8467, 8468, 8469, 19970]	8345377.74	14.62	Maximum number of iterations	uniform	normal
+198	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	60.00	100	100	[8477, 8472, 8473, 14476]	8185327.01	14.94	Maximum number of iterations	pseudorandom_5	normal
+192	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	60.00	100	100	[2467, 10583, 16934, 27517]	8444192.76	15.22	Maximum number of iterations	minimal_2_8467	normal
+156	100_it_steps_lower_100	[8430, 8430, 8430, 8430]	7865580.14	60.00	100	100	[8430, 8430, 8430, 14430]	8178739.21	14.70	Maximum number of iterations	most_probable_scenario	normal
+212	100_it_steps_lower_100	[8467, 8468, 8469, 8470]	7875668.58	100.00	100	100	[8467, 8468, 8469, 18470]	8310806.47	14.92	Maximum number of iterations	uniform	normal
+175	100_it_steps_lower_100	[2726, 3407, 5452, 8859]	6130430.30	75.00	100	100	[2726, 3407, 5452, 16359]	7383153.62	14.87	Maximum number of iterations	minimal_3*2_2726	normal
+208	100_it_steps_lower_100	[8467, 8468, 8469, 8470]	7875668.58	30.00	100	100	[8467, 8468, 8469, 11470]	8050882.21	14.96	Maximum number of iterations	uniform	normal
+163	100_it_steps_lower_100	[9389, 8487, 7744, 8099]	7864039.05	75.00	100	100	[9389, 8487, 7744, 15599]	8231954.31	14.69	Maximum number of iterations	cost_sensitive	normal
+204	100_it_steps_lower_100	[8475, 8458, 8470, 8472]	7875731.04	60.00	100	100	[8475, 8458, 8470, 14472]	8184482.26	493.14	Maximum number of iterations	hybrid_demand_probabilistic	normal
+183	100_it_steps_lower_100	[1363, 1703, 2726, 4429]	3120307.78	115.00	100	100	[6883, 1703, 2726, 10409]	6407258.43	1615.65	Maximum number of iterations	minimal_3_1363	normal
+248	100_it_steps_lower_100	[2726, 3407, 5452, 8859]	6130430.30	100.00	100	100	[2726, 3407, 5452, 18859]	7640348.02	15.60	Maximum number of iterations	minimal_3*2_2726	normal
+228	100_it_steps_lower_100	[8430, 8430, 8430, 8430]	7865580.14	60.00	100	100	[8430, 8430, 8430, 14430]	8178739.21	192.90	Maximum number of iterations	most_probable_scenario	normal
+91	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	30.00	100	100	[5430, 10537, 16860, 27397]	8428104.19	14.80	Maximum number of iterations	minimal_1_8430	normal
+224	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	100.00	100	100	[8467, 8467, 8467, 18467]	8310663.26	2906.28	Maximum number of iterations	weighted_by_scenario_prob	normal
+252	100_it_steps_lower_100	[1363, 1703, 2726, 4429]	3120307.78	60.00	100	100	[6883, 1703, 2726, 4909]	5033404.85	15.12	Maximum number of iterations	minimal_3_1363	normal
+167	100_it_steps_lower_100	[4089, 5111, 8178, 13289]	7646794.56	45.00	100	100	[4089, 5111, 8178, 17789]	7978775.31	15.04	Maximum number of iterations	minimal_3*3_4089	normal
+171	100_it_steps_lower_100	[4089, 5111, 8178, 13289]	7646794.56	115.00	100	100	[4089, 5111, 8178, 24789]	8284525.92	14.69	Maximum number of iterations	minimal_3*3_4089	normal
+95	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	100.00	100	100	[30, 10537, 16460, 28597]	8451612.51	14.78	Maximum number of iterations	minimal_1_8430	normal
+206	100_it_steps_lower_100	[8475, 8458, 8470, 8472]	7875731.04	100.00	100	100	[8475, 8458, 8470, 18472]	8310827.21	14.95	Maximum number of iterations	hybrid_demand_probabilistic	normal
+200	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	100.00	100	100	[8477, 8472, 8473, 18476]	8311357.50	14.96	Maximum number of iterations	pseudorandom_5	normal
+93	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	60.00	100	100	[2430, 10537, 16860, 27397]	8444880.29	15.14	Maximum number of iterations	minimal_1_8430	normal
+169	100_it_steps_lower_100	[4089, 5111, 8178, 13289]	7646794.56	75.00	100	100	[4089, 5111, 8178, 20789]	8134279.25	14.89	Maximum number of iterations	minimal_3*3_4089	normal
+235	100_it_steps_lower_100	[9389, 8487, 7744, 8099]	7864039.05	75.00	100	100	[9389, 8487, 7744, 15599]	8231954.31	15.13	Maximum number of iterations	cost_sensitive	normal
+202	100_it_steps_lower_100	[8475, 8458, 8470, 8472]	7875731.04	30.00	100	100	[8475, 8458, 8470, 11472]	8050928.37	14.98	Maximum number of iterations	hybrid_demand_probabilistic	normal
+184	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	30.00	100	100	[5430, 10537, 16860, 27397]	8428104.19	14.83	Maximum number of iterations	minimal_1_8430	normal
+98	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	45.00	100	100	[3967, 10583, 16934, 27517]	8436724.38	14.93	Maximum number of iterations	minimal_2_8467	normal
+126	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	60.00	100	100	[8477, 8472, 8473, 14476]	8185327.01	14.70	Maximum number of iterations	pseudorandom_5	normal
+121	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	75.00	100	100	[967, 10583, 16934, 27517]	8448487.79	14.65	Maximum number of iterations	minimal_2_8467	normal
+155	100_it_steps_lower_100	[8430, 8430, 8430, 8430]	7865580.14	45.00	100	100	[8430, 8430, 8430, 12930]	8115567.60	14.83	Maximum number of iterations	most_probable_scenario	normal
+109	100_it_steps_lower_100	[8475, 8458, 8470, 8472]	7875731.04	30.00	100	100	[8475, 8458, 8470, 11472]	8050928.37	15.08	Maximum number of iterations	hybrid_demand_probabilistic	normal
+154	100_it_steps_lower_100	[8430, 8430, 8430, 8430]	7865580.14	30.00	100	100	[8430, 8430, 8430, 11430]	8043298.19	189.09	Maximum number of iterations	most_probable_scenario	normal
+234	100_it_steps_lower_100	[9389, 8487, 7744, 8099]	7864039.05	60.00	100	100	[9389, 8487, 7744, 14099]	8177231.12	15.22	Maximum number of iterations	cost_sensitive	normal
+232	100_it_steps_lower_100	[9389, 8487, 7744, 8099]	7864039.05	30.00	100	100	[9389, 8487, 7744, 11099]	8041749.62	15.44	Maximum number of iterations	cost_sensitive	normal
+139	100_it_steps_lower_100	[8467, 8468, 8469, 8470]	7875668.58	75.00	100	100	[8467, 8468, 8469, 15970]	8238322.14	14.73	Maximum number of iterations	uniform	normal
+168	100_it_steps_lower_100	[4089, 5111, 8178, 13289]	7646794.56	60.00	100	100	[4089, 5111, 8178, 19289]	8061736.47	14.69	Maximum number of iterations	minimal_3*3_4089	normal
+137	100_it_steps_lower_100	[8467, 8468, 8469, 8470]	7875668.58	45.00	100	100	[8467, 8468, 8469, 12970]	8122170.79	14.65	Maximum number of iterations	uniform	normal
+174	100_it_steps_lower_100	[2726, 3407, 5452, 8859]	6130430.30	60.00	100	100	[2726, 3407, 5452, 14859]	7196729.58	14.89	Maximum number of iterations	minimal_3*2_2726	normal
+152	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	100.00	100	100	[8467, 8467, 8467, 18467]	8310663.26	14.66	Maximum number of iterations	weighted_by_scenario_prob	normal
+251	100_it_steps_lower_100	[1363, 1703, 2726, 4429]	3120307.78	45.00	100	100	[5863, 1703, 2726, 4429]	4582828.77	15.02	Maximum number of iterations	minimal_3_1363	normal
+197	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	45.00	100	100	[8477, 8472, 8473, 12976]	8123189.21	14.94	Maximum number of iterations	pseudorandom_5	normal
+250	100_it_steps_lower_100	[1363, 1703, 2726, 4429]	3120307.78	30.00	100	100	[4363, 1703, 2726, 4429]	4110026.60	15.18	Maximum number of iterations	minimal_3_1363	normal
+245	100_it_steps_lower_100	[2726, 3407, 5452, 8859]	6130430.30	45.00	100	100	[2726, 3407, 5452, 13359]	6981247.22	15.38	Maximum number of iterations	minimal_3*2_2726	normal
+196	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	30.00	100	100	[8477, 8472, 8473, 11476]	8052050.15	14.98	Maximum number of iterations	pseudorandom_5	normal
+136	100_it_steps_lower_100	[8467, 8468, 8469, 8470]	7875668.58	30.00	100	100	[8467, 8468, 8469, 11470]	8050882.21	14.74	Maximum number of iterations	uniform	normal
+138	100_it_steps_lower_100	[8467, 8468, 8469, 8470]	7875668.58	60.00	100	100	[8467, 8468, 8469, 14470]	8184448.13	14.60	Maximum number of iterations	uniform	normal
+218	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	100.00	100	100	[8467, 8467, 8467, 18467]	8310663.26	1083.48	Maximum number of iterations	average_demand	normal
+190	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	30.00	100	100	[5467, 10583, 16934, 27517]	8426342.64	14.82	Maximum number of iterations	minimal_2_8467	normal
+127	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	75.00	100	100	[8477, 8472, 8473, 15976]	8239072.04	14.72	Maximum number of iterations	pseudorandom_5	normal
+123	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	115.00	100	100	[72, 10583, 15669, 29357]	8453185.43	14.26	Maximum number of iterations	minimal_2_8467	normal
+99	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	60.00	100	100	[2467, 10583, 16934, 27517]	8444192.76	14.85	Maximum number of iterations	minimal_2_8467	normal
+120	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	60.00	100	100	[2467, 10583, 16934, 27517]	8444192.76	14.56	Maximum number of iterations	minimal_2_8467	normal
+185	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	45.00	100	100	[3930, 10537, 16860, 27397]	8438028.44	14.90	Maximum number of iterations	minimal_1_8430	normal
+108	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	115.00	100	100	[8477, 8472, 8473, 19976]	8345838.63	15.26	Maximum number of iterations	pseudorandom_5	normal
+219	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	115.00	100	100	[8467, 8467, 8467, 19967]	8345257.44	1925.43	Maximum number of iterations	average_demand	normal
+111	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	30.00	100	100	[5430, 10537, 16860, 27397]	8428104.19	14.84	Maximum number of iterations	minimal_1_8430	normal
+233	100_it_steps_lower_100	[9389, 8487, 7744, 8099]	7864039.05	45.00	100	100	[9389, 8487, 7744, 12599]	8114035.77	69.33	Maximum number of iterations	cost_sensitive	normal
+124	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	30.00	100	100	[8477, 8472, 8473, 11476]	8052050.15	14.75	Maximum number of iterations	pseudorandom_5	normal
+112	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	30.00	100	100	[5430, 10537, 16860, 27397]	8428104.19	14.92	Maximum number of iterations	minimal_1_8430	normal
+238	100_it_steps_lower_100	[4089, 5111, 8178, 13289]	7646794.56	30.00	100	100	[4089, 5111, 8178, 16289]	7882966.26	15.11	Maximum number of iterations	minimal_3*3_4089	normal
+216	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	60.00	100	100	[8467, 8467, 8467, 14467]	8184223.00	1047.49	Maximum number of iterations	average_demand	normal
+186	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	60.00	100	100	[2430, 10537, 16860, 27397]	8444880.29	14.86	Maximum number of iterations	minimal_1_8430	normal
+187	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	75.00	100	100	[930, 10537, 16860, 27397]	8448598.85	14.88	Maximum number of iterations	minimal_1_8430	normal
+132	100_it_steps_lower_100	[8475, 8458, 8470, 8472]	7875731.04	60.00	100	100	[8475, 8458, 8470, 14472]	8184482.26	14.69	Maximum number of iterations	hybrid_demand_probabilistic	normal
+133	100_it_steps_lower_100	[8475, 8458, 8470, 8472]	7875731.04	75.00	100	100	[8475, 8458, 8470, 15972]	8238350.95	14.72	Maximum number of iterations	hybrid_demand_probabilistic	normal
+113	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	45.00	100	100	[3930, 10537, 16860, 27397]	8438028.44	14.70	Maximum number of iterations	minimal_1_8430	normal
+148	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	30.00	100	100	[8467, 8467, 8467, 11467]	8050584.36	14.72	Maximum number of iterations	weighted_by_scenario_prob	normal
+239	100_it_steps_lower_100	[4089, 5111, 8178, 13289]	7646794.56	45.00	100	100	[4089, 5111, 8178, 17789]	7978775.31	15.19	Maximum number of iterations	minimal_3*3_4089	normal
+140	100_it_steps_lower_100	[8467, 8468, 8469, 8470]	7875668.58	100.00	100	100	[8467, 8468, 8469, 18470]	8310806.47	14.64	Maximum number of iterations	uniform	normal
+247	100_it_steps_lower_100	[2726, 3407, 5452, 8859]	6130430.30	75.00	100	100	[2726, 3407, 5452, 16359]	7383153.62	15.69	Maximum number of iterations	minimal_3*2_2726	normal
+96	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	115.00	100	100	[35, 10537, 15710, 29352]	8453224.88	14.47	Maximum number of iterations	minimal_1_8430	normal
+114	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	60.00	100	100	[2430, 10537, 16860, 27397]	8444880.29	14.81	Maximum number of iterations	minimal_1_8430	normal
+164	100_it_steps_lower_100	[9389, 8487, 7744, 8099]	7864039.05	100.00	100	100	[9389, 8487, 7744, 18099]	8305794.03	14.62	Maximum number of iterations	cost_sensitive	normal
+105	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	60.00	100	100	[8477, 8472, 8473, 14476]	8185327.01	15.05	Maximum number of iterations	pseudorandom_5	normal
+188	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	100.00	100	100	[30, 10537, 16460, 28597]	8451612.51	14.66	Maximum number of iterations	minimal_1_8430	normal
+231	100_it_steps_lower_100	[8430, 8430, 8430, 8430]	7865580.14	115.00	100	100	[8430, 8430, 8430, 19930]	8342367.83	15.39	Maximum number of iterations	most_probable_scenario	normal
+255	100_it_steps_lower_100	[1363, 1703, 2726, 4429]	3120307.78	115.00	100	100	[6883, 1703, 2726, 10409]	6407258.43	14.93	Maximum number of iterations	minimal_3_1363	normal
+122	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	100.00	100	100	[67, 10583, 16434, 28617]	8451574.61	14.46	Maximum number of iterations	minimal_2_8467	normal
+162	100_it_steps_lower_100	[9389, 8487, 7744, 8099]	7864039.05	60.00	100	100	[9389, 8487, 7744, 14099]	8177231.12	14.66	Maximum number of iterations	cost_sensitive	normal
+172	100_it_steps_lower_100	[2726, 3407, 5452, 8859]	6130430.30	30.00	100	100	[2726, 3407, 5452, 11859]	6734029.53	920.24	Maximum number of iterations	minimal_3*2_2726	normal
+249	100_it_steps_lower_100	[2726, 3407, 5452, 8859]	6130430.30	115.00	100	100	[2726, 3407, 5452, 20359]	7769173.16	15.30	Maximum number of iterations	minimal_3*2_2726	normal
+199	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	75.00	100	100	[8477, 8472, 8473, 15976]	8239072.04	14.96	Maximum number of iterations	pseudorandom_5	normal
+193	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	75.00	100	100	[967, 10583, 16934, 27517]	8448487.79	1933.43	Maximum number of iterations	minimal_2_8467	normal
+159	100_it_steps_lower_100	[8430, 8430, 8430, 8430]	7865580.14	115.00	100	100	[8430, 8430, 8430, 19930]	8342367.83	14.79	Maximum number of iterations	most_probable_scenario	normal
+142	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	30.00	100	100	[8467, 8467, 8467, 11467]	8050584.36	14.73	Maximum number of iterations	average_demand	normal
+130	100_it_steps_lower_100	[8475, 8458, 8470, 8472]	7875731.04	30.00	100	100	[8475, 8458, 8470, 11472]	8050928.37	14.72	Maximum number of iterations	hybrid_demand_probabilistic	normal
+153	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	115.00	100	100	[8467, 8467, 8467, 19967]	8345257.44	14.67	Maximum number of iterations	weighted_by_scenario_prob	normal
+229	100_it_steps_lower_100	[8430, 8430, 8430, 8430]	7865580.14	75.00	100	100	[8430, 8430, 8430, 15930]	8233434.96	15.55	Maximum number of iterations	most_probable_scenario	normal
+225	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	115.00	100	100	[8467, 8467, 8467, 19967]	8345257.44	3073.54	Maximum number of iterations	weighted_by_scenario_prob	normal
+243	100_it_steps_lower_100	[4089, 5111, 8178, 13289]	7646794.56	115.00	100	100	[4089, 5111, 8178, 24789]	8284525.92	15.69	Maximum number of iterations	minimal_3*3_4089	normal
+215	100_it_steps_lower_100	[8467, 8467, 8467, 8467]	7875273.42	45.00	100	100	[8467, 8467, 8467, 12967]	8121910.69	2932.52	Maximum number of iterations	average_demand	normal
+213	100_it_steps_lower_100	[8467, 8468, 8469, 8470]	7875668.58	115.00	100	100	[8467, 8468, 8469, 19970]	8345377.74	15.30	Maximum number of iterations	uniform	normal
+209	100_it_steps_lower_100	[8467, 8468, 8469, 8470]	7875668.58	45.00	100	100	[8467, 8468, 8469, 12970]	8122170.79	14.94	Maximum number of iterations	uniform	normal
+166	100_it_steps_lower_100	[4089, 5111, 8178, 13289]	7646794.56	30.00	100	100	[4089, 5111, 8178, 16289]	7882966.26	14.77	Maximum number of iterations	minimal_3*3_4089	normal
+203	100_it_steps_lower_100	[8475, 8458, 8470, 8472]	7875731.04	45.00	100	100	[8475, 8458, 8470, 12972]	8122210.71	14.98	Maximum number of iterations	hybrid_demand_probabilistic	normal
+170	100_it_steps_lower_100	[4089, 5111, 8178, 13289]	7646794.56	100.00	100	100	[4089, 5111, 8178, 23289]	8235094.56	14.74	Maximum number of iterations	minimal_3*3_4089	normal
+180	100_it_steps_lower_100	[1363, 1703, 2726, 4429]	3120307.78	60.00	100	100	[6883, 1703, 2726, 4909]	5033404.85	14.61	Maximum number of iterations	minimal_3_1363	normal
+205	100_it_steps_lower_100	[8475, 8458, 8470, 8472]	7875731.04	75.00	100	100	[8475, 8458, 8470, 15972]	8238350.95	14.97	Maximum number of iterations	hybrid_demand_probabilistic	normal
+176	100_it_steps_lower_100	[2726, 3407, 5452, 8859]	6130430.30	100.00	100	100	[2726, 3407, 5452, 18859]	7640348.02	14.80	Maximum number of iterations	minimal_3*2_2726	normal
+195	100_it_steps_lower_100	[8467, 10583, 16934, 27517]	8398967.62	115.00	100	100	[72, 10583, 15669, 29357]	8453185.43	14.50	Maximum number of iterations	minimal_2_8467	normal
+182	100_it_steps_lower_100	[1363, 1703, 2726, 4429]	3120307.78	100.00	100	100	[6863, 1703, 2726, 8929]	6081723.19	14.96	Maximum number of iterations	minimal_3_1363	normal
+94	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	75.00	100	100	[930, 10537, 16860, 27397]	8448598.85	14.84	Maximum number of iterations	minimal_1_8430	normal
+207	100_it_steps_lower_100	[8475, 8458, 8470, 8472]	7875731.04	115.00	100	100	[8475, 8458, 8470, 19972]	8345394.78	14.90	Maximum number of iterations	hybrid_demand_probabilistic	normal
+92	100_it_steps_lower_100	[8430, 10537, 16860, 27397]	8401544.14	45.00	100	100	[3930, 10537, 16860, 27397]	8438028.44	15.00	Maximum number of iterations	minimal_1_8430	normal
+201	100_it_steps_lower_100	[8477, 8472, 8473, 8476]	7877227.30	115.00	100	100	[8477, 8472, 8473, 19976]	8345838.63	14.96	Maximum number of iterations	pseudorandom_5	normal
+261	100_it_900_step	[8430, 10537, 16860, 27397]	8401544.14	920.00	100	100	[150, 417, 300, 54997]	8505577.74	11.46	Maximum number of iterations	minimal_1_8430	normal
+266	100_it_900_step	[8467, 10583, 16934, 27517]	8398967.62	920.00	100	100	[187, 463, 374, 55117]	8505314.41	11.51	Maximum number of iterations	minimal_2_8467	normal
+271	100_it_900_step	[8477, 8472, 8473, 8476]	7877227.30	920.00	100	100	[197, 192, 193, 55396]	8506161.04	12.59	Maximum number of iterations	pseudorandom_5	normal
+276	100_it_900_step	[8475, 8458, 8470, 8472]	7875731.04	920.00	100	100	[195, 178, 190, 55392]	8506191.65	1320.01	Maximum number of iterations	hybrid_demand_probabilistic	normal
+281	100_it_900_step	[8467, 8468, 8469, 8470]	7875668.58	920.00	100	100	[187, 188, 189, 55390]	8506194.36	2015.18	Maximum number of iterations	uniform	normal
+286	100_it_900_step	[8467, 8467, 8467, 8467]	7875273.42	920.00	100	100	[187, 187, 187, 55387]	8506198.54	1706.13	Maximum number of iterations	average_demand	normal
+291	100_it_900_step	[8467, 8467, 8467, 8467]	7875273.42	920.00	100	100	[187, 187, 187, 55387]	8506198.54	1048.93	Maximum number of iterations	weighted_by_scenario_prob	normal
+296	100_it_900_step	[8430, 8430, 8430, 8430]	7865580.14	920.00	100	100	[150, 150, 150, 55350]	8506378.81	12.62	Maximum number of iterations	most_probable_scenario	normal
+301	100_it_900_step	[9389, 8487, 7744, 8099]	7864039.05	920.00	100	100	[189, 207, 384, 55019]	8505670.02	12.78	Maximum number of iterations	cost_sensitive	normal
+306	100_it_900_step	[4089, 5111, 8178, 13289]	7646794.56	920.00	100	100	[409, 511, 818, 54689]	8503691.95	12.26	Maximum number of iterations	minimal_3*3_4089	normal
+311	100_it_900_step	[2726, 3407, 5452, 8859]	6130430.30	920.00	100	100	[886, 647, 852, 53939]	8502201.36	12.34	Maximum number of iterations	minimal_3*2_2726	normal
+316	100_it_900_step	[1363, 1703, 2726, 4429]	3120307.78	920.00	100	100	[443, 783, 886, 54109]	8502975.84	13.18	Maximum number of iterations	minimal_3_1363	normal
+321	100_it_936_945_step	[8430, 10537, 16860, 27397]	8401544.14	936.00	100	100	[6, 241, 12, 55477]	8506825.12	11.41	Maximum number of iterations	minimal_1_8430	normal
+326	100_it_936_945_step	[8467, 10583, 16934, 27517]	8398967.62	936.00	100	100	[43, 287, 86, 55597]	8506604.08	11.99	Maximum number of iterations	minimal_2_8467	normal
+331	100_it_936_945_step	[8477, 8472, 8473, 8476]	7877227.30	936.00	100	100	[53, 48, 49, 56212]	8507115.25	12.52	Maximum number of iterations	pseudorandom_5	normal
+336	100_it_936_945_step	[8475, 8458, 8470, 8472]	7875731.04	936.00	100	100	[51, 34, 46, 56208]	8507157.97	12.44	Maximum number of iterations	hybrid_demand_probabilistic	normal
+341	100_it_936_945_step	[8467, 8468, 8469, 8470]	7875668.58	936.00	100	100	[43, 44, 45, 56206]	8507161.14	12.59	Maximum number of iterations	uniform	normal
+346	100_it_936_945_step	[8467, 8467, 8467, 8467]	7875273.42	936.00	100	100	[43, 43, 43, 56203]	8507168.39	12.41	Maximum number of iterations	average_demand	normal
+351	100_it_936_945_step	[8467, 8467, 8467, 8467]	7875273.42	936.00	100	100	[43, 43, 43, 56203]	8507168.39	12.61	Maximum number of iterations	weighted_by_scenario_prob	normal
+356	100_it_936_945_step	[8430, 8430, 8430, 8430]	7865580.14	936.00	100	100	[6, 6, 6, 56166]	8507422.61	12.67	Maximum number of iterations	most_probable_scenario	normal
+361	100_it_936_945_step	[9389, 8487, 7744, 8099]	7864039.05	936.00	100	100	[29, 63, 256, 55835]	8506721.57	12.59	Maximum number of iterations	cost_sensitive	normal
+366	100_it_936_945_step	[4089, 5111, 8178, 13289]	7646794.56	936.00	100	100	[345, 431, 690, 54473]	8504257.61	11.81	Maximum number of iterations	minimal_3*3_4089	normal
+371	100_it_936_945_step	[2726, 3407, 5452, 8859]	6130430.30	936.00	100	100	[854, 599, 772, 53787]	8502516.73	12.43	Maximum number of iterations	minimal_3*2_2726	normal
+376	100_it_940_945_step	[8430, 10537, 16860, 27397]	8401544.14	943.00	100	100	[886, 164, 829, 54744]	8503059.70	11.36	Maximum number of iterations	minimal_1_8430	normal
+381	100_it_940_945_step	[8467, 10583, 16934, 27517]	8398967.62	942.00	100	100	[931, 221, 920, 53893]	8502712.18	11.36	Maximum number of iterations	minimal_2_8467	normal
+386	100_it_940_945_step	[8477, 8472, 8473, 8476]	7877227.30	941.00	100	100	[8, 3, 4, 56467]	8507369.63	210.38	Maximum number of iterations	pseudorandom_5	normal
+391	100_it_940_945_step	[8475, 8458, 8470, 8472]	7875731.04	940.00	100	100	[15, 938, 10, 55472]	8505584.63	14.06	Maximum number of iterations	hybrid_demand_probabilistic	normal
+396	100_it_940_945_step	[8475, 8458, 8470, 8472]	7875731.04	945.00	100	100	[915, 898, 910, 53832]	8501462.56	12.33	Maximum number of iterations	hybrid_demand_probabilistic	normal
+401	100_it_940_945_step	[8467, 8468, 8469, 8470]	7875668.58	944.00	100	100	[915, 916, 917, 53782]	8501423.71	12.36	Maximum number of iterations	uniform	normal
+406	100_it_940_945_step	[8467, 8467, 8467, 8467]	7875273.42	943.00	100	100	[923, 923, 923, 53731]	8501389.75	12.38	Maximum number of iterations	average_demand	normal
+411	100_it_940_945_step	[8467, 8467, 8467, 8467]	7875273.42	942.00	100	100	[931, 931, 931, 53683]	8501346.18	12.39	Maximum number of iterations	weighted_by_scenario_prob	normal
+416	100_it_940_945_step	[8430, 8430, 8430, 8430]	7865580.14	941.00	100	100	[902, 902, 902, 53598]	8501572.45	12.36	Maximum number of iterations	most_probable_scenario	normal
+421	100_it_940_945_step	[9389, 8487, 7744, 8099]	7864039.05	940.00	100	100	[929, 27, 224, 55099]	8504621.20	12.47	Maximum number of iterations	cost_sensitive	normal
+452	1000_it_940_step	[8430, 8430, 8430, 8430]	7865580.14	940.00	1000	1000	[910, 910, 910, 53550]	8501521.93	97.52	Maximum number of iterations	most_probable_scenario	normal
+453	1000_it_940_step	[9389, 8487, 7744, 8099]	7864039.05	940.00	1000	1000	[929, 27, 224, 55099]	8504621.20	98.10	Maximum number of iterations	cost_sensitive	normal
+454	1000_it_940_step	[4089, 5111, 8178, 13289]	7646794.56	940.00	1000	1000	[329, 411, 658, 54649]	8504437.82	96.51	Maximum number of iterations	minimal_3*3_4089	normal
+455	1000_it_940_step	[2726, 3407, 5452, 8859]	6130430.30	940.00	1000	1000	[846, 587, 752, 53979]	8502632.39	96.47	Maximum number of iterations	minimal_3*2_2726	normal
+456	1000_it_940_step	[1363, 1703, 2726, 4429]	3120307.78	940.00	1000	1000	[423, 763, 846, 54249]	8503146.77	97.37	Maximum number of iterations	minimal_3_1363	normal
+457	5000_it_940_step	[8467, 8467, 8467, 8467]	7875273.42	940.00	5000	5000	[7, 7, 7, 56407]	8507377.71	466.51	Maximum number of iterations	average_demand	normal
+458	5000_it_940_step	[8467, 8467, 8467, 8467]	7875273.42	940.00	5000	5000	[7, 7, 7, 56407]	8507377.71	2050.57	Maximum number of iterations	weighted_by_scenario_prob	normal
+459	multi_change	[8430, 8430, 8430, 8430]	7865580.14	936.00	100	100	[6, 6, 6, 56166]	8507422.61	120.53	Maximum number of iterations	most_probable_scenario	normal
+460	multi_change	[8430, 8430, 8430, 8430]	7865580.14	939.00	100	100	[918, 918, 918, 53502]	8501470.79	119.01	Maximum number of iterations	most_probable_scenario	normal
+461	multi_change	[8430, 8430, 8430, 8430]	7865580.14	936.00	100	100	[6, 6, 6, 56166]	8507422.61	119.64	Maximum number of iterations	most_probable_scenario	normal
+462	multi_change	[8430, 8430, 8430, 8430]	7865580.14	939.00	100	100	[918, 918, 918, 53502]	8501470.79	119.21	Maximum number of iterations	most_probable_scenario	normal
+463	multi_change_500_step	[8430, 8430, 8430, 8430]	7865580.14	500.00	100	100	[430, 430, 430, 54930]	8504655.71	120.64	Maximum number of iterations	most_probable_scenario	normal
+464	multi_change_900_step	[8430, 8430, 8430, 8430]	7865580.14	936.00	100	100	[6, 6, 6, 56166]	8507422.61	121.38	Maximum number of iterations	most_probable_scenario	normal
+465	multi_change_900_step	[8430, 8430, 8430, 8430]	7865580.14	939.00	100	100	[918, 918, 918, 53502]	8501470.79	135.12	Maximum number of iterations	most_probable_scenario	normal
+466	multi_change_900_step	[8430, 8430, 8430, 8430]	7865580.14	940.00	100	100	[910, 910, 910, 53550]	8501521.93	119.20	Maximum number of iterations	most_probable_scenario	normal
 \.
 
 
@@ -1066,7 +1441,7 @@ SELECT pg_catalog.setval('public.escenario_id_seq', 500, true);
 -- Name: experimento_hill_climbing_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.experimento_hill_climbing_id_seq', 90, true);
+SELECT pg_catalog.setval('public.experimento_hill_climbing_id_seq', 466, true);
 
 
 --

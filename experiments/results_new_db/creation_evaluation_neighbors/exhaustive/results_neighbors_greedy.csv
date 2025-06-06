@@ -1,0 +1,7 @@
+Evaluation strategy,Neighbor strategy,Best Y,Num neighbors,Num. iterations,Step,Time
+greedy_selection_eval,create_exhaustive_neighbors,121386.04760590037,0,100,10,15.670071125030518
+greedy_selection_eval,create_exhaustive_neighbors,464030.11600294313,0,100,20,15.408681154251099
+greedy_selection_eval,create_exhaustive_neighbors,1149095.0931670342,0,100,40,15.725075960159302
+greedy_selection_eval,create_exhaustive_neighbors,1833240.6883820612,0,100,60,15.050095796585083
+greedy_selection_eval,create_exhaustive_neighbors,2514585.5706037823,0,100,80,15.180294752120972
+greedy_selection_eval,create_exhaustive_neighbors,3190282.6622866406,0,100,100,15.152384042739868

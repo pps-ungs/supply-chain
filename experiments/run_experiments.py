@@ -52,7 +52,8 @@ def run_creation_eval_neighbors_experiment(dir:str, F: list, S:list, P:list, E:l
     eval_strategies = neighborhood.get_eval_strategies()
     neighbor_strategies = neighborhood.get_neighbor_strategies()
     num_neigbors = [2, 4, 8, 16, 32, 64]
-    num_iterations = [10000, 100000, 1000000, 10000000]
+    # num_iterations = [10000, 100000, 1000000, 10000000]
+    num_iterations = [100]
     num_step = [10, 20, 40, 60, 80, 100]
 
     for name_c, func_c in neighbor_strategies.items():

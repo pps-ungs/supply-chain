@@ -1,0 +1,7 @@
+Evaluation strategy,Neighbor strategy,Best Y,Num neighbors,Num. iterations,Step,Time
+stochastic_selection_eval,create_exhaustive_neighbors,120414.9689273742,0,100,10,15.638511180877686
+stochastic_selection_eval,create_exhaustive_neighbors,462122.0900413445,0,100,20,15.808895111083984
+stochastic_selection_eval,create_exhaustive_neighbors,1144836.4290282514,0,100,40,15.131591320037842
+stochastic_selection_eval,create_exhaustive_neighbors,1827330.9980960789,0,100,60,15.284040927886963
+stochastic_selection_eval,create_exhaustive_neighbors,2506341.173364272,0,100,80,15.476740837097168
+stochastic_selection_eval,create_exhaustive_neighbors,3180075.7998602795,0,100,100,15.17130184173584

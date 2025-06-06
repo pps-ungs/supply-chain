@@ -1,0 +1,7 @@
+Evaluation strategy,Neighbor strategy,Best Y,Num neighbors,Num. iterations,Step,Time
+first_improvement_eval,create_exhaustive_neighbors,121386.04760590037,0,100,10,15.165883779525757
+first_improvement_eval,create_exhaustive_neighbors,464030.11600294313,0,100,20,15.175474882125854
+first_improvement_eval,create_exhaustive_neighbors,1149095.0931670342,0,100,40,15.027343034744263
+first_improvement_eval,create_exhaustive_neighbors,1833240.6883820612,0,100,60,15.254435062408447
+first_improvement_eval,create_exhaustive_neighbors,2514585.5706037823,0,100,80,15.574519157409668
+first_improvement_eval,create_exhaustive_neighbors,3190282.6622866406,0,100,100,16.46074080467224
