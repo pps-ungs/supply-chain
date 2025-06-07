@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
-import time
+import time, sys, os
 
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "models/")))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "experiments/")))
 from hill_climbing import HillClimbing
 import db.database as db
 import db.config as dbconfig
