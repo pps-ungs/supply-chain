@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import model
+import models.model as model
 import db.config as dbconfig
 import db.database as db
 

@@ -32,7 +32,7 @@ def get_initial_X_average_demand(F: list, E: list) -> list:
 
 # La demanda de cada centro de fabricación se calcula como la suma de las demandas
 # Del escenario más probable
-def get_initial_X_from_most_probable_scenario(F: list, E: list) -> list:
+def get_initial_X_from_most_probable_scenario(model, F: list, E: list) -> list:
     probabilities = model.get_probability_of_occurrence(E)
 
     for i in range(len(E)):

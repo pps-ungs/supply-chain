@@ -2,17 +2,26 @@ from model import Model
 import neighborhood
 
 class HillClimbing(Model):
+       ########################################################################
+    # Escalador de colinas
+    #
+    # F: centros de fabricación
+    # S: centros de distribución
+    # P: puntos de venta
+    # E: escenarios
+    # step: tamaño del paso para la búsqueda local
+    # epsilon: tolerancia para la convergencia, es un valor muy pequeño
+    # max_iterations_allowed: número máximo de iteraciones permitidas, es un valor grande
+    #
+    # Devuelve una lista con los siguientes elementos:
+    # 1. X_current: mejor solución encontrada
+    # 2. algo?
+    # 3. algo?
+    # 4. algo?
+    # 5. limit_is_not_reached: si se alcanzó el límite de iteraciones. Si es True significa que
+    #    hizo pocas iteraciones y encontró la mejor solución. Si es False puede ser indicativo de
+    #    que no encontró la mejor solución.
     def solve(self, step=20, epsilon=1e-12, max_iterations_allowed=1e12, max_stuck_allowed: int = 1e3, initial_X=None):
-        """
-        Ejecuta la heurística de Hill Climbing para optimizar la producción.
-        - step: tamaño del paso para explorar vecinos
-        - epsilon: tolerancia para detenerse
-        - max_iterations_allowed: máximo de iteraciones
-        - initial_X: vector inicial (si es None, se inicializa uniforme)
-        - log_f: función de logging (opcional)
-        - strategy: nombre de la estrategia (opcional)
-        """
-        import time
         F, S, P, E = self.F, self.S, self.P, self.E
 
         X_initial, Z_initial = initial_X, self.get_objective_value(F, S, P, E, initial_X) if initial_X is not None else ([100 for _ in F], 0)

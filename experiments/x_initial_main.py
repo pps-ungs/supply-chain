@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../d
 
 import db.config as dbconfig
 import db.database as db
-import model
+import models.model as model
 import x_initial
 import neighborhood
 import json
