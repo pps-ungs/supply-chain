@@ -17,10 +17,10 @@ def main():
     config = dbconfig.load_config('db/database.ini', 'supply_chain')
     conn = db.get_connection(config)
 
-    F = db.read(conn, "SELECT * FROM fabrication_centers").to_dict(orient='records')
-    S = db.read(conn, "SELECT * FROM distribution_centers").to_dict(orient='records')
-    P = db.read(conn, "SELECT * FROM points_of_sale").to_dict(orient='records')
-    E = db.read(conn, "SELECT * FROM scenarios").to_dict(orient='records')
+    F = db.read(conn, "SELECT * FROM centro_de_fabricacion").to_dict(orient='records')
+    S = db.read(conn, "SELECT * FROM centro_de_distribucion").to_dict(orient='records')
+    P = db.read(conn, "SELECT * FROM punto_de_venta").to_dict(orient='records')
+    E = db.read(conn, "SELECT * FROM escenario").to_dict(orient='records')
 
     conn.close()
     print("[okay] Connection to supply_chain closed")

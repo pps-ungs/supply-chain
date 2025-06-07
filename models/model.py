@@ -295,7 +295,7 @@ class Model(ABC):
     ########################################################################
 
     # pi = probabilidad de ocurrencia del escenario
-    def get_probability_of_occurrence(E):   # FIXME: no estoy leyendo las probabilidades de E, para simplificar, por ahora
+    def get_probability_of_occurrence(self, E):   # FIXME: no estoy leyendo las probabilidades de E, para simplificar, por ahora
         return [1 / len(E) for _ in range(len(E))] # equiprobable
 
     # d = demanda de cada punto de venta para cada escenario
