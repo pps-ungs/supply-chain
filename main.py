@@ -29,7 +29,7 @@ def main():
 
     # Instanciar el modelo HillClimbing
     model = HillClimbing(F, S, P, E)
-    result = model.solve(step=20, epsilon=1e-3, max_iterations_allowed=100, x_initial=x_initial.get_initial_X_from_most_probable_scenario(model, F, E), max_stuck_allowed=1000)
+    result = model.solve(step=20, epsilon=1e-3, max_iterations_allowed=100, initial_X=x_initial.get_initial_X_from_most_probable_scenario(model, F, E), max_stuck_allowed=1000)
 
     print("############################### RESULTS ################################")
     print("X:", result["X"])
