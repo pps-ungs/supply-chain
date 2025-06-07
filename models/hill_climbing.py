@@ -21,7 +21,7 @@ class HillClimbing(Model):
     # 5. limit_is_not_reached: si se alcanzó el límite de iteraciones. Si es True significa que
     #    hizo pocas iteraciones y encontró la mejor solución. Si es False puede ser indicativo de
     #    que no encontró la mejor solución.
-    def solve(self, step=20, epsilon=1e-12, max_iterations_allowed=1e12, max_stuck_allowed: int = 1e3, initial_X=None):
+    def solve(self, step=20, epsilon=1e-12, max_iterations_allowed=1e12, max_stuck_allowed: int = 1, initial_X=None):
         F, S, P, E = self.F, self.S, self.P, self.E
 
         X_initial, Z_initial = initial_X, self.get_objective_value(F, S, P, E, initial_X) if initial_X is not None else ([100 for _ in F], 0)
@@ -46,6 +46,7 @@ class HillClimbing(Model):
             # Evaluation of the neighbourhood
             best_n, best_z = neighborhood.greedy_selection_eval(evaluated_neighbors, Z_current)
 
+            print(f"[info] Iteration {it}: current Z = {Z_current}, best neighbor Z = {best_z}")
             # Comparing the best solution with the current one
             if best_n is not None:
                 X_current = best_n
@@ -93,4 +94,16 @@ class HillClimbing(Model):
         elif not is_not_stuck:
             halting_condition = "Stuck in local optimum"
 
-        return [X_current, Z_current] + self.get_objective_function_values(F, S, P, E, X_current) + [halting_condition]
+        margin, pStk, pDIn, CTf2s, CTs2p = self.get_objective_function_values(F, S, P, E, X_current)
+
+        return {
+            "X": X_current,
+            "Z": Z_current,
+            "margin": margin,
+            "pStk": pStk,
+            "pDIn": pDIn,
+            "CTf2s": CTf2s,
+            "CTs2p": CTs2p,
+            "halting_condition": halting_condition,
+            "iterations": it
+        }

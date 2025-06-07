@@ -4,7 +4,7 @@ import models.model as model
 
 # La demanda uniforme de cada centro de fabricación se calcula como la suma de las demandas 
 # de todos los escenarios dividida por el número de escenarios.
-def get_initial_X_uniform(F: list, E: list) -> list:
+def get_initial_X_uniform(model, F: list, E: list) -> list:
     total_demand = sum(sum(d.values()) for d in model.get_demand_per_point_of_sale(E))
     num_fabrication_centers = len(F)
     base_value = int(total_demand // (num_fabrication_centers * len(E)))
@@ -13,7 +13,7 @@ def get_initial_X_uniform(F: list, E: list) -> list:
 
 # La demanda promedio de cada centro de fabricación se calcula como la suma de las demandas
 # promedio de todos los punto de venta en todos los escenarios dividida por el número de escenarios.
-def get_initial_X_average_demand(F: list, E: list) -> list:
+def get_initial_X_average_demand(model, F: list, E: list) -> list:
     average_demand = {}
     num_scenarios = len(E)
 
@@ -52,12 +52,12 @@ def get_initial_X_minimal(F: list, min_value: int = 30) -> list:
     return [int(min_value + (min_value / len(F) * i**2)) for i in range(len(F))]
 
 # Toma las demandas máximas de cada punto de venta y las distribuye uniformemente entre los centros de fabricación.
-def get_initial_X_higher_demand(F: list, E: list) -> list:
+def get_initial_X_higher_demand(model, F: list, E: list) -> list:
     total_demand = sum(max(d.values()) for d in model.get_demand_per_point_of_sale(E))
     return [int(total_demand // (len(F) * len(E))) for _ in range(len(F))]
 
 # Genera valores de pseudorandoms basados en la suma de las demandas de todos los escenarios.
-def get_initial_X_pseudorandom(F: list, E: list, seed: int = 42) -> list:
+def get_initial_X_pseudorandom(model, F: list, E: list, seed: int = 42) -> list:
     random.seed(seed)
     total_demand = sum(sum(d.values()) for d in model.get_demand_per_point_of_sale(E))
 
@@ -65,7 +65,7 @@ def get_initial_X_pseudorandom(F: list, E: list, seed: int = 42) -> list:
     return [base_value + random.randint(1, 10) for _ in range(len(F))]
 
 # Sensible al costo de un escenario
-def get_initial_X_cost_sensitive(F: list, S: list, E: list) -> list:
+def get_initial_X_cost_sensitive(model, F: list, S: list, E: list) -> list:
     # Calculate average cost from each fabrication center to all distribution centers
     avg_costs_f2s = {}
     transportation_costs = model.get_unit_transportation_cost_from_fabrication_to_distribution(F, S)
@@ -100,7 +100,7 @@ def get_initial_X_cost_sensitive(F: list, S: list, E: list) -> list:
 
 # Demanda inicial ponderada por la probabilidad de ocurrencia de cada escenario
 # Por ahora da lo mismo que la demanda promedio ya que las probabilidades son equiprobables
-def get_initial_X_weighted_by_scenario_prob(F: list, E: list) -> list:
+def get_initial_X_weighted_by_scenario_prob(model, F: list, E: list) -> list:
     expected_total_demand = 0
     probabilities = model.get_probability_of_occurrence(E)
 
@@ -112,7 +112,7 @@ def get_initial_X_weighted_by_scenario_prob(F: list, E: list) -> list:
     num_fabrication_centers = len(F)
     return [int(expected_total_demand // num_fabrication_centers) for _ in range(num_fabrication_centers)]
 
-def get_initial_X_hybrid_demand_probabilistic(F: list, E: list, min_per_center: int = 10, randomness_range: int = 20) -> list:
+def get_initial_X_hybrid_demand_probabilistic(model, F: list, E: list, min_per_center: int = 10, randomness_range: int = 20) -> list:
     # Calcular la demanda total esperada (considerando probabilidades de escenario)
     expected_total_demand = 0
     probabilities = model.get_probability_of_occurrence(E)
@@ -146,7 +146,7 @@ def get_initial_X_hybrid_demand_probabilistic(F: list, E: list, min_per_center: 
         
     return initial_X
 
-def get_initial_X_based_on_demand(F: list, E: list) -> list:
+def get_initial_X_based_on_demand(model, F: list, E: list) -> list:
     max_demand = max(max(d.values()) for d in model.get_demand_per_point_of_sale(E))
     min_demand = min(min(d.values()) for d in model.get_demand_per_point_of_sale(E))
 
