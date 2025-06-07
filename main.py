@@ -2,10 +2,10 @@
 
 import time
 
-import model
+from hill_climbing import HillClimbing
 import db.database as db
 import db.config as dbconfig
-
+import x_initial
 
 def main():
     ####################################################################
@@ -15,26 +15,31 @@ def main():
     config = dbconfig.load_config('db/database.ini', 'supply_chain')
     conn = db.get_connection(config)
 
-    F = db.read(conn, model.fabrication_centers_read()).to_dict(orient='records')
-    S = db.read(conn, model.distribution_centers_read()).to_dict(orient='records')
-    P = db.read(conn, model.points_of_sale_read()).to_dict(orient='records')
-    E = db.read(conn, model.scenarios_read()).to_dict(orient='records')
+    F = db.read(conn, "SELECT * FROM fabrication_centers").to_dict(orient='records')
+    S = db.read(conn, "SELECT * FROM distribution_centers").to_dict(orient='records')
+    P = db.read(conn, "SELECT * FROM points_of_sale").to_dict(orient='records')
+    E = db.read(conn, "SELECT * FROM scenarios").to_dict(orient='records')
 
     conn.close()
     print("[okay] Connection to supply_chain closed")
 
     t = time.time()
-    X, Z, margin, pStk, pDIn, CTf2s, CTs2p, halting_condition = model.optimization_heuristic(F=F, S=S, P=P, E=E, step=20, epsilon=1e-3, max_iterations_allowed=100, max_stuck_allowed=1)
+
+    # Instanciar el modelo HillClimbing
+    model = HillClimbing(F, S, P, E)
+    result = model.solve(step=20, epsilon=1e-3, max_iterations_allowed=100, x_initial=x_initial.get_initial_X_from_most_probable_scenario(F, E), max_stuck_allowed=1000)
 
     print("############################### RESULTS ################################")
-    print("X:", X)
-    print("Z:", Z) # Objective function value
+    print("X:", result["X"])
+    print("Z:", result["Z"]) # Objective function value
+    # Si quieres imprimir los componentes, puedes obtenerlos así:
+    margin, pStk, pDIn, CTf2s, CTs2p = model.get_objective_function_values(F, S, P, E, result["X"])
     print("Margin:", margin)
     print("pStk:", pStk)
     print("pDIn:", pDIn)
     print("CTf2s:", CTf2s)
     print("CTs2p:", CTs2p)
-    print("Halting condition:", halting_condition)
+    print("Iterations:", result.get("iterations"))
     print("Time:", time.time() - t)
     print("########################################################################")
 

@@ -12,7 +12,7 @@ import db.config as dbconfig
 import db.database as db
 import experiments.run_experiments as nh
 from experiments.writeCSV import *
-import model
+import models.model as model
 
 
 def main():

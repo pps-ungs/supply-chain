@@ -1,7 +1,7 @@
 import os, sys, time, random
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/')))
-import model
+import models.model as model
 from db.config import *
 from db.database import *
 import x_initial

@@ -1,6 +1,6 @@
 import os, sys, random
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
-import model
+import models.model as model
 
 # La demanda uniforme de cada centro de fabricación se calcula como la suma de las demandas 
 # de todos los escenarios dividida por el número de escenarios.
