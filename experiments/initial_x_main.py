@@ -10,6 +10,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../d
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../models/')))
 
 from hill_climbing import HillClimbing
+import setup
 
 import db.config as dbconfig
 import db.database as db
@@ -282,15 +283,10 @@ def test(experiment, model, num_iterations, num_step, heuristic: callable, log_f
 def main():
 
     config = dbconfig.load_config('db/database.ini', 'supply_chain')
-    conn = db.get_connection(config)
-
-    F = db.read(conn, "SELECT * FROM centro_de_fabricacion").to_dict(orient='records')
-    S = db.read(conn, "SELECT * FROM centro_de_distribucion").to_dict(orient='records')
-    P = db.read(conn, "SELECT * FROM punto_de_venta").to_dict(orient='records')
-    E = db.read(conn, "SELECT * FROM escenario").to_dict(orient='records')
-
-    create_tables(conn)
-    conn.close()
+    
+    data = setup.read_database(config)
+    F, S, P, E = data["F"], data["S"], data["P"], data["E"]
+    print("[okay] Data loaded from database")
 
     num_iterations = [3] # [100, 10000, 100000]
     num_step = [936, 939, 940]

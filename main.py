@@ -22,7 +22,7 @@ def main():
     if ans == "c":
         setup.create_database(config)
     elif ans == "t":
-        setup.restore_database("db/data/supply_chain_dump.sql")
+        setup.restore_database(config)
     elif ans != "r":
         print("Invalid option. Exiting.")
         sys.exit(1)    
