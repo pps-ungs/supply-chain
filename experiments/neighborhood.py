@@ -115,9 +115,11 @@ def get_eval_strategies():
 
 #* Evaluación de vecinos: Greedy.
 #* Creación de vecinos: strategy.
-def optimization_heuristic_neighbors_exp(F: list, S: list, P: list, E: list, step: float, neighbor_strategy: callable, num_neighbors=5, max_iterations=1000) -> list:
-    X = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100] 
+def optimization_heuristic_neighbors_exp(model, step: float, neighbor_strategy: callable, num_neighbors=5, max_iterations=1000) -> list:
+    F, S, P, E = model.F, model.S, model.P, model.E
+    X = [100 for _ in F] 
     Y = model.get_objective_value(F, S, P, E, X)
+    
     X_best = X
     Y_best = Y
     it = 0
@@ -138,9 +140,11 @@ def optimization_heuristic_neighbors_exp(F: list, S: list, P: list, E: list, ste
 
 #* Evaluación de vecinos: strategy.
 #* Creación de vecinos: exhaustive
-def optimization_heuristic_eval_exp(F: list, S: list, P: list, E: list, step:20, eval_strategy: callable, max_iterations=10000) -> list:
-    X = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100] 
+def optimization_heuristic_eval_exp(model, step:20, eval_strategy: callable, max_iterations=10000) -> list:
+    F, S, P, E = model.F, model.S, model.P, model.E
+    X = [100 for _ in F] 
     Y = model.get_objective_value(F, S, P, E, X)
+    
     X_best = X
     Y_best = Y
     it = 0
@@ -160,9 +164,11 @@ def optimization_heuristic_eval_exp(F: list, S: list, P: list, E: list, step:20,
 
 #* Evaluación de vecinos: strategy.
 #* Creación de vecinos: strategy.
-def optimization_heuristic_neighbors_eval_exp(F: list, S: list, P: list, E: list, step: float, neighbor_strategy: callable, eval_strategy: callable, num_neighbors=5, max_iterations=1000) -> list:
+def optimization_heuristic_neighbors_eval_exp(model, step: float, neighbor_strategy: callable, eval_strategy: callable, num_neighbors=5, max_iterations=1000) -> list:
+    F, S, P, E = model.F, model.S, model.P, model.E
     X = [100 for _ in F] 
     Y = model.get_objective_value(F, S, P, E, X)
+    
     X_best = X
     Y_best = Y
     it = 0
@@ -183,19 +189,19 @@ def optimization_heuristic_neighbors_eval_exp(F: list, S: list, P: list, E: list
 # Correr experimentos
 ########################################################################
 
-def run_heuristic_with_neighbors_strategy(F: list, S: list, P: list, E: list, step: int, neighbor_strategy, num_neighbors: int, max_iterations: int):
+def run_heuristic_with_neighbors_strategy(model, step: int, neighbor_strategy, num_neighbors: int, max_iterations: int):
     t = time.time()
-    result = optimization_heuristic_neighbors_exp(F=F, S=S, P=P, E=E, step=step, neighbor_strategy=neighbor_strategy, num_neighbors=num_neighbors, max_iterations=max_iterations)
+    result = optimization_heuristic_neighbors_exp(model, step=step, neighbor_strategy=neighbor_strategy, num_neighbors=num_neighbors, max_iterations=max_iterations)
     return [neighbor_strategy.__name__, num_neighbors, result[1], max_iterations, step, time.time() - t]
 
 
-def run_heuristic_with_eval_strategy(F: list, S: list, P: list, E: list, step:20, eval_strategy, max_iterations: 10000):
+def run_heuristic_with_eval_strategy(model, step:20, eval_strategy, max_iterations: 10000):
     t = time.time()
-    result = optimization_heuristic_eval_exp(F=F, S=S, P=P, E=E, step=step, eval_strategy=eval_strategy, max_iterations=max_iterations)
+    result = optimization_heuristic_eval_exp(model, step=step, eval_strategy=eval_strategy, max_iterations=max_iterations)
     return [eval_strategy.__name__, result[1], max_iterations, step, time.time() - t]
 
 
-def run_heuristic_with_all_strategies(F: list, S: list, P: list, E: list, step: float, neighbor_strategy: callable, eval_strategy: callable, num_neighbors=5, max_iterations=1000):
+def run_heuristic_with_all_strategies(model, step: float, neighbor_strategy: callable, eval_strategy: callable, num_neighbors=5, max_iterations=1000):
     t = time.time()
-    result = optimization_heuristic_neighbors_eval_exp(F=F, S=S, P=P, E=E, step=step, neighbor_strategy=neighbor_strategy, eval_strategy=eval_strategy, num_neighbors=num_neighbors, max_iterations=max_iterations)
+    result = optimization_heuristic_neighbors_eval_exp(model, step=step, neighbor_strategy=neighbor_strategy, eval_strategy=eval_strategy, num_neighbors=num_neighbors, max_iterations=max_iterations)
     return [ eval_strategy.__name__, neighbor_strategy.__name__, result[1], num_neighbors, max_iterations, step, time.time() - t]
