@@ -153,7 +153,7 @@ def get_initial_X_based_on_demand(model, F: list, E: list) -> list:
     initial_x = [max_demand - (min_demand * (i + 1) // len(F)) for i in range(len(F))]
     return initial_x
 
-def get_posible_X_sorted(model: model.Model) -> list:
+def get_possible_X(model: model.Model) -> list:
     F = model.F
     S = model.S
     P = model.P
@@ -185,13 +185,7 @@ def get_posible_X_sorted(model: model.Model) -> list:
 
     results = [
         (X, model.get_objective_value(F, S, P, E, X), name)
-        for name, X in strategies
+        for X, name in strategies
     ]
 
-    results.sort(key=lambda x: x[1], reverse=True)
-
-    X_list = [r[0] for r in results]
-    obj_list = [r[1] for r in results]
-    strategy_names = [r[2] for r in results]
-
-    return X_list, obj_list, strategy_names
+    return results

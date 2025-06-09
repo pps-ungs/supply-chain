@@ -223,8 +223,11 @@ def optimization_heuristic(
     }
 
 def test(experiment, model, num_iterations, num_step, heuristic: callable, log_f: callable):
-    X_list, obj_list, strategies  = initial_x.get_posible_X_sorted(model)
+    results = initial_x.get_possible_X(model)
 
+    results.sort(key=lambda x: x[1], reverse=True)
+    X_list, obj_list, strategies = zip(*results)
+    
     print("################ X INICIAL ################")
     for i in range(len(X_list)):
         print(f"X inicial {X_list[i]}, Obj inicial = {obj_list[i]}, Estrategia = {strategies[i]}")
@@ -235,19 +238,20 @@ def test(experiment, model, num_iterations, num_step, heuristic: callable, log_f
         for iteration in num_iterations:
             for step in num_step:
                 print("################ EXECUTION ################")
-                initial_x = X_list[i]
+                initial_x_exp = X_list[i]
                 initial_obj = obj_list[i]
                 strategy = strategies[i]
 
                 print(f"Strategy {strategy} running with {iteration} iterations and step {step}")
-                print(f"X inicial {initial_x}, Obj inicial = {initial_obj}")
+                print(f"X inicial {initial_x_exp}, Obj inicial = {initial_obj}")
 
                 # Detecta los argumentos de la función
                 params = inspect.signature(heuristic).parameters
 
                 kwargs = {
+                    "model": model,
                     "step": step,
-                    "initial_obj": (initial_x, initial_obj),
+                    "initial_obj": (initial_x_exp, initial_obj),
                 }
 
                 # Agrega los argumentos opcionales según corresponda
@@ -265,7 +269,7 @@ def test(experiment, model, num_iterations, num_step, heuristic: callable, log_f
                 result = heuristic(**kwargs)
 
                 results[(iteration, step, strategy)] = {
-                    "X inicial": initial_x,
+                    "X inicial": initial_x_exp,
                     "Obj inicial": initial_obj,
                     "X": result.get("X"),
                     "Obj": result.get("Z"),
