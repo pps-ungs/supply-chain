@@ -2,6 +2,8 @@
 
 import time, sys, os
 
+import setup
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "models/")))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "experiments/")))
 from hill_climbing import HillClimbing
@@ -13,17 +15,19 @@ def main():
     ####################################################################
     # Conjuntos
     ####################################################################
-
-    config = dbconfig.load_config('db/database.ini', 'supply_chain')
-    conn = db.get_connection(config)
-
-    F = db.read(conn, "SELECT * FROM centro_de_fabricacion").to_dict(orient='records')
-    S = db.read(conn, "SELECT * FROM centro_de_distribucion").to_dict(orient='records')
-    P = db.read(conn, "SELECT * FROM punto_de_venta").to_dict(orient='records')
-    E = db.read(conn, "SELECT * FROM escenario").to_dict(orient='records')
-
-    conn.close()
-    print("[okay] Connection to supply_chain closed")
+    
+    config = dbconfig.load_config('db/database.ini', 'postgres')
+    ans = input("Do you want to create (c), restore (t) or read (r) database? (c/t/r): ")
+    
+    if ans == "c":
+        setup.create_database(config)
+    elif ans == "t":
+        setup.restore_database("db/data/supply_chain_dump.sql")
+    elif ans != "r":
+        print("Invalid option. Exiting.")
+        sys.exit(1)    
+    
+    F, S, P, E = setup.read_database(config)
 
     t = time.time()
 
