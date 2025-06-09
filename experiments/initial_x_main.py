@@ -5,7 +5,6 @@ import sys
 import time
 import inspect
 
-
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../models/')))
@@ -141,7 +140,7 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
 def log_optimization_heuristic(experiment, X_initial, Z_initial, X, Z, step, it, actual_time, halting_condition, strategy):
     config = dbconfig.load_config('db/database.ini', 'supply_chain')
     conn = db.get_connection(config)
-    
+
     query = f"""
             insert into experimento_hill_climbing (
                 experimento,
