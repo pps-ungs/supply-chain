@@ -27,7 +27,6 @@ def main():
 
     t = time.time()
 
-    # Instanciar el modelo HillClimbing
     model = HillClimbing(F, S, P, E)
     result = model.solve(step=936, initial_X=initial_x.get_initial_X_from_most_probable_scenario(model, F, E), max_iterations_allowed=100)
 
