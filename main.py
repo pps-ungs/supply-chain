@@ -27,7 +27,9 @@ def main():
         print("Invalid option. Exiting.")
         sys.exit(1)    
     
-    F, S, P, E = setup.read_database(config)
+    data = setup.read_database(config)
+    F, S, P, E = data["F"], data["S"], data["P"], data["E"]
+    print("[okay] Data loaded from database")
 
     t = time.time()
 
