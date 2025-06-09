@@ -5,11 +5,12 @@ import sys
 import time
 import inspect
 
-from models.hill_climbing import HillClimbing
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../models/')))
+
+from hill_climbing import HillClimbing
 
 import db.config as dbconfig
 import db.database as db
@@ -18,12 +19,7 @@ import experiments.initial_x as initial_x
 import neighborhood
 import json
 
-def create_tables():
-    conn = db.get_connection({
-        "user": "postgres",
-        "password": "",
-        "dbname": "supply_chain"
-    })
+def create_tables(conn):
     query = """
         create table if not exists x_inicial (
             id serial primary key,
@@ -180,10 +176,7 @@ def log_optimization_heuristic(experiment, X_initial, Z_initial, X, Z, step, it,
     conn.close()
 
 def optimization_heuristic(
-        F: list,
-        S: list,
-        P: list,
-        E: list,
+        model: model.Model,
         experiment: str,
         log_f: callable,
         strategy: str,
@@ -195,7 +188,6 @@ def optimization_heuristic(
     
     intial_time = time.time()
     
-    model = HillClimbing(F, S, P, E)
     result = model.solve(
         step=step,
         epsilon=epsilon,
@@ -230,8 +222,8 @@ def optimization_heuristic(
         "halting_condition": halting_condition
     }
 
-def test(experiment, F, S, P, E, num_iterations, num_step, heuristic: callable, log_f: callable):
-    X_list, obj_list, strategies  = initial_x.get_posible_X_sorted(F, S, P, E)
+def test(experiment, model, num_iterations, num_step, heuristic: callable, log_f: callable):
+    X_list, obj_list, strategies  = initial_x.get_posible_X_sorted(model)
 
     print("################ X INICIAL ################")
     for i in range(len(X_list)):
@@ -254,13 +246,10 @@ def test(experiment, F, S, P, E, num_iterations, num_step, heuristic: callable, 
                 params = inspect.signature(heuristic).parameters
 
                 kwargs = {
-                    "F": F,
-                    "S": S,
-                    "P": P,
-                    "E": E,
                     "step": step,
                     "initial_obj": (initial_x, initial_obj),
                 }
+
                 # Agrega los argumentos opcionales según corresponda
                 if "log_f" in params:
                     kwargs["log_f"] = log_f
@@ -290,30 +279,26 @@ def test(experiment, F, S, P, E, num_iterations, num_step, heuristic: callable, 
     print(results)
 
 def main():
-    conn = db.get_connection({
-        "user": "postgres",
-        "password": "",
-        "dbname": "supply_chain"
-    })
 
-    F = model.read_fabrication_centers(conn)
-    S = model.read_distribution_centers(conn)
-    P = model.read_points_of_sale(conn)
-    E = model.read_scenarios(conn)
+    config = dbconfig.load_config('db/database.ini', 'supply_chain')
+    conn = db.get_connection(config)
 
-    create_tables()
+    F = db.read(conn, "SELECT * FROM centro_de_fabricacion").to_dict(orient='records')
+    S = db.read(conn, "SELECT * FROM centro_de_distribucion").to_dict(orient='records')
+    P = db.read(conn, "SELECT * FROM punto_de_venta").to_dict(orient='records')
+    E = db.read(conn, "SELECT * FROM escenario").to_dict(orient='records')
+
+    create_tables(conn)
     conn.close()
 
-    num_iterations = [100] # [100, 10000, 100000]
+    num_iterations = [3] # [100, 10000, 100000]
     num_step = [936, 939, 940]
 
-    test("multi_change_900_step", F, S, P, E, num_iterations, num_step, optimization_heuristic, log_optimization_heuristic)
+    model = HillClimbing(F, S, P, E)
+    test("testtt", model, num_iterations, num_step, optimization_heuristic, log_optimization_heuristic)
     # test("100_it_all_x", F, S, P, E, num_iterations, num_step, optimization_heuristic, log_optimization_heuristic)
 
-    db.dump("db/data/supply_chain_dump.sql", {
-        "user": "postgres",
-        "password": ""
-    })
+    db.dump("db/data/supply_chain_dump.sql", config)
 
 if __name__ == "__main__":
     main()

@@ -153,7 +153,12 @@ def get_initial_X_based_on_demand(model, F: list, E: list) -> list:
     initial_x = [max_demand - (min_demand * (i + 1) // len(F)) for i in range(len(F))]
     return initial_x
 
-def get_posible_X_sorted(F: list, S: list, P: list, E: list) -> list:
+def get_posible_X_sorted(model: model.Model) -> list:
+    F = model.F
+    S = model.S
+    P = model.P
+    E = model.E
+
     minimal_1 = int(sum(model.get_demand_per_point_of_sale(E)[0].values()) / len(F))
     minimal_2 = int(sum(sum(d.values()) for d in model.get_demand_per_point_of_sale(E)) / (len(F) * len(E)))
 
