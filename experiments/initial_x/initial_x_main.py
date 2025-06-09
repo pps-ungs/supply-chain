@@ -5,9 +5,9 @@ import sys
 import time
 import inspect
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/')))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../models/')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../db/')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../models/')))
 
 from hill_climbing import HillClimbing
 import setup
@@ -15,7 +15,7 @@ import setup
 import db.config as dbconfig
 import db.database as db
 import models.model as model
-import experiments.initial_x as initial_x
+import experiments.initial_x.initial_x as initial_x
 import neighborhood
 import json
 

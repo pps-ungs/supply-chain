@@ -4,7 +4,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../d
 import models.model as model
 from db.config import *
 from db.database import *
-import experiments.initial_x as initial_x
+import experiments.initial_x.initial_x as initial_x
 import neighborhood
 
 ###### sorry por este codigo tan feo. la idea era que salga una prueba rapida

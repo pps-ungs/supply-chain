@@ -6,6 +6,8 @@ import setup
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "models/")))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "experiments/")))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "experiments/initial_x/")))
+
 from hill_climbing import HillClimbing
 import db.database as db
 import db.config as dbconfig
@@ -46,6 +48,7 @@ def main():
     print("CTs2p:", result["CTs2p"])
     print("Iterations:", result.get("iterations"))
     print("Time:", time.time() - t)
+    print("Halting condition:", result["halting_condition"])
     print("########################################################################")
 
 if __name__ == "__main__":
