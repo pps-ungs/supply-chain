@@ -28,6 +28,7 @@ class HillClimbing(Model):
 
         X_current = X_initial
         Z_current = Z_initial
+        Z_previous = Z_current
 
         it = 0
         stuck = 0

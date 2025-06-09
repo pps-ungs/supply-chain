@@ -14,8 +14,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../m
 import db.config as dbconfig
 import db.database as db
 import models.model as model
-import x_initial
-import hill_climbing
+import experiments.initial_x as initial_x
 import neighborhood
 import json
 
@@ -232,7 +231,7 @@ def optimization_heuristic(
     }
 
 def test(experiment, F, S, P, E, num_iterations, num_step, heuristic: callable, log_f: callable):
-    X_list, obj_list, strategies  = x_initial.get_posible_X_sorted(F, S, P, E)
+    X_list, obj_list, strategies  = initial_x.get_posible_X_sorted(F, S, P, E)
 
     print("################ X INICIAL ################")
     for i in range(len(X_list)):

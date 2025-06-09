@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "expe
 from hill_climbing import HillClimbing
 import db.database as db
 import db.config as dbconfig
-import x_initial
+import initial_x
 
 def main():
     ####################################################################
@@ -29,7 +29,7 @@ def main():
 
     # Instanciar el modelo HillClimbing
     model = HillClimbing(F, S, P, E)
-    result = model.solve(step=936, initial_X=x_initial.get_initial_X_from_most_probable_scenario(model, F, E), max_iterations_allowed=100)
+    result = model.solve(step=936, initial_X=initial_x.get_initial_X_from_most_probable_scenario(model, F, E), max_iterations_allowed=100)
 
     print("############################### RESULTS ################################")
     print("X:", result["X"])
