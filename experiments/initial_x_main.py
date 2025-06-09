@@ -139,11 +139,9 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
     }
 
 def log_optimization_heuristic(experiment, X_initial, Z_initial, X, Z, step, it, actual_time, halting_condition, strategy):
-    conn = db.get_connection({
-        "user": "postgres",
-        "password": "",
-        "dbname": "supply_chain"
-    })
+    config = dbconfig.load_config('db/database.ini', 'supply_chain')
+    conn = db.get_connection(config)
+    
     query = f"""
             insert into experimento_hill_climbing (
                 experimento,
