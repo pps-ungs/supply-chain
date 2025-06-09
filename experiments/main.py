@@ -13,18 +13,14 @@ import db.database as db
 import experiments.run_experiments as nh
 from experiments.writeCSV import *
 import models.model as model
+import setup
 
 
 def main():
-    conn = db.get_connection(dbconfig.load_config("../db/database.ini", "supply_chain"))
-
-    F = db.read(conn, model.fabrication_centers_read()).to_dict(orient="records")
-    S = db.read(conn, model.distribution_centers_read()).to_dict(orient="records")
-    P = db.read(conn, model.points_of_sale_read()).to_dict(orient="records")
-    E = db.read(conn, model.scenarios_read()).to_dict(orient="records")
-
-    conn.close()
-    print("[okay] Connection to supply_chain closed")
+    config = dbconfig.load_config('db/database.ini', 'supply_chain')
+    
+    data = setup.read_database(config)
+    F, S, P, E = data["F"], data["S"], data["P"], data["E"]
 
     dir = "results_new_db/creation_evaluation_neighbors"
     # nh.run_creation_neighbors_experiment(dir=dir, F=F, S=S, P=P, E=E)

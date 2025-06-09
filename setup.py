@@ -48,6 +48,10 @@ def read_database(config):
     P = db.read(conn, "SELECT * FROM punto_de_venta").to_dict(orient='records')
     E = db.read(conn, "SELECT * FROM escenario").to_dict(orient='records')
     
+    print("[okay] Data read from database")
+    conn.close()
+    print("[okay] Connection closed")
+    
     return {
         "F": F,
         "S": S,
