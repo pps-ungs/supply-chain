@@ -16,7 +16,7 @@ def main():
     # Conjuntos
     ####################################################################
     
-    config = dbconfig.load_config('db/database.ini', 'postgres')
+    config = dbconfig.load_config('db/database.ini', 'supply_chain')
     ans = input("Do you want to create (c), restore (t) or read (r) database? (c/t/r): ")
     
     if ans == "c":
