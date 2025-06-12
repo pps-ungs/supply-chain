@@ -2,9 +2,7 @@ import sys
 import os
 import random
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../experiments/')))
-
-from model import Model
+from models.hill_climbing import HillClimbing
 
 class RandomRestart(HillClimbing):
 
