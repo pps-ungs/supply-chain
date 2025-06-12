@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "expe
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "experiments/initial_x/")))
 
 from hill_climbing import HillClimbing
-import db.database as db
+# import db.database as db
 import db.config as dbconfig
 import initial_x
 
