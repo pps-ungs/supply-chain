@@ -48,7 +48,7 @@ class Model(ABC):
         wDS = []
         for i in range(len(X)):
             factory_i = []
-            for j in range(len(S)):
+            for j in range(len(self.S)):
                 factory_i.append(X[i] * cf[i][j])
             wDS.append(factory_i)
         return wDS
