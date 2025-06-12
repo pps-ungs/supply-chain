@@ -2,8 +2,6 @@
 # Modelo de Cadena de Distribución Básica
 ########################################################################
 from abc import ABC, abstractmethod
-import random
-import db.database as db
 import warnings
 warnings.filterwarnings('ignore') # get rid of annoying pandas warnings
 
@@ -27,16 +25,6 @@ class Model(ABC):
     # $i$. Estos valores se toman de la solución de la heurística.
     # X: lista de cantidades a producir
     # solution: diccionario con la solución de la heurística.
-
-    # NOT USED: revisar si se necesita, borrar sino
-    """
-    def allocate_production_per_center(X: list, solution: dict) -> None:
-        X = []
-        quantities = solution["X"]
-        for i in range(len(quantities)):
-            X.append(quantities[i])
-        return None
-    """
 
     ########################################################################
     # La cantidad producida se debe distribuir desde los centros de
@@ -329,7 +317,7 @@ class Model(ABC):
         return matrix
 
     # ps = Penalidad unitaria por dejar un producto en el punto de venta sin comercializar
-    def get_distribution_curve_from_fabrication_to_sale(self, F, P):
+    def get_distribution_curve_from_fabrication_to_sale(self, P):
         m = self.get_margin_per_point_of_sale(P)
         return [m[i] * 0.05 for i in range(len(P))]
 
@@ -424,7 +412,7 @@ class Model(ABC):
         d = self.get_demand_per_point_of_sale(E)
         cf = self.get_distribution_curve_from_fabrication_to_distribution(F, S)
         cp = self.get_distribution_curve_from_distribution_to_sale(S, P)
-        ps = self.get_distribution_curve_from_fabrication_to_sale(F, P)
+        ps = self.get_distribution_curve_from_fabrication_to_sale(P)
         pdi = self.get_penalty_for_unsatisfied_demand(P)
 
         wDS = self.generate_products_to_distribution_center(X, S, cf)

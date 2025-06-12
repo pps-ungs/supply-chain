@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-import time, sys, os
-
+import time
+import sys
+import os
 import setup
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "models/")))
@@ -9,9 +10,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "expe
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "experiments/initial_x/")))
 
 from hill_climbing import HillClimbing
-# import db.database as db
 import db.config as dbconfig
-import initial_x
+import initial_x as initial_x
 
 def main():
     ####################################################################
@@ -24,7 +24,7 @@ def main():
     if ans == "c":
         setup.create_database(config)
     elif ans == "t":
-        setup.restore_database(config)
+        setup.restore_database()
     elif ans != "r":
         print("Invalid option. Exiting.")
         sys.exit(1)    

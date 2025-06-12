@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import models.model as model
-import db.config as dbconfig
 import db.database as db
 
 def create_database(config):
@@ -37,7 +36,7 @@ def create_database(config):
     else:
         print("[okay] Database not dumped")
 
-def restore_database(config):
+def restore_database():
     db.restore("db/data/supply_chain_dump.sql")
     print("[okay] Database restored from db/data/supply_chain_dump.sql")
 
