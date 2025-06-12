@@ -1,0 +1,37 @@
+import sys
+import os
+import random
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../experiments/')))
+
+from model import Model
+
+class RandomRestart(HillClimbing):
+
+    def solve(self, step=20, epsilon=1e-12, max_iterations_allowed=1e12, max_stuck_allowed: int = 1, initial_X = None, loops_without_improvement = 10, max_restarts=10):
+        random.seed(42)
+
+        loops_without_improvement_counter = 0
+        amount_of_restarts = 0
+
+        X = initial_X if initial_X is not None else [100 for _ in self.F]
+        best_result = None
+
+        while loops_without_improvement_counter < loops_without_improvement and amount_of_restarts < max_restarts:
+            X += random.randint(0, 10000)
+            result = super().solve(step, epsilon, max_iterations_allowed, max_stuck_allowed, X)
+
+            if result["Z"] is not None and result["Z"] > best_result["Z"] if best_result else True:
+                best_result = result
+                loops_without_improvement_counter = 0
+            else:
+                loops_without_improvement_counter += 1
+                amount_of_restarts += 1
+
+        if loops_without_improvement_counter >= loops_without_improvement:
+            random_restart_halting_condition = "Maximum loops without improvement"
+        else:
+            random_restart_halting_condition = "Maximum number of restarts"
+
+        best_result["halting_condition"] = random_restart_halting_condition
+        return best_result
