@@ -61,27 +61,17 @@ class HeuristicTestHelper:
 
         initial_time = time.time()
 
-        solve_sig = inspect.signature(model.solve)
-        solve_defaults = {
-            k: v.default
-            for k, v in solve_sig.parameters.items()
-            if v.default is not inspect.Parameter.empty
-        }
-
         solve_kwargs = {
             "step": step,
             "epsilon": epsilon,
             "max_iterations_allowed": max_iterations_allowed,
             "max_stuck_allowed": max_stuck_allowed,
-            "initial_X": initial_obj[0]
+            "initial_X": initial_obj[0],
+            "loops_without_improvement": loops_without_improvement,
+            "max_restarts": max_restarts
         }
 
-        filtered_kwargs = {
-            k: v for k, v in solve_kwargs.items()
-            if k not in solve_defaults or v != solve_defaults[k]
-        }
-
-        result = model.solve(**filtered_kwargs)
+        result = self.call_with_non_default_params(model.solve, **solve_kwargs)
         actual_time = time.time() - initial_time
         
         X = result["X"]
@@ -108,6 +98,19 @@ class HeuristicTestHelper:
             "time": actual_time,
             "halting_condition": halting_condition
         }
+    
+    import inspect
+
+    def call_with_non_default_params(self, func, **kwargs):
+        sig = inspect.signature(func)
+        filtered = {}
+        for k, v in kwargs.items():
+            param = sig.parameters.get(k)
+            if param is None:
+                continue  # ignora parámetros que no existen en la función
+            if param.default is inspect.Parameter.empty or v != param.default:
+                filtered[k] = v
+        return func(**filtered)
     
     def log(
             self,

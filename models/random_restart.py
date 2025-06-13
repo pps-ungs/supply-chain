@@ -16,7 +16,7 @@ class RandomRestart(HillClimbing):
         best_result = None
 
         while loops_without_improvement_counter < loops_without_improvement and amount_of_restarts < max_restarts:
-            X += [random.randint(0, 10000) for _ in range(len(X))]
+            X = [x + random.randint(0, 10000) for x in X]
             result = super().solve(step, epsilon, max_iterations_allowed, max_stuck_allowed, X)
 
             if result["Z"] is not None and result["Z"] > best_result["Z"] if best_result else True:
