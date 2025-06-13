@@ -1,13 +1,13 @@
 import numpy as np
 
 class Ant:
-    def __init__(self, id, F, S, P, E, num_prod_levels, model_instance):
+    def __init__(self, id, F, S, P, E, num_production_levels, model_instance):
         self.id = id
         self.F = F 
         self.S = S 
         self.P = P 
         self.E = E 
-        self.num_prod_levels = num_prod_levels
+        self.num_production_levels = num_production_levels
         self.model = model_instance 
         
         # Definir los niveles de producción reales para cada fábrica
@@ -15,7 +15,7 @@ class Ant:
         for f_idx in range(len(self.F)):
             min_prod = 0 
             max_prod = 100000 
-            self.actual_prod_levels[f_idx] = np.linspace(min_prod, max_prod, self.num_prod_levels)
+            self.actual_prod_levels[f_idx] = np.linspace(min_prod, max_prod, self.num_production_levels)
 
     def build_solution(self, pheromones, alpha, beta):
         self.solution_X_indices = np.zeros(len(self.F), dtype=int) 
@@ -24,7 +24,7 @@ class Ant:
         for f_idx in range(len(self.F)):
             probabilities = self._calculate_probabilities(f_idx, pheromones, alpha, beta)
             
-            chosen_level_index = np.random.choice(self.num_prod_levels, p=probabilities)
+            chosen_level_index = np.random.choice(self.num_production_levels, p=probabilities)
             self.solution_X_indices[f_idx] = chosen_level_index
             self.solution_X_real_values[f_idx] = self.actual_prod_levels[f_idx][chosen_level_index]
             
@@ -48,7 +48,7 @@ class Ant:
         return self.solution_X_indices, self.solution_X_real_values, self.solution_Z, self.details
 
     def _calculate_probabilities(self, factory_index, pheromones, alpha, beta):
-        heuristic_info = np.zeros(self.num_prod_levels)
+        heuristic_info = np.zeros(self.num_production_levels)
         
         # Calcular la demanda promedio total
         total_avg_demand = 0
@@ -57,7 +57,7 @@ class Ant:
         
         avg_demand_per_factory = total_avg_demand / len(self.F)
 
-        for k in range(self.num_prod_levels):
+        for k in range(self.num_production_levels):
             prod_val = self.actual_prod_levels[factory_index][k]
             
             # Heurística: Favor al nivel de producción que se acerca a la demanda promedio esperada
@@ -83,7 +83,7 @@ class Ant:
         if denominator == 0:
             # Si el denominador es cero (ej. todas las heurísticas son 0 o feromonas son 0),
             # asigna probabilidades uniformes para permitir exploración.
-            return np.ones(self.num_prod_levels) / self.num_prod_levels
+            return np.ones(self.num_production_levels) / self.num_production_levels
         
         probabilities = numerator / denominator
         

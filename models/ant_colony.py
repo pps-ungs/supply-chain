@@ -1,5 +1,4 @@
 import numpy as np
-# from model import Model # No es necesario importar de nuevo si ya está en el mismo archivo
 from ant import Ant
 from models.model import Model # Asegúrate de que ant.py esté en la misma carpeta o ruta
 
