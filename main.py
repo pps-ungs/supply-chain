@@ -37,8 +37,20 @@ def main():
 
     t = time.time()
 
-    model = AntColony(F, S, P, E)
-    result = model.solve()
+    model = AntColony(F, S, P, E, alpha=1.0, beta=2.0, rho=0.1, Q=100.0, tau_min=0.01, tau_max=10.0)
+    result = model.solve(num_ants=10, max_iterations=200)
+    print("############################### RESULTS ################################")
+    print("X:", result["X"])
+    print("Z:", result["Z"])
+    print("Margin:", result["margin"])
+    print("pStk:", result["pStk"])
+    print("pDIn:", result["pDIn"])
+    print("CTf2s:", result["CTf2s"])
+    print("CTs2p:", result["CTs2p"])
+    print("Iterations:", result.get("iterations"))
+    print("Time:", time.time() - t)
+    print("Halting condition:", result["halting_condition"])
+    print("########################################################################")
 
     print("############################### RESULTS ################################")
     print("X:", result["X"])
