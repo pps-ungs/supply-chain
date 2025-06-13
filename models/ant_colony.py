@@ -4,6 +4,15 @@ from ant import Ant
 from models.model import Model # Asegúrate de que ant.py esté en la misma carpeta o ruta
 
 class AntColony(Model):
+    # F: centros de fabricación
+    # S: centros de distribución
+    # P: puntos de venta
+    # E: escenarios
+    # Parámetros del algoritmo de colonia de hormigas
+    # alpha: importancia del rastro de feromona (usualmente entre 0 y 1)
+    # beta: importancia de la información heurística (usualmente > 1)
+    # rho: tasa de evaporación de feromona (usualmente entre 0 y 1)
+    # Q: constante para la actualización de feromona
     def __init__(self, F, S, P, E, alpha=1.0, beta=2.0, rho=0.1, Q=100.0, tau_min=0.01, tau_max=10.0):
         super().__init__(F, S, P, E) 
         
@@ -21,19 +30,34 @@ class AntColony(Model):
         # Definir el número de niveles discretos para la producción.
         self.num_prod_levels = 100
         
-        # Inicialización de las feromonas. 
-        # La matriz de feromonas es `num_factories` x `num_prod_levels`.
+        Z_best_expected = 8507422.0 # Valor de referencia
+        
+        # Calcular Q y tau_max basándose en Z_best_expected
+        pheromone_max_scale = 10000
+        
+        # Si Q no se proporciona, lo calculamos
+        self.Q = Q if Q is not None else pheromone_max_scale / Z_best_expected
+        
+        # Si tau_max no se proporciona, lo calculamos
+        self.tau_max = tau_max if tau_max is not None else pheromone_max_scale # Usamos el valor objetivo como tau_max
+
+        # Si tau_min no se proporciona, lo calculamos como una fracción de tau_max
+        self.tau_min = tau_min if tau_min is not None else self.tau_max * 0.0001
+
+        if self.tau_min <= 0:
+            self.tau_min = 1e-6 
+
+        # Inicialización de las feromonas con tau_max
         self.pheromones = np.ones((self.num_factories, self.num_prod_levels)) * self.tau_max
         
         # Mejor solución encontrada globalmente
         self.best_solution_X = None
-        self.best_solution_Z = float('-inf')
-        
-        # self.best_margin = 0
-        # self.best_pStk = 0
-        # self.best_pDIn = 0
-        # self.best_CTf2s = 0
-        # self.best_CTs2p = 0
+        self.best_solution_Z = float('-inf')        
+        self.best_margin = 0
+        self.best_pStk = 0
+        self.best_pDIn = 0
+        self.best_CTf2s = 0
+        self.best_CTs2p = 0
         
     def solve(self, num_ants=10, max_iterations=200):
         ant_colony = []
