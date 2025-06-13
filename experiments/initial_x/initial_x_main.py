@@ -20,7 +20,47 @@ import experiments.initial_x.initial_x as initial_x
 import neighborhood
 import json
 
-######## old experiments ########
+def create_tables(conn):
+    query = """
+        create table if not exists x_inicial (
+            id serial primary key,
+            x_inicial text,
+            obj_inicial decimal(15, 9),
+            estrategia text
+        );
+
+        create table if not exists experimentos_x_inicial (
+            id serial primary key,
+            id_x_inicial integer references x_inicial(id),
+            step decimal(15, 2),
+            cant_iteraciones integer,
+            iteracion integer,
+            x_optimo text,
+            obj decimal(15, 2),
+            tiempo decimal(15, 2)
+        );
+
+        create table if not exists experimento_hill_climbing (
+            id serial primary key,
+            experimento text,
+            x_inicial text,
+            obj_inicial decimal(15, 2),
+            step decimal(15, 2),
+            cant_iteraciones integer,
+            iteracion integer,
+            x_optimo text,
+            obj decimal(15, 2),
+            tiempo decimal(15, 2),
+            motivo_parada text,
+            estrategia text,
+            distribucion text
+        );
+        """
+    db.execute(conn, query)
+
+    conn.close()
+    print("[okay] Connection to supply_chain closed")
+
 def log_x_initial(X, obj, step, max_iterations, it, best_X, best_obj, initial_time, strategy):
     conn = db.get_connection(dbconfig.load_config('../db/database.ini', 'supply_chain'))
     query = f"""
@@ -99,10 +139,44 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
         "time": total_time
     }
 
+def log_optimization_heuristic(experiment, X_initial, Z_initial, X, Z, step, it, actual_time, halting_condition, strategy):
+    config = dbconfig.load_config('db/database.ini', 'supply_chain')
+    conn = db.get_connection(config)
 
-######## test ########
-def test(experiment, model, num_iterations, num_step):
+    query = f"""
+            insert into experimento_hill_climbing (
+                experimento,
+                x_inicial, 
+                obj_inicial,
+                step,
+                cant_iteraciones,
+                iteracion,
+                x_optimo, 
+                obj, 
+                tiempo,
+                motivo_parada,
+                estrategia,
+                distribucion) 
+            values (
+                '{experiment}',
+                '{json.dumps(X_initial)}',
+                {Z_initial:.2f},
+                {step:.2f},
+                {it},
+                {it},
+                '{json.dumps(X)}', 
+                {Z:.2f}, 
+                {actual_time:.2f},
+                '{halting_condition}',
+                '{strategy}',
+                'normal');
+            """
+    db.execute(conn, query)
+    conn.close()
+
+def test(experiment, model, num_iterations, num_step, log_f: callable):
     helper = HeuristicTestHelper()
+
     results = initial_x.get_possible_X(model)
     results.sort(key=lambda x: x[1], reverse=True)
     X_list, obj_list, strategies = zip(*results)
@@ -126,11 +200,22 @@ def test(experiment, model, num_iterations, num_step):
 
                 result = helper.solve(
                     model=model,
-                    experiment=experiment,
-                    strategy=strategy,
                     step=step,
                     initial_obj=(initial_x_exp, initial_obj),
                     max_iterations_allowed=iteration
+                )
+
+                log_f(
+                    experiment=experiment,
+                    X_initial=initial_x_exp,
+                    Z_initial=initial_obj,
+                    X=result["X"],
+                    Z=result["Z"],
+                    step=step,
+                    it=result.get("iterations", 0),
+                    actual_time=result["time"],
+                    halting_condition=result["halting_condition"],
+                    strategy=strategy
                 )
 
                 all_results[(iteration, step, strategy)] = {
@@ -159,7 +244,7 @@ def main():
     num_step = [936]
 
     model = HillClimbing(F, S, P, E)
-    test("testtt", model, num_iterations, num_step)
+    test("testtt", model, num_iterations, num_step, log_optimization_heuristic)
     db.dump("db/data/supply_chain_dump_testing_ref.sql", config)
 
 if __name__ == "__main__":

@@ -14,42 +14,9 @@ import db.database as db
 class HeuristicTestHelper:
     dbconfig = {}
 
-    def __init__(self, dbconfig_path: str = 'db/database.ini', database_name: str = 'supply_chain'):
-        self.dbconfig = dbconfig.load_config(dbconfig_path, database_name)
-        self.create_tables()
-
-    def create_tables(self):
-        conn = db.get_connection(self.dbconfig)
-
-        query = """
-            create table if not exists experimento (
-                id serial primary key,
-                modelo text,
-                experimento text,
-                x_inicial text,
-                obj_inicial decimal(15, 2),
-                step decimal(15, 2),
-                cant_iteraciones integer,
-                iteracion integer,
-                x_optimo text,
-                obj decimal(15, 2),
-                tiempo decimal(15, 2),
-                motivo_parada text,
-                estrategia text,
-                distribucion text
-            );
-            """
-
-        print("[data] Creating tables in database...")
-        db.execute(conn, query)
-        conn.close()
-        print("[okay] Connection to database closed")
-
     def solve(
             self,
             model,
-            experiment: str,
-            strategy: str,
             step: int = 20,
             initial_obj: tuple = (None, None),
             epsilon: float = 1e-12,
@@ -77,20 +44,6 @@ class HeuristicTestHelper:
         X = result["X"]
         Z = result["Z"]
         halting_condition = result.get("halting_condition", "unknown")
-        
-        self.log(
-            model_name=model.__class__.__name__,
-            experiment=experiment,
-            X_initial=initial_obj[0],
-            Z_initial=initial_obj[1],
-            X=X,
-            Z=Z,
-            step=step,
-            it=result.get("iterations", 0),
-            actual_time=actual_time,
-            halting_condition=halting_condition,
-            strategy=strategy
-        )
 
         return {
             "X": X,
@@ -98,8 +51,6 @@ class HeuristicTestHelper:
             "time": actual_time,
             "halting_condition": halting_condition
         }
-    
-    import inspect
 
     def call_with_non_default_params(self, func, **kwargs):
         sig = inspect.signature(func)
@@ -111,56 +62,3 @@ class HeuristicTestHelper:
             if param.default is inspect.Parameter.empty or v != param.default:
                 filtered[k] = v
         return func(**filtered)
-    
-    def log(
-            self,
-            model_name,
-            experiment, 
-            X_initial,
-            Z_initial, 
-            X, 
-            Z, 
-            step, 
-            it,
-            actual_time, 
-            halting_condition, 
-            strategy
-        ):
-
-        conn = db.get_connection(self.dbconfig)
-
-        query = f"""
-                insert into experimento (
-                    modelo,
-                    experimento,
-                    x_inicial, 
-                    obj_inicial,
-                    step,
-                    cant_iteraciones,
-                    iteracion,
-                    x_optimo, 
-                    obj, 
-                    tiempo,
-                    motivo_parada,
-                    estrategia,
-                    distribucion) 
-                values (
-                    '{model_name}',
-                    '{experiment}',
-                    '{json.dumps(X_initial)}',
-                    {Z_initial:.2f},
-                    {step:.2f},
-                    {it},
-                    {it},
-                    '{json.dumps(X)}', 
-                    {Z:.2f}, 
-                    {actual_time:.2f},
-                    '{halting_condition}',
-                    '{strategy}',
-                    'normal');
-                """
-        
-        print("[data] Saving experiment in database...")
-        db.execute(conn, query)
-        conn.close()
-        print("[okay] Connection to database closed")
