@@ -1,10 +1,10 @@
 import os, sys, random
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
-import model
+import models.model as model
 
 # La demanda uniforme de cada centro de fabricación se calcula como la suma de las demandas 
 # de todos los escenarios dividida por el número de escenarios.
-def get_initial_X_uniform(F: list, E: list) -> list:
+def get_initial_X_uniform(model, F: list, E: list) -> list:
     total_demand = sum(sum(d.values()) for d in model.get_demand_per_point_of_sale(E))
     num_fabrication_centers = len(F)
     base_value = int(total_demand // (num_fabrication_centers * len(E)))
@@ -13,7 +13,7 @@ def get_initial_X_uniform(F: list, E: list) -> list:
 
 # La demanda promedio de cada centro de fabricación se calcula como la suma de las demandas
 # promedio de todos los punto de venta en todos los escenarios dividida por el número de escenarios.
-def get_initial_X_average_demand(F: list, E: list) -> list:
+def get_initial_X_average_demand(model, F: list, E: list) -> list:
     average_demand = {}
     num_scenarios = len(E)
 
@@ -32,7 +32,7 @@ def get_initial_X_average_demand(F: list, E: list) -> list:
 
 # La demanda de cada centro de fabricación se calcula como la suma de las demandas
 # Del escenario más probable
-def get_initial_X_from_most_probable_scenario(F: list, E: list) -> list:
+def get_initial_X_from_most_probable_scenario(model, F: list, E: list) -> list:
     probabilities = model.get_probability_of_occurrence(E)
 
     for i in range(len(E)):
@@ -52,12 +52,12 @@ def get_initial_X_minimal(F: list, min_value: int = 30) -> list:
     return [int(min_value + (min_value / len(F) * i**2)) for i in range(len(F))]
 
 # Toma las demandas máximas de cada punto de venta y las distribuye uniformemente entre los centros de fabricación.
-def get_initial_X_higher_demand(F: list, E: list) -> list:
+def get_initial_X_higher_demand(model, F: list, E: list) -> list:
     total_demand = sum(max(d.values()) for d in model.get_demand_per_point_of_sale(E))
     return [int(total_demand // (len(F) * len(E))) for _ in range(len(F))]
 
 # Genera valores de pseudorandoms basados en la suma de las demandas de todos los escenarios.
-def get_initial_X_pseudorandom(F: list, E: list, seed: int = 42) -> list:
+def get_initial_X_pseudorandom(model, F: list, E: list, seed: int = 42) -> list:
     random.seed(seed)
     total_demand = sum(sum(d.values()) for d in model.get_demand_per_point_of_sale(E))
 
@@ -65,7 +65,7 @@ def get_initial_X_pseudorandom(F: list, E: list, seed: int = 42) -> list:
     return [base_value + random.randint(1, 10) for _ in range(len(F))]
 
 # Sensible al costo de un escenario
-def get_initial_X_cost_sensitive(F: list, S: list, E: list) -> list:
+def get_initial_X_cost_sensitive(model, F: list, S: list, E: list) -> list:
     # Calculate average cost from each fabrication center to all distribution centers
     avg_costs_f2s = {}
     transportation_costs = model.get_unit_transportation_cost_from_fabrication_to_distribution(F, S)
@@ -100,7 +100,7 @@ def get_initial_X_cost_sensitive(F: list, S: list, E: list) -> list:
 
 # Demanda inicial ponderada por la probabilidad de ocurrencia de cada escenario
 # Por ahora da lo mismo que la demanda promedio ya que las probabilidades son equiprobables
-def get_initial_X_weighted_by_scenario_prob(F: list, E: list) -> list:
+def get_initial_X_weighted_by_scenario_prob(model, F: list, E: list) -> list:
     expected_total_demand = 0
     probabilities = model.get_probability_of_occurrence(E)
 
@@ -112,7 +112,7 @@ def get_initial_X_weighted_by_scenario_prob(F: list, E: list) -> list:
     num_fabrication_centers = len(F)
     return [int(expected_total_demand // num_fabrication_centers) for _ in range(num_fabrication_centers)]
 
-def get_initial_X_hybrid_demand_probabilistic(F: list, E: list, min_per_center: int = 10, randomness_range: int = 20) -> list:
+def get_initial_X_hybrid_demand_probabilistic(model, F: list, E: list, min_per_center: int = 10, randomness_range: int = 20) -> list:
     # Calcular la demanda total esperada (considerando probabilidades de escenario)
     expected_total_demand = 0
     probabilities = model.get_probability_of_occurrence(E)
@@ -146,62 +146,46 @@ def get_initial_X_hybrid_demand_probabilistic(F: list, E: list, min_per_center: 
         
     return initial_X
 
-def get_initial_X_based_on_demand(F: list, E: list) -> list:
+def get_initial_X_based_on_demand(model, F: list, E: list) -> list:
     max_demand = max(max(d.values()) for d in model.get_demand_per_point_of_sale(E))
     min_demand = min(min(d.values()) for d in model.get_demand_per_point_of_sale(E))
 
     initial_x = [max_demand - (min_demand * (i + 1) // len(F)) for i in range(len(F))]
     return initial_x
 
-def get_posible_X_sorted(F: list, S: list, P: list, E: list) -> list:
+def get_possible_X(model: model.Model) -> list:
+    F = model.F
+    S = model.S
+    P = model.P
+    E = model.E
+
     minimal_1 = int(sum(model.get_demand_per_point_of_sale(E)[0].values()) / len(F))
     minimal_2 = int(sum(sum(d.values()) for d in model.get_demand_per_point_of_sale(E)) / (len(F) * len(E)))
 
     max_demand = max(max(d.values()) for d in model.get_demand_per_point_of_sale(E))
     min_demand = min(min(d.values()) for d in model.get_demand_per_point_of_sale(E))
     minimal_3 = max_demand - min_demand
-
-    X_list = [
-                    # get_initial_X_uniform(F, E),
-                    # get_initial_X_average_demand(F, E),
-                    get_initial_X_from_most_probable_scenario(F, E),
-                    get_initial_X_minimal(F, minimal_1),
-                    get_initial_X_minimal(F, minimal_2),
-                    get_initial_X_minimal(F, minimal_3),
-                    get_initial_X_minimal(F, minimal_3*2),
-                    get_initial_X_minimal(F, minimal_3*3),
-                    get_initial_X_higher_demand(F, E),
-                    get_initial_X_pseudorandom(F, E, 5),
-                    get_initial_X_weighted_by_scenario_prob(F, E),
-                    get_initial_X_cost_sensitive(F, S, E),
-                    get_initial_X_hybrid_demand_probabilistic(F, E, 10),
-                    get_initial_X_based_on_demand(F, E)
-                ]
     
     strategies = [
-                    # "uniform", 
-                    # "average_demand", 
-                    "most_probable_scenario", 
-                    f"minimal_1_{minimal_1}",
-                    f"minimal_2_{minimal_2}",
-                    f"minimal_3_{minimal_3}",
-                    f"minimal_3*2_{minimal_3*2}",
-                    f"minimal_3*3_{minimal_3*3}",
-                    "higher_demand", 
-                    "pseudorandom_5",
-                    "weighted_by_scenario_prob",
-                    "cost_sensitive",
-                    "hybrid_demand_probabilistic",
-                    "based_on_demand"
-                ]
+        (get_initial_X_uniform(model, F, E), "uniform"),
+        (get_initial_X_average_demand(model, F, E), "average_demand"),
+        (get_initial_X_from_most_probable_scenario(model, F, E), "most_probable_scenario"),
+        (get_initial_X_minimal(F, minimal_1), f"minimal_1_{minimal_1}"),
+        (get_initial_X_minimal(F, minimal_2), f"minimal_2_{minimal_2}"),
+        (get_initial_X_minimal(F, minimal_3), f"minimal_3_{minimal_3}"),
+        (get_initial_X_minimal(F, minimal_3*2), f"minimal_3*2_{minimal_3*2}"),
+        (get_initial_X_minimal(F, minimal_3*3), f"minimal_3*3_{minimal_3*3}"),
+        (get_initial_X_higher_demand(model, F, E), "higher_demand"),
+        (get_initial_X_pseudorandom(model, F, E, 5), "pseudorandom_5"),
+        (get_initial_X_weighted_by_scenario_prob(model, F, E), "weighted_by_scenario_prob"),
+        (get_initial_X_cost_sensitive(model, F, S, E), "cost_sensitive"),
+        (get_initial_X_hybrid_demand_probabilistic(model, F, E, 10), "hybrid_demand_probabilistic"),
+        (get_initial_X_based_on_demand(model, F, E), "based_on_demand"),
+    ]
 
-    obj_list = [model.get_objective_value(F, S, P, E, X) for X in X_list]
-    
-    pairs_of_X_obj = list(zip(X_list, obj_list, strategies))
-    pairs_of_X_obj.sort(key=lambda x: x[1], reverse=True)
+    results = [
+        (X, model.get_objective_value(F, S, P, E, X), name)
+        for X, name in strategies
+    ]
 
-    X_list = [pair[0] for pair in pairs_of_X_obj]
-    obj_list = [pair[1] for pair in pairs_of_X_obj]
-    strategies = [pair[2] for pair in pairs_of_X_obj] 
-
-    return X_list, obj_list, strategies
+    return results
