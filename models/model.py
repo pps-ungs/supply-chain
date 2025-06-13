@@ -6,6 +6,7 @@ import warnings
 warnings.filterwarnings('ignore') # get rid of annoying pandas warnings
 
 class Model(ABC):
+
     def __init__(self, F, S, P, E):
         self.F = F
         self.S = S
@@ -48,7 +49,7 @@ class Model(ABC):
         wDS = []
         for i in range(len(X)):
             factory_i = []
-            for j in range(len(self.S)):
+            for j in range(len(S)):
                 factory_i.append(X[i] * cf[i][j])
             wDS.append(factory_i)
         return wDS
