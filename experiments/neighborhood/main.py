@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../d
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../models")))
 
 import db.config as dbconfig
-import experiments.run_experiments as nh
+import experiments.neighborhood.run_experiments as nh
 import setup
 import models.hill_climbing as hill_climbing
 
