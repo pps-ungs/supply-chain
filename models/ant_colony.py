@@ -22,7 +22,7 @@ class AntColony(Model):
         self.tau_min = tau_min
         self.tau_max = tau_max
         self.num_factories = len(self.F)
-        self.num_prod_levels = 100000
+        self.num_prod_levels = 70000
         
         Z_best_expected = 8507422.0 # Valor de referencia
         

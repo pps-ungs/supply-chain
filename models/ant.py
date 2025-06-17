@@ -12,7 +12,7 @@ class Ant:
         self.actual_prod_levels = {}
         for f_idx in range(len(self.F)):
             min_prod = 0 
-            max_prod = 100000 
+            max_prod = 70000 
             self.actual_prod_levels[f_idx] = np.linspace(min_prod, max_prod, self.num_prod_levels)
 
     def build_solution(self, pheromones, alpha, beta):
