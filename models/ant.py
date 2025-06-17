@@ -10,26 +10,24 @@ class Ant:
         self.num_production_levels = num_production_levels
         self.model = model_instance 
         self.actual_prod_levels = {}
-        for f_idx in range(len(self.F)):
+        for i in range(len(self.F)):
             min_prod = 0 
             max_prod = 70000 
-            # self.actual_prod_levels[f_idx] = np.linspace(min_prod, max_prod, self.num_production_levels)
             if self.num_production_levels == 1:
-                self.actual_prod_levels[f_idx] = np.array([int(min_prod)])
+                self.actual_prod_levels[i] = np.array([int(min_prod)])
             else:
-                self.actual_prod_levels[f_idx] = np.round(np.linspace(min_prod, max_prod, self.num_production_levels)).astype(int)
-            
+                self.actual_prod_levels[i] = np.round(np.linspace(min_prod, max_prod, self.num_production_levels)).astype(int)
 
     def build_solution(self, pheromones, alpha, beta):
         self.solution_X_indices = np.zeros(len(self.F), dtype=int) 
         self.solution_X_real_values = np.zeros(len(self.F)) 
 
-        for f_idx in range(len(self.F)):
-            probabilities = self._calculate_probabilities(f_idx, pheromones, alpha, beta)
+        for i in range(len(self.F)):
+            probabilities = self._calculate_probabilities(i, pheromones, alpha, beta)
             
             chosen_level_index = np.random.choice(self.num_production_levels, p=probabilities)
-            self.solution_X_indices[f_idx] = chosen_level_index
-            self.solution_X_real_values[f_idx] = self.actual_prod_levels[f_idx][chosen_level_index]
+            self.solution_X_indices[i] = chosen_level_index
+            self.solution_X_real_values[i] = self.actual_prod_levels[i][chosen_level_index]
             
         
         margin, pStk, pDIn, CTf2s, CTs2p = self.model.get_objective_function_values(
@@ -51,7 +49,15 @@ class Ant:
         heuristic_info = np.zeros(self.num_production_levels)
         
         for k in range(self.num_production_levels):
-            heuristic_info[k] = 1.0
+            # heuristic_info[k] = 1.0
+            prod_val = self.actual_prod_levels[factory_index][k]
+
+             # Impulso a la fábrica 3
+            if factory_index == 3:
+                heuristic_info[k] = (prod_val / self.actual_prod_levels[factory_index][-1]) + 1.0 
+            else:
+                heuristic_info[k] = 1.0 / (prod_val + 1.0) # Favorece producción cercana a 0
+                # heuristic_info[k] = 1.0 # Ser neutral
             
             if heuristic_info[k] < 1e-6:
                 heuristic_info[k] = 1e-6

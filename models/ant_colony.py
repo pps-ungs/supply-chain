@@ -12,7 +12,7 @@ class AntColony(Model):
     # beta: importancia de la información heurística (usualmente > 1)
     # rho: tasa de evaporación de feromona (usualmente entre 0 y 1)
     # Q: constante para la actualización de feromona
-    def __init__(self, F, S, P, E, alpha=3.0, beta=1.0, rho=0.01, Q=100.0, tau_min=0.01, tau_max=10.0):
+    def __init__(self, F, S, P, E, alpha=3.0, beta=1.0, rho=0.01, Q=100.0, tau_min=0.01, tau_max=10.0, num_prod_levels=500):
         super().__init__(F, S, P, E) 
         
         self.alpha = alpha
@@ -22,9 +22,9 @@ class AntColony(Model):
         self.tau_min = tau_min
         self.tau_max = tau_max
         self.num_factories = len(self.F)
-        self.num_prod_levels = 70000
+        self.num_prod_levels = num_prod_levels
         
-        Z_best_expected = 8507422.0 # Valor de referencia
+        Z_best_expected = 8600000.0 # Valor de referencia
         
         pheromone_max_scale = 1000000
         self.Q = Q if Q is not None else pheromone_max_scale / Z_best_expected

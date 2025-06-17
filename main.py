@@ -37,7 +37,7 @@ def main():
 
     t = time.time()
 
-    model = AntColony(F, S, P, E, alpha=0.5, beta=3.0, rho=0.3)
+    model = AntColony(F, S, P, E, alpha=0.5, beta=3.0, rho=0.3, num_prod_levels=500)
     result = model.solve(num_ants=100, max_iterations=1000)
     print("############################### RESULTS ################################")
     print("X:", result["X"])
