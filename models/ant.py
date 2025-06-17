@@ -13,7 +13,12 @@ class Ant:
         for f_idx in range(len(self.F)):
             min_prod = 0 
             max_prod = 70000 
-            self.actual_prod_levels[f_idx] = np.linspace(min_prod, max_prod, self.num_production_levels)
+            # self.actual_prod_levels[f_idx] = np.linspace(min_prod, max_prod, self.num_production_levels)
+            if self.num_production_levels == 1:
+                self.actual_prod_levels[f_idx] = np.array([int(min_prod)])
+            else:
+                self.actual_prod_levels[f_idx] = np.round(np.linspace(min_prod, max_prod, self.num_production_levels)).astype(int)
+            
 
     def build_solution(self, pheromones, alpha, beta):
         self.solution_X_indices = np.zeros(len(self.F), dtype=int) 
