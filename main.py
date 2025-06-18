@@ -15,11 +15,7 @@ from ant_colony import AntColony
 import db.config as dbconfig
 import initial_x as initial_x
 
-def main():
-    ####################################################################
-    # Conjuntos
-    ####################################################################
-    
+def main() -> None:
     config = dbconfig.load_config('db/database.ini', 'supply_chain')
     ans = input("Do you want to create (c), restore (t) or read (r) database? (c/t/r): ")
     
