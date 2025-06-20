@@ -1,5 +1,3 @@
-import sys
-import os
 import random
 
 from models.hill_climbing import HillClimbing
