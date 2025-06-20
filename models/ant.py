@@ -52,7 +52,7 @@ class Ant:
             # heuristic_info[k] = 1.0
             prod_val = self.actual_prod_levels[factory_index][k]
 
-             # Impulso a la fábrica 3
+            #  # Impulso a la fábrica 3
             if factory_index == 3:
                 heuristic_info[k] = (prod_val / self.actual_prod_levels[factory_index][-1]) + 1.0 
             else:

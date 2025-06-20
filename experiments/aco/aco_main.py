@@ -99,12 +99,12 @@ def main():
     create_tables(config)
     print("[okay] Tables created in database")  
     
-    experiment_name = "favor_low_production"
+    experiment_name = "factories_zero_1000_iterations_average_rho_500_prod"
     alpha_test = 0.5 
     beta_test = 3.0  
-    rho_test = 0.3   
+    rho_test = 0.3  
     num_ants_test = 100
-    max_iterations_test = 100
+    max_iterations_test = 1000
     num_prod_levels = 500
 
     model_aco = AntColony(F, S, P, E, 
