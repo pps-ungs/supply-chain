@@ -50,7 +50,7 @@ class AntColony(Model):
         
         history_Z = []
         
-        print("[info] Starting Ant Colony optimization...")
+        # print("[info] Starting Ant Colony optimization...")
 
         for iteration in range(max_iterations):
             solutions_this_iteration = [] 
@@ -96,9 +96,10 @@ class AntColony(Model):
             # Registrar la mejor solución
             history_Z.append(self.best_solution_Z)
 
-            if (iteration + 1) % 10 == 0 or iteration == 0:
-                print(f"Iteration {iteration+1}/{max_iterations} - Best Z so far: {self.best_solution_Z:.2f}, X: {self.best_solution_X}")
-                print(f"Pheromones sum: {np.sum(self.pheromones):.2f}")
+            # For debugging:
+            # if (iteration + 1) % 10 == 0 or iteration == 0:
+            #     print(f"Iteration {iteration+1}/{max_iterations} - Best Z so far: {self.best_solution_Z:.2f}, X: {self.best_solution_X}")
+            #     print(f"Pheromones sum: {np.sum(self.pheromones):.2f}")
 
         halting_condition = "Max iterations reached"
         
