@@ -14,7 +14,6 @@ CREATE TABLE public.experimento_hill_climbing (
     distribucion text
 );
 
-
 ALTER TABLE public.experimento_hill_climbing OWNER TO postgres;
 
 CREATE SEQUENCE public.experimento_hill_climbing_id_seq
