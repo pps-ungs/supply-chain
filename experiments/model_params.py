@@ -7,8 +7,6 @@ from db.database import *
 import experiments.initial_x.initial_x as initial_x
 import neighborhood
 
-###### sorry por este codigo tan feo. la idea era que salga una prueba rapida
-
 def optimization_heuristic_test(
         F: list,
         S: list,

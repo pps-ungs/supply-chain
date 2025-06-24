@@ -1,5 +1,5 @@
-from experiments import neighborhood
-from experiments.writeCSV import *
+from experiments.neighborhood import neighborhood
+from experiments.neighborhood.writeCSV import *
 
 
 def run_creation_neighbors_experiment(dir:str, model):

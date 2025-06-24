@@ -17,7 +17,7 @@ import db.config as dbconfig
 import db.database as db
 import models.model as model
 import experiments.initial_x.initial_x as initial_x
-import neighborhood
+import experiments.neighborhood.neighborhood as neighborhood
 import json
 
 def create_tables(conn):
