@@ -22,8 +22,8 @@ class HeuristicTestHelper:
             epsilon: float = 1e-12,
             max_iterations_allowed: int = 1e12,
             max_stuck_allowed: int = 1e3,
-            loops_without_improvement = 0,
-            max_restarts = 0
+            loops_without_improvement = 10,
+            max_restarts = 10
         ) -> dict:
 
         initial_time = time.time()

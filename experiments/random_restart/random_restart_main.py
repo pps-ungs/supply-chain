@@ -47,73 +47,6 @@ def create_tables(config):
     conn.close()
     print("[okay] Connection to database closed")
 
-def log(
-        config,
-        model_name,
-        experiment, 
-        X_initial,
-        Z_initial, 
-        X, 
-        Z, 
-        step,
-        max_iterations_allowed,
-        it,
-        max_loops_without_improvement,
-        loops_without_improvement,
-        max_restarts,
-        amount_of_restarts,
-        actual_time, 
-        halting_condition, 
-        strategy
-    ):
-
-    conn = db.get_connection(config)
-
-    query = f"""
-            insert into experimento (
-                modelo,
-                experimento,
-                x_inicial, 
-                obj_inicial,
-                step,
-                cant_iteraciones,
-                iteracion,
-                cant_iteraciones_sin_mejora_max,
-                cant_iteraciones_sin_mejora,
-                cant_reinicios_max,
-                cant_reinicios,
-                x_optimo, 
-                obj, 
-                tiempo,
-                motivo_parada,
-                estrategia,
-                distribucion) 
-            values (
-                '{model_name}',
-                '{experiment}',
-                '{json.dumps(X_initial)}',
-                {Z_initial:.2f},
-                {step:.2f},
-                {max_iterations_allowed},
-                {it},
-                {max_loops_without_improvement},
-                {loops_without_improvement},
-                {max_restarts},
-                {amount_of_restarts},
-                '{json.dumps(X)}', 
-                {Z:.2f}, 
-                {actual_time:.2f},
-                '{halting_condition}',
-                '{strategy}',
-                'normal');
-            """
-    
-    print("[data] Saving experiment in database...")
-    db.execute(conn, query)
-    conn.close()
-    print("[okay] Connection to database closed")
-
-
 def main():
 
     config = dbconfig.load_config('db/database.ini', 'supply_chain')
@@ -136,8 +69,6 @@ def main():
     
     result = test_helper.solve(
         model=model,
-        experiment="x_from_most_probable_scenario",
-        strategy="random_restart",
         step=num_step[0],
         initial_obj=(X, Z),
         max_iterations_allowed=num_iterations[0],
@@ -145,20 +76,6 @@ def main():
         max_restarts=10
     )
 
-    log(
-        config=config,
-        model_name=model.__class__.__name__,
-        experiment="best_args_from_hill_climbing",
-        X_initial=X,
-        Z_initial=Z,
-        X=result["X"],
-        Z=result["Z"],
-        step=num_step[0],
-        it=result.get("iterations", 0),
-        actual_time=result["time"],
-        halting_condition=result["halting_condition"],
-        strategy="x_from_most_probable_scenario"
-    )
     print(result)
 
     db.dump("db/data/supply_chain_xime.sql", config)
