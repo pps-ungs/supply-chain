@@ -13,13 +13,13 @@ def create_database(config):
 
     ####################################################################
     # Centros de fabricación
-    db.insert_data_from_csv(conn, model.fabrication_centers_write(), "./db/data/conjuntos/fabrication_centers.csv")
+    db.insert_data_from_csv(conn, model.fabrication_centers_write(), "./db/data/sets/fabrication_centers.csv")
     # Centros de distribución
-    db.insert_data_from_csv(conn, model.distribution_centers_write(), "./db/data/conjuntos/distribution_centers.csv")
+    db.insert_data_from_csv(conn, model.distribution_centers_write(), "./db/data/sets/distribution_centers.csv")
     # Puntos de venta
-    db.insert_data_from_csv(conn, model.points_of_sale_write(), "./db/data/conjuntos/points_of_sale.csv")
+    db.insert_data_from_csv(conn, model.points_of_sale_write(), "./db/data/sets/points_of_sale.csv")
     # Escenarios
-    db.insert_data_from_csv_json(conn, model.scenarios_write(), "./db/data/conjuntos/scenarios-normal.csv")
+    db.insert_data_from_csv_json(conn, model.scenarios_write(), "./db/data/sets/scenarios-normal.csv")
     ####################################################################
     print("[okay] Database created")
 
