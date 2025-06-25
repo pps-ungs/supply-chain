@@ -34,7 +34,12 @@ def main() -> None:
     t = time.time()
 
     model = AntColony(F, S, P, E, alpha=0.5, beta=3.0, rho=0.3, num_prod_levels=500)
+
+    print("Experiment with Ant Colony Optimization with parameters:")
+    print(f"alpha: {model.alpha}, beta: {model.beta}, rho: {model.rho}, num_prod_levels: {model.num_prod_levels}")
+
     result = model.solve(num_ants=100, max_iterations=1000)
+    
     print("############################### RESULTS ################################")
     print("X:", result["X"])
     print("Z:", result["Z"])
@@ -62,7 +67,14 @@ def main() -> None:
     print("########################################################################")
 
     model = HillClimbing(F, S, P, E)
-    result = model.solve(step=936, initial_X=initial_x.get_initial_X_from_most_probable_scenario(model, F, E), max_iterations_allowed=100)
+    hill_climbing_step = 936
+    hill_climbing_initial_x = initial_x.get_initial_X_from_most_probable_scenario(model, F, E)
+    hill_climbing_max_iterations = 100
+
+    print("Experiment with Hill Climbing with parameters:")
+    print(f"step: {hill_climbing_step}, initial_X: {hill_climbing_initial_x}, max_iterations_allowed: {hill_climbing_max_iterations}")
+
+    result = model.solve(step=hill_climbing_step, initial_X=hill_climbing_initial_x, max_iterations_allowed=hill_climbing_max_iterations)
 
     print("############################### RESULTS ################################")
     print("X:", result["X"])
@@ -78,7 +90,14 @@ def main() -> None:
     print("########################################################################")
 
     model = RandomRestart(F, S, P, E)
-    result = model.solve(step=936, initial_X=initial_x.get_initial_X_from_most_probable_scenario(model, F, E), max_iterations_allowed=100)
+    random_restart_step = 936
+    random_restart_initial_x = [100 for _ in F]
+    random_restart_max_iterations = 100
+
+    print("Experiment with Random Restart with parameters:")
+    print(f"step: {random_restart_step}, initial_X: {random_restart_initial_x}, max_iterations_allowed: {random_restart_max_iterations}")
+
+    result = model.solve(step=random_restart_step, initial_X=random_restart_initial_x, max_iterations_allowed=random_restart_max_iterations)
 
     print("############################### RESULTS ################################")
     print("X:", result["X"])
