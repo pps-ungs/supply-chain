@@ -14,6 +14,9 @@ import db.database as db # Not used in this script?
 class HeuristicTestHelper:
     dbconfig = {}
 
+    # add log()
+
+    # to kwargs
     def solve(
             self,
             model,
