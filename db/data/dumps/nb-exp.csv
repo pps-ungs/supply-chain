@@ -1,15 +1,3 @@
-create table experimento_neighborhood (
-	id serial primary key,
-	evaluation_strategy text not null,
-	neighbor_strategy text not null,
-	best_y numeric not null,
-	num_neighbors int not null,
-	num_iterations int not null,
-	step int not null,
-	time numeric not null
-);
-
-copy experimento_neighborhood (evaluation_strategy, neighbor_strategy, best_y, num_neighbors, num_iterations, step, time) from stdin with csv;
 first_improvement_eval,create_exhaustive_neighbors,123936.65552492334,0,10000,10,23.584733963012695
 first_improvement_eval,create_exhaustive_neighbors,123565.98981688406,0,10000,20,8.053186893463135
 first_improvement_eval,create_exhaustive_neighbors,122842.62919393052,0,10000,40,1.3539538383483887
@@ -946,4 +934,3 @@ stochastic_selection_eval,create_one_change_neighbors,122786.5634046713,8,100000
 stochastic_selection_eval,create_one_change_neighbors,121782.65765252206,16,10000000,100,0.07124209403991699
 stochastic_selection_eval,create_one_change_neighbors,123583.178179934,32,10000000,100,2.3372812271118164
 stochastic_selection_eval,create_one_change_neighbors,123583.178179934,64,10000000,100,5.6523048877716064
-\.
