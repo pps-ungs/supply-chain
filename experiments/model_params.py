@@ -1,6 +1,11 @@
-import os, sys, time, random
+import os
+import sys
+import time
+import random # Not used in this script?
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/')))
+
 import models.model as model
 from db.config import *
 from db.database import *

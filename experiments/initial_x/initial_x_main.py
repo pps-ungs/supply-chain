@@ -3,14 +3,14 @@
 import os
 import sys
 import time
-import inspect
+import inspect # Not used in this script?
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../db/')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../models/')))
 
 from experiments.test.heuristic_test_helper import HeuristicTestHelper
-from hill_climbing import HillClimbing
+from models.hill_climbing import HillClimbing
 import setup
 
 import db.config as dbconfig

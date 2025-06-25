@@ -4,7 +4,7 @@ import os
 import sys
 import json
 import time
-import numpy as np
+import numpy as np # Not used in this script?
 
 # Ajusta las rutas para importar tus módulos
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../.
 import setup
 import db.config as dbconfig
 import db.database as db
-from ant_colony import AntColony
+from models.ant_colony import AntColony
 
 
 def create_tables(config):

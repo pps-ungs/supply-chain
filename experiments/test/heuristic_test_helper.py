@@ -2,13 +2,13 @@ import os
 import sys
 import inspect
 import time
-import json
+import json # Not used in this script?
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../db/')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../models/')))
 
-import db.config as dbconfig
-import db.database as db
+import db.config as dbconfig # Not used in this script?
+import db.database as db # Not used in this script?
 
 
 class HeuristicTestHelper:
