@@ -2,6 +2,8 @@
 
 from db import write_csv
 import numpy as np
+import configparser
+import os
 
 ####################################################################
 # Centros de fabricación
@@ -114,13 +116,18 @@ def binomial_distribution(n: int, p: float) -> float:
 ####################################################################
 # Generacion de conjuntos
 def generate(path_to_files: str) -> None:
-    number_of_fabrication_centers = 4
-    number_of_distribution_centers = 10
-    number_of_points_of_sale = 50
+    config_path = os.path.join(os.path.dirname(__file__), 'config', 'input_config.ini')
 
-    number_of_scenarios = 500
-    mean_demand = 678
-    std_dev_demand = 170
+    config = configparser.ConfigParser()
+    config.read(config_path)
+
+    number_of_fabrication_centers = config.getint('sets', 'number_of_fabrication_centers')
+    number_of_distribution_centers = config.getint('sets', 'number_of_distribution_centers')
+    number_of_points_of_sale = config.getint('sets', 'number_of_points_of_sale')
+
+    number_of_scenarios = config.getint('scenarios', 'number_of_scenarios')
+    mean_demand = config.getint('scenarios', 'mean_demand')
+    std_dev_demand = config.getint('scenarios', 'std_dev_demand')
 
     # Conjunto de centros de fabricación
     F = list()
