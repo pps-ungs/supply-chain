@@ -1,10 +1,10 @@
-select * from public.experimento_hill_climbing 
-where experimento = '100_it_all_x' 
+select * from public.experimento_hill_climbing
+where experimento = '100_it_all_x'
 order by obj desc;
 
 --mejores por experimento, estrategia
-select * 
-from public.experimento_hill_climbing 
+select *
+from public.experimento_hill_climbing
 where experimento = '100_it_all_x' and (experimento, estrategia, obj) in (
 	select experimento, estrategia, max(obj) obj
 	from public.experimento_hill_climbing

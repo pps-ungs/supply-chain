@@ -9,11 +9,11 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "mode
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "experiments/")))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "experiments/initial_x/")))
 
-from hill_climbing import HillClimbing
-from random_restart import RandomRestart
-from ant_colony import AntColony
+from models.hill_climbing import HillClimbing
+from models.random_restart import RandomRestart
+from models.ant_colony import AntColony
 import db.config as dbconfig
-import initial_x as initial_x
+import experiments.initial_x.initial_x as initial_x
 
 def main() -> None:
     config = dbconfig.load_config('db/database.ini', 'supply_chain')

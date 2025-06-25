@@ -8,9 +8,9 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../.
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../models/')))
 
 from experiments.test.heuristic_test_helper import HeuristicTestHelper
-from random_restart import RandomRestart
+from models.random_restart import RandomRestart
 import setup
-import json
+import json # Not used in this script?
 
 import db.config as dbconfig
 import db.database as db
