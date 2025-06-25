@@ -91,13 +91,12 @@ def main() -> None:
 
     model = RandomRestart(F, S, P, E)
     random_restart_step = 936
-    random_restart_initial_x = [100 for _ in F]
     random_restart_max_iterations = 100
 
     print("Experiment with Random Restart with parameters:")
-    print(f"step: {random_restart_step}, initial_X: {random_restart_initial_x}, max_iterations_allowed: {random_restart_max_iterations}")
+    print(f"step: {random_restart_step}, max_iterations_allowed: {random_restart_max_iterations}")
 
-    result = model.solve(step=random_restart_step, initial_X=random_restart_initial_x, max_iterations_allowed=random_restart_max_iterations)
+    result = model.solve(step=random_restart_step, max_iterations_allowed=random_restart_max_iterations)
 
     print("############################### RESULTS ################################")
     print("X:", result["X"])

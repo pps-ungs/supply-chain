@@ -4,11 +4,11 @@ from models.hill_climbing import HillClimbing
 
 class RandomRestart(HillClimbing):
 
-    def solve(self, step=20, epsilon=1e-12, max_iterations_allowed=1e12, max_stuck_allowed: int = 1, initial_X = None, max_loops_without_improvement = 10, max_restarts=10, experiment: str = "random_restart", strategy: str = "random_restart") -> dict :
+    def solve(self, step=20, epsilon=1e-12, max_iterations_allowed=1e12, max_stuck_allowed: int = 1, max_loops_without_improvement = 10, max_restarts=10) -> dict :
         amount_of_restarts = 0
         loops_without_improvement = 0
 
-        X = initial_X if initial_X is not None else [100 for _ in self.F]
+        X = [100 for _ in self.F]
         best_result = None
 
         while loops_without_improvement < max_loops_without_improvement or amount_of_restarts < max_restarts:

@@ -64,7 +64,7 @@ def main():
     model = RandomRestart(F, S, P, E)
     
     test_helper = HeuristicTestHelper()
-    X = initial_x.get_initial_X_from_most_probable_scenario(model, F, E)
+    X = [0 for _ in F]
     Z = model.get_objective_value(F, S, P, E, X)
     
     result = test_helper.solve(
@@ -78,7 +78,7 @@ def main():
 
     print(result)
 
-    db.dump("db/data/supply_chain_xime.sql", config)
+    db.dump("db/data/dumps/random_restart_experiment.sql", config)
 
 if __name__ == "__main__":
     main()
