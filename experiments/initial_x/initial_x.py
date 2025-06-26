@@ -140,7 +140,6 @@ def get_initial_X_hybrid_demand_probabilistic(model, F: list, E: list, min_per_c
     initial_X = []
     for _ in range(num_fabrication_centers):
         # Añadir un componente aleatorio para variar la producción por centro
-        # Puedes ajustar 'randomness_range' para más o menos variación
         variation = random.randint(-randomness_range // 2, randomness_range // 2)
         
         # Asegurar que el valor final sea al menos min_per_center y no negativo
