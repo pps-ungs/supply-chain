@@ -1,10 +1,10 @@
 import sys
 import os
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../experiments/neighborhood/')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from model import Model
-import neighborhood as neighborhood
+from models.model import Model
+import experiments.neighborhood.neighborhood as neighborhood
 
 class HillClimbing(Model):
     ########################################################################
@@ -26,10 +26,11 @@ class HillClimbing(Model):
     # 5. limit_is_not_reached: si se alcanzó el límite de iteraciones. Si es True significa que
     #    hizo pocas iteraciones y encontró la mejor solución. Si es False puede ser indicativo de
     #    que no encontró la mejor solución.
+
     def solve(self, step=20, epsilon=1e-12, max_iterations_allowed=1e12, max_stuck_allowed: int = 1, initial_X = 0):
         F, S, P, E = self.F, self.S, self.P, self.E
 
-        X_initial, Z_initial = initial_X, self.get_objective_value(F, S, P, E, initial_X) if initial_X is not 0 else ([100 for _ in F], 0)
+        X_initial, Z_initial = initial_X, self.get_objective_value(F, S, P, E, initial_X) if initial_X != 0 else ([100 for _ in F], 0)
 
         X_current = X_initial
         Z_current = Z_initial
