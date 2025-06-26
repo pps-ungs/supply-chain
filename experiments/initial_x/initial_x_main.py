@@ -3,7 +3,6 @@
 import os
 import sys
 import time
-import inspect # Not used in this script?
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../db/')))
@@ -17,7 +16,6 @@ import db.config as dbconfig
 import db.database as db
 import models.model as model
 import experiments.initial_x.initial_x as initial_x
-import experiments.neighborhood.neighborhood as neighborhood
 import json
 
 def create_tables(conn):
@@ -107,7 +105,6 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
     it = 0
    
     while it < max_iterations:
-        # añadir la mejor manera de obtener los vecinos segun los experimentos
         X_neighbour_1 = [X[i] - step for i in range(len(X))]
         X_neighbour_2 = [X[i] + step for i in range(len(X))]
 
