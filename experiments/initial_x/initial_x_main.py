@@ -132,7 +132,7 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
         "time": total_time
     }
 
-def log_optimization_heuristic(experiment, X_initial, Z_initial, X, Z, step, it, actual_time, halting_condition, strategy):
+def log_optimization_heuristic(experiment, X_initial, Z_initial, X, Z, step, max_iterations_allowed, it, actual_time, halting_condition, strategy):
     config = dbconfig.load_config('db/database.ini', 'supply_chain')
     conn = db.get_connection(config)
 
@@ -155,7 +155,7 @@ def log_optimization_heuristic(experiment, X_initial, Z_initial, X, Z, step, it,
                 '{json.dumps(X_initial)}',
                 {Z_initial:.2f},
                 {step:.2f},
-                {it},
+                {max_iterations_allowed},
                 {it},
                 '{json.dumps(X)}', 
                 {Z:.2f}, 
@@ -206,6 +206,7 @@ def test(experiment, model, num_iterations, num_step, log_f: callable):
                     Z=result["Z"],
                     step=step,
                     it=result.get("iterations", 0),
+                    max_iterations_allowed=iteration,
                     actual_time=result["time"],
                     halting_condition=result["halting_condition"],
                     strategy=strategy
