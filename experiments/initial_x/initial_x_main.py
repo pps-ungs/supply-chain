@@ -22,22 +22,16 @@ import json
 
 def create_tables(conn):
     query = """
-        create table if not exists x_inicial (
+        create table if not exists experimento_x_inicial (
             id serial primary key,
             x_inicial text,
-            obj_inicial decimal(15, 9),
-            estrategia text
-        );
-
-        create table if not exists experimentos_x_inicial (
-            id serial primary key,
-            id_x_inicial integer references x_inicial(id),
             step decimal(15, 2),
             cant_iteraciones integer,
             iteracion integer,
             x_optimo text,
             obj decimal(15, 2),
-            tiempo decimal(15, 2)
+            tiempo decimal(15, 2),
+            estrategia text
         );
 
         create table if not exists experimento_hill_climbing (
@@ -64,7 +58,7 @@ def create_tables(conn):
 def log_x_initial(X, obj, step, max_iterations, it, best_X, best_obj, initial_time, strategy):
     conn = db.get_connection(dbconfig.load_config('../db/database.ini', 'supply_chain'))
     query = f"""
-            insert into experimentos_x_inicial (
+            insert into experimento_x_inicial (
                 x_inicial, 
                 obj_inicial,
                 step,
@@ -126,7 +120,6 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
             best_X = X_best_neighbour
             best_obj = Y_best_neighbour
 
-            # print(f"X = {best_X}, Y = {best_obj}, iteración = {it}, tiempo = {time.time() - initial_time:.2f} segundos")
             log_f(X, obj, step, max_iterations, it, best_X, best_obj, initial_time, strategy)
 
         it += 1
@@ -244,8 +237,8 @@ def main():
     num_step = [936]
 
     model = HillClimbing(F, S, P, E)
-    test("testtt", model, num_iterations, num_step, log_optimization_heuristic)
-    db.dump("db/data/supply_chain_dump_testing_ref.sql", config)
+    test("test_hill_climbing", model, num_iterations, num_step, log_optimization_heuristic)
+    db.dump("db/data/dumps/hill_climbing_test.sql", config)
 
 if __name__ == "__main__":
     main()
