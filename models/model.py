@@ -352,13 +352,10 @@ class Model(ABC):
     ########################################################################
 
     # monto de la ganancia esperada
-    # esto no esta bien, (wDP[j][k] - Y[k][l])  es negativo
     def get_margin(self, E, P, S, wDP, Y, pi, m):
         margin = 0
-        # for j in range(len(S)):     # no es lo que dice el enunciado, pero falta un indice
         for k in range(len(P)):
             for l in range(len(E)):
-                # margin += wDP[j][k] - Y[l][k]) * pi[l] * m[k]
                 margin += (self.get_products_received_by_point_of_sale(S, k, wDP) - Y[l][k]) * pi[l] * m[k]
         return margin
 
