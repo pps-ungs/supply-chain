@@ -3,15 +3,31 @@ from ant import Ant
 from models.model import Model
 
 class AntColony(Model):
+    ########################################################################
+    # Colonia de hormigas
+    #
     # F: centros de fabricación
     # S: centros de distribución
     # P: puntos de venta
     # E: escenarios
-    # Parámetros del algoritmo de colonia de hormigas
+    ### Parámetros del algoritmo de colonia de hormigas
     # alpha: importancia del rastro de feromona (usualmente entre 0 y 1)
     # beta: importancia de la información heurística (usualmente > 1)
     # rho: tasa de evaporación de feromona (usualmente entre 0 y 1)
     # Q: constante para la actualización de feromona
+    # 
+    ### Devuelve un diccionario con los siguientes elementos:
+    # 1. "X": mejor solución encontrada,
+    # 2. "Z": mejor valor de la función objetivo encontrado
+    # 3. "margin": margen de ganancia encontrado,
+    # 4. "pStk": penalidad por exceso de stok,
+    # 5. "pDIn": penalidad por demanda insatisfecha,
+    # 6. "CTf2s": costo de transporte de fábricas a centros de distribución,
+    # 7. "CTs2p": costo de transporte de centros de distribución a puntos de venta,
+    # 8. "halting_condition": criterio de parada. En este modelo, sólo "Max iterations reached",
+    # 9. "iterations": cantidad de iteraciones realizadas. En este modelo, la recibida por parámetro,
+    # 10. "history_Z": historial de resultados de Z
+    
     def __init__(self, F, S, P, E, alpha=3.0, beta=1.0, rho=0.01, Q=100.0, tau_min=0.01, tau_max=10.0, num_prod_levels=500):
         super().__init__(F, S, P, E) 
         
