@@ -53,7 +53,7 @@ def create_tables(conn):
     conn.close()
     print("[okay] Connection to supply_chain closed")
 
-def log_x_initial(X, obj, step, max_iterations, it, best_X, best_obj, initial_time, strategy):
+def log_initial_x(X, obj, step, max_iterations, it, best_X, best_obj, initial_time, strategy):
     conn = db.get_connection(dbconfig.load_config('../db/database.ini', 'supply_chain'))
     query = f"""
             insert into experimento_x_inicial (
@@ -129,7 +129,7 @@ def optimization_heuristic_initial_x(F: list, S: list, P: list, E: list, step: f
         "time": total_time
     }
 
-def log_optimization_heuristic(experiment, X_initial, Z_initial, X, Z, step, max_iterations_allowed, it, actual_time, halting_condition, strategy):
+def log_hill_climbing(experiment, X_initial, Z_initial, X, Z, step, max_iterations_allowed, it, actual_time, halting_condition, strategy):
     config = dbconfig.load_config('db/database.ini', 'supply_chain')
     conn = db.get_connection(config)
 
@@ -219,9 +219,7 @@ def test(experiment, model, num_iterations, num_step, log_f: callable):
                 }
 
                 print(f"X {result.get('X')}, Obj = {result.get('Z')}, Tiempo = {result.get('time')}, Halting Condition = {result.get('halting_condition')}")
-
-    print("################ RESULT ################")
-    print(all_results)
+    return all_results
 
 def main():
 
@@ -235,8 +233,13 @@ def main():
     num_step = [936]
 
     model = HillClimbing(F, S, P, E)
-    test("test_hill_climbing", model, num_iterations, num_step, log_optimization_heuristic)
-    db.dump("db/data/dumps/hill_climbing_test.sql", config)
+    results = test("test_hill_climbing", model, num_iterations, num_step, log_hill_climbing)
+
+    print("################ RESULT ################")
+    print(results)
+
+    # Uncomment the following line to dump the database after running the experiment
+    # db.dump("db/data/dumps/hill_climbing_experiment.sql", config)
 
 if __name__ == "__main__":
     main()

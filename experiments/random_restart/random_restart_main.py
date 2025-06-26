@@ -10,11 +10,10 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../.
 from experiments.test.heuristic_test_helper import HeuristicTestHelper
 from models.random_restart import RandomRestart
 import setup
-import json # Not used in this script?
 
 import db.config as dbconfig
 import db.database as db
-import experiments.initial_x.initial_x as initial_x
+import json
 
 def create_tables(config):
     conn = db.get_connection(config)
@@ -47,6 +46,78 @@ def create_tables(config):
     conn.close()
     print("[okay] Connection to database closed")
 
+def log_random_restart_experiment(experiment, strategy, step, max_iterations_allowed, max_loops_without_improvement, max_restarts, result):
+    config = dbconfig.load_config('db/database.ini', 'supply_chain')
+    conn = db.get_connection(config)
+
+    query = f"""
+        insert into experimento_random_restart 
+        values (
+            default,
+            'RandomRestart',
+           '{experiment}',
+           '{json.dumps(result["initial_X"])}',
+            {result["initial_Z"]:.2f},
+            {step:.2f},
+            {max_iterations_allowed},
+            {result["iterations"]},
+            {max_loops_without_improvement},
+            {result["loops_without_improvement"]},
+            {max_restarts},
+            {result["amount_of_restarts"]},
+            '{json.dumps(result["X"])}',
+            {result["Z"]:.2f},
+            {result["time"]:.2f},
+            '{result["halting_condition"]}',
+            '{strategy}',
+            'normal'
+        );
+        """
+
+    print("[data] Creating tables in database...")
+    db.execute(conn, query)
+    conn.close()
+    print("[okay] Connection to database closed")
+
+def test(experiment, strategy, model, iterations, steps, max_loops_without_improvement, max_restarts, log_f: callable):
+    test_helper = HeuristicTestHelper()
+    X = [0 for _ in model.F]
+    
+    all_results = {}
+    for step in steps:
+        for it in iterations:
+            result = test_helper.solve(
+                model=model,
+                step=step,
+                initial_X = X,
+                max_iterations_allowed=it,
+                max_loops_without_improvement=max_loops_without_improvement,
+                max_restarts=max_restarts,
+                get_history=True,
+            )
+
+            all_results[(it, step, strategy)] = {
+                "X": result.get("X"),
+                "Obj": result.get("Z"),
+                "Tiempo": result.get("time"),
+                "Halting Condition": result.get("halting_condition")
+            }
+
+            print(f"X: {result.get('X')}, Z: {result.get('Z')}, Time: {result.get('time')}, Halting Condition: {result.get('halting_condition')}")
+
+            history = result.get("history", [])
+            for entry in history:
+                log_random_restart_experiment(
+                    experiment=experiment,
+                    strategy=strategy,
+                    step=step,
+                    max_iterations_allowed=it,
+                    max_loops_without_improvement=0,
+                    max_restarts=4,
+                    result=entry
+                )
+    return all_results
+
 def main():
 
     config = dbconfig.load_config('db/database.ini', 'supply_chain')
@@ -58,27 +129,31 @@ def main():
     create_tables(config)
     print("[okay] Tables created in database")  
 
-    num_iterations = [50] # [100, 10000, 100000]
-    num_step = [936]
+    iterations = [50] # [100, 10000, 100000]
+    steps = [936]
+    max_loops_without_improvement = 10
+    max_restarts = 10
+
+    experiment = "random_restart_experiment"
+    strategy = "random_restart"
 
     model = RandomRestart(F, S, P, E)
-    
-    test_helper = HeuristicTestHelper()
-    X = [0 for _ in F]
-    Z = model.get_objective_value(F, S, P, E, X)
-    
-    result = test_helper.solve(
+    results = test(
+        experiment=experiment,
+        strategy=strategy,
         model=model,
-        step=num_step[0],
-        initial_obj=(X, Z),
-        max_iterations_allowed=num_iterations[0],
-        loops_without_improvement=10,
-        max_restarts=10
+        iterations=iterations,
+        steps=steps,
+        max_loops_without_improvement=max_loops_without_improvement,
+        max_restarts=max_restarts,
+        log_f=log_random_restart_experiment
     )
 
-    print(result)
+    print("################ RESULT ################")
+    print(results)
 
-    db.dump("db/data/dumps/random_restart_experiment.sql", config)
+    # Uncomment the following line to dump the database after running the experiment
+    # db.dump("db/data/dumps/random_restart_experiment.sql", config)
 
 if __name__ == "__main__":
     main()

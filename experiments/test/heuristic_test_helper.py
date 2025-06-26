@@ -17,12 +17,17 @@ class HeuristicTestHelper:
         Z = result.get("Z")
         halting_condition = result.get("halting_condition", "unknown")
 
-        return {
+        data = {
             "X": X,
             "Z": Z,
             "time": actual_time,
             "halting_condition": halting_condition
         }
+
+        if "history" in result:
+            data["history"] = result["history"]
+            
+        return data
 
     def call_with_non_default_params(self, func, **kwargs):
         sig = inspect.signature(func)

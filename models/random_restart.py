@@ -1,16 +1,20 @@
-import random
+import random, time
 
 from models.hill_climbing import HillClimbing
 
 class RandomRestart(HillClimbing):
 
-    def solve(self, step=20, epsilon=1e-12, max_iterations_allowed=1e12, max_stuck_allowed: int = 1, max_loops_without_improvement = 10, max_restarts=10) -> dict :
+    def solve(self, step=20, epsilon=1e-12, max_iterations_allowed=1e12, max_stuck_allowed: int = 1, max_loops_without_improvement = 10, max_restarts=10, get_history: bool = False) -> dict :
         amount_of_restarts = 0
         loops_without_improvement = 0
 
         X = [100 for _ in self.F]
         best_result = None
+        history = []
 
+        initial_time = time.time()
+
+        print(f"Starting random restart with initial X: {X}, step: {step}, max_iterations_allowed: {max_iterations_allowed}, max_stuck_allowed: {max_stuck_allowed}, max_loops_without_improvement: {max_loops_without_improvement}, max_restarts: {max_restarts}")
         while loops_without_improvement < max_loops_without_improvement or amount_of_restarts < max_restarts:
             X = [random.randint(0, 100000) for _ in X]
             print(f"Restarting with X: {X}, amount_of_restarts: {amount_of_restarts}, loops_without_improvement: {loops_without_improvement}")
@@ -19,6 +23,22 @@ class RandomRestart(HillClimbing):
 
             if result["Z"] is not None and result["Z"] > best_result["Z"] if best_result else True:
                 best_result = result
+
+                if get_history:
+                    improvement = {
+                        "initial_X": X,
+                        "initial_Z": self.get_objective_value(self.F, self.S, self.P, self.E, X),
+                        "loops_without_improvement": loops_without_improvement,
+                        "amount_of_restarts": amount_of_restarts,
+                        "X": result["X"],
+                        "Z": result["Z"],
+                        "time": time.time() - initial_time,
+                        "iterations": result["iterations"],
+                        "halting_condition": result["halting_condition"]
+                    }
+
+                    history.append(improvement)
+
                 loops_without_improvement = 0
             else:
                 loops_without_improvement += 1
@@ -32,4 +52,7 @@ class RandomRestart(HillClimbing):
         best_result["halting_condition"] = random_restart_halting_condition
         best_result["amount_of_restarts"] = amount_of_restarts
         best_result["loops_without_improvement"] = loops_without_improvement
+
+        if get_history:
+            best_result["history"] = history
         return best_result
