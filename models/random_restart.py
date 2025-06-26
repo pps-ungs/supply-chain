@@ -4,7 +4,7 @@ from models.hill_climbing import HillClimbing
 
 class RandomRestart(HillClimbing):
 
-    def solve(self, step=20, epsilon=1e-12, max_iterations_allowed=1e12, max_stuck_allowed: int = 1, max_loops_without_improvement = 10, max_restarts=10, get_history: bool = False) -> dict :
+    def solve(self, step=20, epsilon=1e-12, max_iterations_allowed=1e12, max_stuck_allowed: int = 1, max_loops_without_improvement = 10, max_restarts=10, get_history: bool = False) -> dict[str, any] | None:
         amount_of_restarts = 0
         loops_without_improvement = 0
 

@@ -342,7 +342,7 @@ class Model(ABC):
     #        distribución
     # CTs2p: costo de transporte desde el centro de distribución al punto de
     #        venta
-    def objective_function(self, margen, pStk, pDIn, CTf2s, CTs2p):
+    def objective_function(self, margen, pStk, pDIn, CTf2s, CTs2p) -> float:
         return margen - pStk - pDIn - CTf2s - CTs2p
     #
     ########################################################################
@@ -398,7 +398,7 @@ class Model(ABC):
         return CTs2p
     
     # Devuelve el valor de la función objetivo para una solución X
-    def get_objective_value(self, F, S, P, E, X):
+    def get_objective_value(self, F, S, P, E, X) -> float:
         margin, pStk, pDIn, CTf2s, CTs2p = self.get_objective_function_values(F, S, P, E, X)
         return self.objective_function(margin, pStk, pDIn, CTf2s, CTs2p)
 

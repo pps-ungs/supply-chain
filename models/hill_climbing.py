@@ -14,19 +14,22 @@ class HillClimbing(Model):
     # S: centros de distribución
     # P: puntos de venta
     # E: escenarios
+    #
     # step: tamaño del paso para la búsqueda local
     # epsilon: tolerancia para la convergencia, es un valor muy pequeño
     # max_iterations_allowed: número máximo de iteraciones permitidas, es un valor grande
     #
-    # Devuelve una lista con los siguientes elementos:
-    # 1. X_current: mejor solución encontrada
-    # 2. algo?
-    # 3. algo?
-    # 4. algo?
-    # 5. limit_is_not_reached: si se alcanzó el límite de iteraciones. Si es True significa que
-    #    hizo pocas iteraciones y encontró la mejor solución. Si es False puede ser indicativo de
-    #    que no encontró la mejor solución.
-
+    # Devuelve un diccionario con los siguientes elementos:
+    # 1. X: mejor solución encontrada
+    # 2. Z: mejor valor de la función objetivo encontrado
+    # 3. margin: margen de ganancia encontrado
+    # 4. pStk: penalidad por exceso de stock
+    # 5. pDIn: penalidad por demanda insatisfecha
+    # 6. CTf2s: costo de transporte de fábricas a centros de distribución
+    # 7. CTs2p: costo de transporte de centros de distribución a puntos de venta
+    # 8. halting_condition: criterio de parada. Puede ser "Satisfactory solution found",
+    #    "Maximum number of iterations" o "Stuck in local optimum"
+    # 9. iterations: cantidad de iteraciones realizadas
     def solve(self, step=20, epsilon=1e-12, max_iterations_allowed=1e12, max_stuck_allowed: int = 1, initial_X = 0):
         F, S, P, E = self.F, self.S, self.P, self.E
 
