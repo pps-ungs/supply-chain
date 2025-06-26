@@ -194,7 +194,7 @@ def test(experiment, model, num_iterations, num_step, log_f: callable):
                 result = helper.solve(
                     model=model,
                     step=step,
-                    initial_obj=(initial_x_exp, initial_obj),
+                    initial_x=initial_x_exp,
                     max_iterations_allowed=iteration
                 )
 
