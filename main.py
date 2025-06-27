@@ -16,6 +16,26 @@ import db.config as dbconfig
 import experiments.initial_x.initial_x as initial_x
 
 def main() -> None:
+    ################################################################################
+    # All the parameters for the experiments are defined here.
+    ################################################################################
+    # Parameters ACO
+    num_ants        = 5 # 100
+    max_iterations  = 10 # 1000
+    alpha           = 0.5
+    beta            = 3.0
+    rho             =  0.3
+    num_prod_levels = 500
+    ################################################################################
+    # Parameters Hill Climbing
+    hill_climbing_step           = 936 # 936
+    hill_climbing_max_iterations = 5 # 100
+    ################################################################################
+    # Parameters Random Restart
+    random_restart_step           = 936 # 936
+    random_restart_max_iterations = 2 # 100
+    ################################################################################
+
     config = dbconfig.load_config('db/database.ini', 'supply_chain')
     ans = input("Do you want to create (c), restore (t) or read (r) database? (c/t/r): ")
     
@@ -33,7 +53,7 @@ def main() -> None:
 
     t = time.time()
 
-    model = AntColony(F, S, P, E, alpha=0.5, beta=3.0, rho=0.3, num_prod_levels=500)
+    model = AntColony(F, S, P, E, alpha, beta, rho, num_prod_levels)
 
     print("################################################################################")
     print("    Experiment **ANT COLONY OPTIMIZATION**")
@@ -42,7 +62,7 @@ def main() -> None:
     print(f"    alpha: {model.alpha}, beta: {model.beta}, rho: {model.rho}, num_prod_levels: {model.num_prod_levels}")
     print("--------------------------------------------------------------------------------")
 
-    result = model.solve(num_ants=100, max_iterations=1000)
+    result = model.solve(num_ants, max_iterations)
     
     print("RESULTS")
     print("                X:", result["X"])
@@ -58,9 +78,7 @@ def main() -> None:
     print("################################################################################", "\n")
 
     model = HillClimbing(F, S, P, E)
-    hill_climbing_step = 936
     hill_climbing_initial_x = initial_x.get_initial_X_from_most_probable_scenario(model, F, E)
-    hill_climbing_max_iterations = 100
 
     print("################################################################################")
     print("    Experiment **HILL CLIMBING**")
@@ -85,8 +103,6 @@ def main() -> None:
     print("################################################################################", "\n")
 
     model = RandomRestart(F, S, P, E)
-    random_restart_step = 936
-    random_restart_max_iterations = 100
 
     print("################################################################################")
     print("    Experiment **RANDOM RESTART**")
