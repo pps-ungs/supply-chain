@@ -14,7 +14,7 @@ class RandomRestart(HillClimbing):
 
         initial_time = time.time()
 
-        print(f"[info] Starting random restart → initial X: {X}, step: {step}, max_iterations_allowed: {max_iterations_allowed}, max_stuck_allowed: {max_stuck_allowed}, max_loops_without_improvement: {max_loops_without_improvement}, max_restarts: {max_restarts}")
+        print(f"[info] Starting random restart → step: {step}, max_iterations_allowed: {max_iterations_allowed}, max_stuck_allowed: {max_stuck_allowed}, max_loops_without_improvement: {max_loops_without_improvement}, max_restarts: {max_restarts}")
         while loops_without_improvement < max_loops_without_improvement or amount_of_restarts < max_restarts:
             X = [random.randint(0, 100000) for _ in X]
             print(f"[info] Restarting with X: {X}, amount_of_restarts: {amount_of_restarts}, loops_without_improvement: {loops_without_improvement}")

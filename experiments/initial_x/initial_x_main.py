@@ -164,7 +164,7 @@ def log_hill_climbing(experiment, X_initial, Z_initial, X, Z, step, max_iteratio
     db.execute(conn, query)
     conn.close()
 
-def test(experiment, model, num_iterations, num_step, log_f: callable):
+def test(experiment, model, iterations, steps, log_f: callable):
     helper = HeuristicTestHelper()
 
     results = initial_x.get_possible_X(model)
@@ -178,8 +178,8 @@ def test(experiment, model, num_iterations, num_step, log_f: callable):
     all_results = {}
 
     for i in range(len(X_list)):
-        for iteration in num_iterations:
-            for step in num_step:
+        for iteration in iterations:
+            for step in steps:
                 print("################ EXECUTION ################")
                 initial_x_exp = X_list[i]
                 initial_obj = obj_list[i]
@@ -222,18 +222,24 @@ def test(experiment, model, num_iterations, num_step, log_f: callable):
     return all_results
 
 def main():
-
+    # Load the database configuration & read the data
     config = dbconfig.load_config('db/database.ini', 'supply_chain')
     
     data = setup.read_database(config)
     F, S, P, E = data["F"], data["S"], data["P"], data["E"]
     print("[okay] Data loaded from database")
 
-    num_iterations = [50] # [100, 10000, 100000]
-    num_step = [936]
+    # Uncomment the following line to create the tables in the database
+    # create_tables(config)
 
+    # Define the parameters for the hill climbing experiment
+    iterations = [50] # [100, 10000, 100000]
+    steps = [936]
+    experiment = "test_hill_climbing"
+
+    # Execute the hill climbing algorithm
     model = HillClimbing(F, S, P, E)
-    results = test("test_hill_climbing", model, num_iterations, num_step, log_hill_climbing)
+    results = test(experiment, model, iterations, steps, log_hill_climbing)
 
     print("################ RESULT ################")
     print(results)
