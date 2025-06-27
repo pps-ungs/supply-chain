@@ -233,7 +233,7 @@ def main():
     # create_tables(config)
 
     # Define the parameters for the hill climbing experiment
-    iterations = [50] # [100, 10000, 100000]
+    iterations = [50]
     steps = [936]
     experiment = "test_hill_climbing"
 

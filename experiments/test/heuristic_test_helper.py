@@ -27,6 +27,9 @@ class HeuristicTestHelper:
         if "history" in result:
             data["history"] = result["history"]
             
+        if "iterations" in result:
+            data["iterations"] = result["iterations"]
+            
         return data
 
     def call_with_non_default_params(self, func, **kwargs):

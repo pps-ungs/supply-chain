@@ -107,7 +107,7 @@ def test(experiment, strategy, model, iterations, steps, max_loops_without_impro
 
                     history = result.get("history", [])
                     for entry in history:
-                        log_random_restart(
+                        log_f(
                             experiment=experiment,
                             strategy=strategy,
                             step=step,
@@ -130,7 +130,7 @@ def main():
     # create_tables(config)
 
     # Define the parameters for the random restart experiment
-    iterations = [50] # [100, 10000, 100000]
+    iterations = [50]
     steps = [936]
     max_loops_without_improvement_list = [10]
     max_restarts_list = [30]
