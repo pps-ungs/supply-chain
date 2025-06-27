@@ -49,16 +49,24 @@ class Ant:
         heuristic_info = np.zeros(self.num_production_levels)
         
         for k in range(self.num_production_levels):
-            # heuristic_info[k] = 1.0
-            prod_val = self.actual_prod_levels[factory_index][k]
-
-            #  # Impulso a la fábrica 3
-            if factory_index == 3:
-                heuristic_info[k] = (prod_val / self.actual_prod_levels[factory_index][-1]) + 1.0 
-            else:
-                heuristic_info[k] = 1.0 / (prod_val + 1.0) # Favorece producción cercana a 0
-                # heuristic_info[k] = 1.0 # Ser neutral
-            
+            ########################################
+            # Equal factories:
+            heuristic_info[k] = 1.0
+            ########################################
+            # Favour last factory:
+            # prod_val = self.actual_prod_levels[factory_index][k]
+            # if factory_index == 3:
+            #     heuristic_info[k] = (prod_val / self.actual_prod_levels[factory_index][-1]) + 1.0 
+            # else:
+            #     heuristic_info[k] = 1.0
+            ########################################       
+            # Favour production zero:
+            # prod_val = self.actual_prod_levels[factory_index][k]
+            # if factory_index == 3:
+            #     heuristic_info[k] = (prod_val / self.actual_prod_levels[factory_index][-1]) + 1.0 
+            # else:
+            #     heuristic_info[k] = 1.0 / (prod_val + 1.0)
+            ########################################
             if heuristic_info[k] < 1e-6:
                 heuristic_info[k] = 1e-6
 
