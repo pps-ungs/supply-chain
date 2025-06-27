@@ -24,7 +24,6 @@ conn.close()
 steps = df['step'].tolist()
 valores_objetivo = df['obj'].tolist()
 
-# Crear figura para animación
 fig, ax = plt.subplots(figsize=(10, 5))
 line, = ax.plot([], [], 'o-', color='green')
 text = ax.text(0.5, 0.9, '', transform=ax.transAxes, ha='center')
