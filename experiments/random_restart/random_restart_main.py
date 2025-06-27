@@ -82,7 +82,7 @@ def log_random_restart(experiment, strategy, step, max_iterations_allowed, max_l
 def test(experiment, strategy, model, iterations, steps, max_loops_without_improvement_list, max_restarts_list, log_f: callable):
     test_helper = HeuristicTestHelper()
     all_results = {}
-    
+
     for step in steps:
         for it in iterations:
             for max_loops_without_improvement in max_loops_without_improvement_list:
@@ -112,8 +112,8 @@ def test(experiment, strategy, model, iterations, steps, max_loops_without_impro
                             strategy=strategy,
                             step=step,
                             max_iterations_allowed=it,
-                            max_loops_without_improvement=0,
-                            max_restarts=4,
+                            max_loops_without_improvement=max_loops_without_improvement,
+                            max_restarts=max_restarts,
                             result=entry
                         )
     return all_results
@@ -130,11 +130,11 @@ def main():
     # create_tables(config)
 
     # Define the parameters for the random restart experiment
-    iterations = [5] # [100, 10000, 100000]
+    iterations = [50] # [100, 10000, 100000]
     steps = [936]
-    max_loops_without_improvement_list = [1]
-    max_restarts_list = [3]
-    experiment = "random_restart_experiment_22"
+    max_loops_without_improvement_list = [10]
+    max_restarts_list = [30]
+    experiment = "random_restart_experiment"
     strategy = "random_restart"
 
     # Execute the random restart experiment
