@@ -24,7 +24,7 @@ def main() -> None:
     max_iterations  = 10 # 1000
     alpha           = 0.5
     beta            = 3.0
-    rho             =  0.3
+    rho             = 0.3
     num_prod_levels = 500
     ################################################################################
     # Parameters Hill Climbing
