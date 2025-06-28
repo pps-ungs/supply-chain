@@ -42,20 +42,38 @@ steps = df["step"].values
 objs = df["obj"].values
 labels = df["X_label"].values
 
-fig, ax = plt.subplots(figsize=(10, 6))
-sc = ax.scatter([], [], c=[], cmap='viridis', vmin=objs.min(), vmax=objs.max())
+fig, ax = plt.subplots(figsize=(10, 3))
+sc = ax.scatter([], [], c=[], cmap='winter', vmin=objs.min(), vmax=objs.max())
 
 line, = ax.plot([], [], color='gray', alpha=0.6)  # Línea para unir los puntos
 
 ax.set_xlim(steps.min() - 1, steps.max() + 1)
-ax.set_ylim(objs.min() - 500, objs.max() + 500)
+
+ymin = objs.min()
+ymax = objs.max()
+yrange = ymax - ymin
+
+margen = 0.20 * yrange
+ax.set_ylim(ymin - margen, ymax + margen)
+
 ax.set_xlabel("Step")
 ax.set_ylabel("Valor objetivo")
 
 title = ax.set_title("Evolución del valor objetivo según step")
 texts = []
 
+# Encuentra el índice y valores del máximo
+idx_max = objs.argmax()
+x_max = steps[idx_max]
+y_max = objs[idx_max]
+
+# Línea punteada para el valor máximo
+ax.axhline(y=y_max, color='green', linestyle='--', linewidth=1, alpha=0.7)
+
+highlight = None  # Para el punto resaltado
+
 def update(frame):
+    global highlight
     for txt in texts:
         txt.remove()
     texts.clear()
@@ -63,18 +81,33 @@ def update(frame):
     current = df.iloc[:frame+1]
     sc.set_offsets(np.c_[current["step"], current["obj"]])
     sc.set_array(current["obj"])
-    line.set_data(current["step"], current["obj"])  # Actualiza la línea
+    line.set_data(current["step"], current["obj"])
 
     valor = current['obj'].iloc[-1]
     ganancia_str = f"${valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
     title.set_text(f"Ganancia: {ganancia_str}")
 
-    # Etiquetas para cada punto
+    offset = yrange * 0.07
     for i, row in current.iterrows():
-        txt = ax.text(row["step"], row["obj"], row["X_label"], fontsize=8, ha='left', va='top')
+        posicion = 'bottom' if i % 2 == 0 else 'top'
+        y = row["obj"] + (1 if posicion == 'bottom' else -1) * offset
+        txt = ax.text(row["step"], y, row["X_label"], fontsize=10, ha='left', va=posicion)
         texts.append(txt)
-    return sc, line, title, *texts
+
+    # Resalta el punto máximo solo si ya fue alcanzado en la animación
+    if frame >= idx_max:
+        if highlight:
+            highlight.remove()
+        highlight = ax.scatter(x_max, y_max, s=120, color='green', edgecolor='black', zorder=5)
+        return sc, line, title, highlight, *texts
+    else:
+        if highlight:
+            highlight.remove()
+            highlight = None
+        return sc, line, title, *texts
 
 ani = animation.FuncAnimation(fig, update, frames=len(df), interval=300, blit=False)
+ani.save("evolucion_hill_climbing.gif", writer="pillow", fps=3)
+
 plt.show()
 plt.close(fig)
