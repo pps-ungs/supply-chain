@@ -43,9 +43,11 @@ objs = df["obj"].values
 labels = df["X_label"].values
 
 fig, ax = plt.subplots(figsize=(10, 3))
+ax.set_facecolor('#d1d2db')
+fig.patch.set_facecolor('#d1d2db')
 sc = ax.scatter([], [], c=[], cmap='winter', vmin=objs.min(), vmax=objs.max())
 
-line, = ax.plot([], [], color='gray', alpha=0.6)  # Línea para unir los puntos
+line, = ax.plot([], [], color='#0d124b', alpha=0.6)  # Línea para unir los puntos
 
 ax.set_xlim(steps.min() - 1, steps.max() + 1)
 
@@ -68,7 +70,7 @@ x_max = steps[idx_max]
 y_max = objs[idx_max]
 
 # Línea punteada para el valor máximo
-ax.axhline(y=y_max, color='green', linestyle='--', linewidth=1, alpha=0.7)
+ax.axhline(y=y_max, color='#5666f8', linestyle='--', linewidth=1, alpha=0.7)
 
 highlight = None  # Para el punto resaltado
 
@@ -106,7 +108,7 @@ def update(frame):
             highlight = None
         return sc, line, title, *texts
 
-ani = animation.FuncAnimation(fig, update, frames=len(df), interval=300, blit=False)
+ani = animation.FuncAnimation(fig, update, frames=len(df), interval=600, blit=False)
 ani.save("evolucion_hill_climbing.gif", writer="pillow", fps=3)
 
 plt.show()
