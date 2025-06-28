@@ -108,8 +108,8 @@ def update(frame):
             highlight = None
         return sc, line, title, *texts
 
-ani = animation.FuncAnimation(fig, update, frames=len(df), interval=600, blit=False)
-ani.save("evolucion_hill_climbing.gif", writer="pillow", fps=3)
+ani = animation.FuncAnimation(fig, update, frames=len(df), interval=700, blit=False)
+ani.save("anims/evolucion_hill_climbing.gif", writer="pillow", fps=3)
 
 plt.show()
 plt.close(fig)
