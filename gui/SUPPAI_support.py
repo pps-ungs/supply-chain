@@ -2,16 +2,15 @@
 import os
 import sys
 
-sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../models/')))
 
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.constants import *
-import db.config as dbconfig
 import setup
+import db.config as dbconfig
 from models.ant_colony import AntColony
-
 import SUPPAI
 
 _debug = True
