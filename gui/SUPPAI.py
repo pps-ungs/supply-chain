@@ -4,10 +4,9 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.constants import *
 import os.path
+import SUPPAI_support
 
 _location = os.path.dirname(__file__)
-
-import SUPPAI_support
 
 _bgcolor = '#d9d9d9'
 _fgcolor = '#000000'
@@ -18,25 +17,28 @@ _tabbg1 = '#d9d9d9'
 _tabbg2 = 'gray40' 
 
 _style_code_ran = 0
+
 def _style_code():
     global _style_code_ran
-    if _style_code_ran: return        
-    try: SUPPAI_support.root.tk.call('source',
-                os.path.join(_location, 'themes', 'default.tcl'))
-    except: pass
+    if _style_code_ran:
+        return        
+    try:
+        SUPPAI_support.root.tk.call('source', os.path.join(_location, 'themes', 'default.tcl'))
+    except:
+        print("?theme not found")
+
     style = ttk.Style()
     style.theme_use('default')
     style.configure('.', font = "-family {Segoe UI Variable} -size 10 -weight bold")
+
     if sys.platform == "win32":
        style.theme_use('winnative')    
+
     _style_code_ran = 1
 
 class MainWindow:
     def __init__(self, top=None):
-        '''This class configures and populates the toplevel window.
-           top is the toplevel containing window.'''
-
-        top.geometry("800x600+493+76")
+        top.geometry("800x600")
         top.minsize(800, 600)
         top.maxsize(1351, 738)
         top.resizable(1,  1)
@@ -44,52 +46,26 @@ class MainWindow:
 
         self.top = top
 
-        self.menubar = tk.Menu(top
-                ,font="-family {Segoe UI Variable} -size 10 -weight bold"
-                ,bg=_bgcolor, fg=_fgcolor)
+        self.menubar = tk.Menu(top ,font="-family {Segoe UI Variable} -size 10 -weight bold" ,bg=_bgcolor, fg=_fgcolor)
         top.configure(menu = self.menubar)
 
-        self.sub_menu = tk.Menu(self.menubar, activebackground='#d9d9d9'
-                ,activeforeground='black', tearoff=0)
-        self.menubar.add_cascade(compound='left'
-                ,font="-family {Segoe UI Variable} -size 10 -weight bold"
-                ,label='File', menu=self.sub_menu, )
-        self.sub_menu.add_command(accelerator='CTRL+O', compound='left'
-                ,font="-family {Segoe UI Variable} -size 10 -weight bold"
-                ,label='Connect to database...')
-        self.sub_menu.add_command(accelerator='CTRL+Q', compound='left'
-                ,font="-family {Segoe UI Variable} -size 10 -weight bold"
-                ,label='Quit')
-        self.sub_menu1 = tk.Menu(self.menubar, activebackground='#d9d9d9'
-                ,activeforeground='black', tearoff=0)
-        self.menubar.add_cascade(compound='left'
-                ,font="-family {Segoe UI Variable} -size 10 -weight bold"
-                ,label='Heuristics', menu=self.sub_menu1, )
-        self.sub_menu1.add_command(compound='left'
-                ,font="-family {Segoe UI Variable} -size 10 -weight bold"
-                ,label='Hill Climbing', state="active", )
-        self.sub_menu1.add_command(compound='left'
-                ,font="-family {Segoe UI Variable} -size 10 -weight bold"
-                ,label='Random Restart', state="disabled", )
-        self.sub_menu1.add_command(compound='left'
-                ,font="-family {Segoe UI Variable} -size 10 -weight bold"
-                ,label='Ant Colony', state="disabled", )
-        self.sub_menu12 = tk.Menu(self.menubar, activebackground='#d9d9d9'
-                ,activeforeground='black', tearoff=0)
-        self.menubar.add_cascade(compound='left'
-                ,font="-family {Segoe UI Variable} -size 10 -weight bold"
-                ,label='Help', menu=self.sub_menu12, )
-        self.sub_menu12.add_command(compound='left'
-                ,font="-family {Segoe UI Variable} -size 10 -weight bold"
-                ,label='Licence')
-        self.sub_menu12.add_command(compound='left'
-                ,font="-family {Segoe UI Variable} -size 10 -weight bold"
-                ,label='About')
+        self.sub_menu = tk.Menu(self.menubar, activebackground='#d9d9d9' ,activeforeground='black', tearoff=0)
+        self.menubar.add_cascade(compound='left', font="-family {Segoe UI Variable} -size 10 -weight bold", label='File', menu=self.sub_menu)
+        self.sub_menu.add_command(accelerator='CTRL+O', compound='left', font="-family {Segoe UI Variable} -size 10 -weight bold",label='Connect to database...')
+        self.sub_menu.add_command(accelerator='CTRL+Q', compound='left', font="-family {Segoe UI Variable} -size 10 -weight bold",label='Quit')
+        self.sub_menu1 = tk.Menu(self.menubar, activebackground='#d9d9d9',activeforeground='black', tearoff=0)
+        self.menubar.add_cascade(compound='left', font="-family {Segoe UI Variable} -size 10 -weight bold",label='Heuristics', menu=self.sub_menu1)
+        self.sub_menu1.add_command(compound='left',font="-family {Segoe UI Variable} -size 10 -weight bold",label='Hill Climbing', state="active")
+        self.sub_menu1.add_command(compound='left',font="-family {Segoe UI Variable} -size 10 -weight bold",label='Random Restart', state="disabled")
+        self.sub_menu1.add_command(compound='left' ,font="-family {Segoe UI Variable} -size 10 -weight bold",label='Ant Colony', state="disabled")
+        self.sub_menu12 = tk.Menu(self.menubar, activebackground='#d9d9d9',activeforeground='black', tearoff=0)
+        self.menubar.add_cascade(compound='left',font="-family {Segoe UI Variable} -size 10 -weight bold",label='Help', menu=self.sub_menu12)
+        self.sub_menu12.add_command(compound='left',font="-family {Segoe UI Variable} -size 10 -weight bold",label='Licence')
+        self.sub_menu12.add_command(compound='left',font="-family {Segoe UI Variable} -size 10 -weight bold",label='About')
 
         _style_code()
         self.TLabelframeHC = ttk.Labelframe(self.top)
-        self.TLabelframeHC.place(relx=0.025, rely=0.017, relheight=0.958
-                , relwidth=0.953)
+        self.TLabelframeHC.place(relx=0.025, rely=0.017, relheight=0.958, relwidth=0.953)
         self.TLabelframeHC.configure(relief='')
         self.TLabelframeHC.configure(text='''Hill Climbing''')
 
@@ -255,22 +231,19 @@ class MainWindow:
         self.TLabel8.configure(compound='left')
 
         self.TButtonRun = ttk.Button(self.TLabelframeHC)
-        self.TButtonRun.place(relx=0.866, rely=0.922, height=30, width=83
-                , bordermode='ignore')
+        self.TButtonRun.place(relx=0.866, rely=0.922, height=30, width=83, bordermode='ignore')
         self.TButtonRun.configure(takefocus="")
         self.TButtonRun.configure(text='''Run''')
         self.TButtonRun.configure(compound='left')
 
         self.TButtonAbort = ttk.Button(self.TLabelframeHC)
-        self.TButtonAbort.place(relx=0.735, rely=0.922, height=30, width=83
-                , bordermode='ignore')
+        self.TButtonAbort.place(relx=0.735, rely=0.922, height=30, width=83, bordermode='ignore')
         self.TButtonAbort.configure(takefocus="")
         self.TButtonAbort.configure(text='''Abort''')
         self.TButtonAbort.configure(compound='left')
 
         self.TLabelframeOutput = ttk.Labelframe(self.TLabelframeHC)
-        self.TLabelframeOutput.place(relx=0.512, rely=0.052, relheight=0.791
-                , relwidth=0.459, bordermode='ignore')
+        self.TLabelframeOutput.place(relx=0.512, rely=0.052, relheight=0.791, relwidth=0.459, bordermode='ignore')
         self.TLabelframeOutput.configure(relief='groove')
         self.TLabelframeOutput.configure(text='''Results''')
         self.TLabelframeOutput.configure(relief="groove")
