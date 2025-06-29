@@ -4,14 +4,11 @@ import os
 import sys
 import json
 import time
-import numpy as np # Not used in this script?
 
-# Ajusta las rutas para importar tus módulos
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../db/')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../models/')))
 
-# Importa tus clases y módulos necesarios
 import setup
 import db.config as dbconfig
 import db.database as db
