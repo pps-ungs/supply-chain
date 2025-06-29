@@ -6,7 +6,14 @@ from tkinter.constants import *
 
 import SUPPAI
 
-_debug = False
+_debug = True
+
+# TODO: Add a function to connect to the database
+def connect_to_database():
+    print("Viva Perón!")
+
+def get_active_heuristic():
+    return "Aguante Cristina!"
 
 def main(*args):
     global root
