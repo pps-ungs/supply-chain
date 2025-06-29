@@ -708,7 +708,35 @@ class MainWindow:
         self._render_results(TLabelframeACO, label_results)
 
         buttons = ["Abort", "Run"]
-        self._render_buttons(buttons)
+        actions = [self._run_ACO, self._run_ACO]
+        self._render_buttons(buttons, actions)
+
+    def _run_ACO(self):
+        param_values = []
+        for _, entry_widget in enumerate(self.input_entries):
+            value = entry_widget.get()
+            param_values.append(value)
+        alpha = param_values[0]
+        beta = param_values[0]
+        rho = param_values[0]
+        Q = param_values[0]
+        tau_min = param_values[0]
+        tau_max = param_values[0]
+        num_prod_levels = param_values[0]
+        num_ants = param_values[0]
+        num_iterations = param_values[0]
+
+        results_aco = SUPPAI_support.run_aco(alpha, beta, rho, Q, tau_max, tau_min, num_prod_levels, num_ants, num_iterations)
+        self._update_output_results(results_aco)
+
+    def _update_output_results(self, results_data):
+        for i, entry_widget in enumerate(self.output_entries):
+            if i < len(results_data):
+                entry_widget.delete(0, tk.END)
+                entry_widget.insert(0, str(results_data[i]))
+            else:
+                entry_widget.delete(0, tk.END)
+
 
     def _new_frame(self, title):
         labelFrame = ttk.Labelframe(self.top)
@@ -717,15 +745,16 @@ class MainWindow:
         labelFrame.configure(text=title)
         return labelFrame
 
-    def _render_buttons(self, label_buttons):
+    def _render_buttons(self, label_buttons, commands):
         initial_relax = 0.75
         relax_increment = 0.125
-        for label in label_buttons:
+        for i in range (len(label_buttons)):
             TButton = ttk.Button(self.top)
             TButton.place(relx=initial_relax, rely=0.917, height=30, width=83)
             TButton.configure(takefocus="")
-            TButton.configure(text=label)
+            TButton.configure(text=label_buttons[i])
             TButton.configure(compound='left')
+            TButton.configure(command=commands[i])
             initial_relax += relax_increment
 
     def _render_results(self, frame, label_results):
@@ -733,6 +762,8 @@ class MainWindow:
         frame.place(relx=0.512, rely=0.081, relheight=0.861, relwidth=0.459, bordermode='ignore')
         frame.configure(relief='')
         frame.configure(text='''Results''')
+        self.output_entries = []
+        self.output_labels = []
         initial_rely = 0.068
         rely_increment = 0.094
         for label in label_results:
@@ -743,10 +774,12 @@ class MainWindow:
             result_label.configure(anchor='e')
             result_label.configure(text=label)
             result_label.configure(compound='left')
+            self.output_labels.append(result_label)
             result_entry = ttk.Entry(frame)
             result_entry.place(relx=0.486, rely=initial_rely, relheight=0.054, relwidth=0.469, bordermode='ignore')
             result_entry.configure(cursor="xterm")
             result_entry.configure(font=_default_font)
+            self.output_labels.append(result_entry)
             initial_rely += rely_increment
 
     def _render_parameters(self, frame, label_parameters):
@@ -754,6 +787,8 @@ class MainWindow:
         frame.place(relx=0.026, rely=0.081, relheight=0.861, relwidth=0.459, bordermode='ignore')
         frame.configure(relief='')
         frame.configure(text='''Parameters''')
+        self.input_entries = []
+        self.input_labels = []
         initial_rely = 0.068
         rely_increment = 0.094
         for label in label_parameters:
@@ -764,10 +799,12 @@ class MainWindow:
             result_label.configure(anchor='e')
             result_label.configure(text=label)
             result_label.configure(compound='left')
+            self.input_labels.append(result_label)
             result_entry = ttk.Entry(frame)
             result_entry.place(relx=0.486, rely=initial_rely, relheight=0.054, relwidth=0.469, bordermode='ignore')
             result_entry.configure(cursor="xterm")
             result_entry.configure(font=_default_font)
+            self.input_entries.append(result_entry)
             initial_rely += rely_increment
 
 def start_up():
