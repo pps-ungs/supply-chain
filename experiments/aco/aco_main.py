@@ -39,7 +39,8 @@ def create_tables(config):
             tiempo_ejecucion decimal(15, 2),
             motivo_parada text,
             iteraciones_realizadas integer,
-            historial_z text -- Para almacenar el JSON del historial de Z
+            historial_z text,
+            historial_x text
         );
         """
     print("[data] Creating tables in database...")
@@ -57,7 +58,8 @@ def log_aco_experiment(
         execution_time, 
         halting_condition, 
         iterations_performed,
-        history_Z
+        history_Z,
+        history_X
     ):
 
     conn = db.get_connection(config)
@@ -70,7 +72,8 @@ def log_aco_experiment(
                 num_hormigas, max_iteraciones,
                 x_optimo, obj_optimo,
                 tiempo_ejecucion, motivo_parada,
-                iteraciones_realizadas, historial_z) 
+                iteraciones_realizadas, 
+                historial_z, historial_x) 
             values (
                 '{model_name}',
                 '{experiment_name}',
@@ -80,7 +83,8 @@ def log_aco_experiment(
                 {execution_time:.2f},
                 '{halting_condition}',
                 {iterations_performed},
-                '{json.dumps(history_Z)}');
+                '{json.dumps(history_Z)}',
+                '{json.dumps(history_X)}');
             """
     
     print("[data] Saving ACO experiment in database...")
@@ -99,13 +103,14 @@ def main():
     create_tables(config)
     print("[okay] Tables created in database")  
     
-    experiment_name = "factories_zero_1000_iterations_average_rho_500_prod"
+    experiment_name = "equal_factories_1000_iterations_less_rho_200_prod_2"
+    # experiment_name = "prueba"
     alpha_test = 0.5 
     beta_test = 3.0  
-    rho_test = 0.3  
+    rho_test = 0.1
     num_ants_test = 100
     max_iterations_test = 1000
-    num_prod_levels = 500
+    num_prod_levels = 200
 
     model_aco = AntColony(F, S, P, E, 
                           alpha=alpha_test, 
@@ -144,12 +149,13 @@ def main():
         execution_time=execution_time,
         halting_condition=results_aco["halting_condition"],
         iterations_performed=results_aco["iterations"],
-        history_Z=results_aco["history_Z"]
+        history_Z=results_aco["history_Z"],
+        history_X=results_aco["history_X"]
     )
     print("[okay] Experiment logged to database.")
 
-    db.dump("db/data/supply_chain_aco_results.sql", config)
-    print("[okay] Database dumped.")
+    # db.dump("db/data/dumps/sc-aco.sql", config)
+    # print("[okay] Database dumped.")
 
 if __name__ == "__main__":
     main()

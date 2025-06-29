@@ -27,6 +27,7 @@ class AntColony(Model):
     # 8. "halting_condition": criterio de parada. En este modelo, sólo "Max iterations reached",
     # 9. "iterations": cantidad de iteraciones realizadas. En este modelo, la recibida por parámetro,
     # 10. "history_Z": historial de resultados de Z
+    # 10. "history_X": historial de resultados de X
     def __init__(self, F, S, P, E, alpha=3.0, beta=1.0, rho=0.01, Q=100.0, tau_min=0.01, tau_max=10.0, num_prod_levels=500):
         super().__init__(F, S, P, E) 
         
@@ -64,6 +65,7 @@ class AntColony(Model):
             ant_colony.append(Ant(i, self.F, self.S, self.P, self.E, self.num_prod_levels, self)) 
         
         history_Z = []
+        history_X = []
         
         # print("[info] Starting Ant Colony optimization...")
 
@@ -110,6 +112,7 @@ class AntColony(Model):
             
             # Registrar la mejor solución
             history_Z.append(self.best_solution_Z)
+            history_X.append(self.best_solution_X.tolist())
 
             # For debugging:
             # if (iteration + 1) % 10 == 0 or iteration == 0:
@@ -128,5 +131,6 @@ class AntColony(Model):
             "CTs2p": self.best_CTs2p,
             "halting_condition": halting_condition,
             "iterations": max_iterations,
-            "history_Z": history_Z
+            "history_Z": history_Z,
+            "history_X": history_X
         }
