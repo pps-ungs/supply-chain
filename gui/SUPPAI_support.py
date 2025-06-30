@@ -44,6 +44,72 @@ def run_rr(step, epsilon, num_iterations, num_restarts):
 def run_hc(step, epsilon, num_iterations):
     return [[10, 10, 10, 10], 100]
 
+def about_app(root):
+    about_window = tk.Toplevel(root)
+    about_window.title("About")
+    about_window.geometry("300x150")
+    about_window.resizable(False, False)
+
+    # Center contents
+    msg = "SUPPly chAIn Optimizer App\n\nCopyright © 2025 Ebertz, Rondelli, Soria"
+    label = tk.Label(about_window, text=msg, justify="center", pady=20)
+    label.pack()
+
+    dismiss_button = tk.Button(about_window, text="Dismiss", command=about_window.destroy)
+    dismiss_button.pack(pady=10)
+
+    about_window.transient(root)
+    about_window.grab_set()
+    root.wait_window(about_window)
+
+
+def show_license(root):
+    license_window = tk.Toplevel(root)
+    license_window.title("License")
+    license_window.geometry("600x600")
+    license_window.resizable(False, False)
+
+    license_text = """
+Copyright (c) 2025, Ebertz, Rondelli, Soria
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its
+   contributors may be used to endorse or promote products derived from
+   this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+"""
+
+    text_widget = tk.Text(license_window, wrap="word", padx=10, pady=10, font=("Aptos", 10))
+    text_widget.insert("1.0", license_text)
+    text_widget.config(state="disabled")
+    text_widget.pack(expand=True, fill="both")
+
+    dismiss_button = tk.Button(license_window, text="Dismiss", command=license_window.destroy)
+    dismiss_button.pack(pady=10)
+
+    license_window.transient(root)
+    license_window.grab_set()
+    root.wait_window(license_window)
 
 def main(*args):
     global root

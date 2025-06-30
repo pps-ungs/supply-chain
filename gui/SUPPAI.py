@@ -16,11 +16,10 @@ _bgmode = 'light'
 _tabbg1 = '#d9d9d9' 
 _tabbg2 = 'gray40' 
 _activebackground = _bgcolor
-_activebackground = 'red'
 
 _style_code_ran = 0
 
-_default_font = "-family {Segoe UI Variable} -size 10 -weight bold"
+_default_font = "-family {Segoe UI Variable} -size 10 -weight normal"
 
 def _style_code():
     global _style_code_ran
@@ -57,11 +56,10 @@ class MainWindow:
 
     def __init__(self, top=None):
         self.top = top
-        self._active_heuristic = "" 
+        self._active_heuristic = ""
 
         top.geometry("800x600")
         top.minsize(800, 600)
-        # top.maxsize(1351, 738)
         top.resizable(1,  1)
         top.title("SUPPAI")
 
@@ -89,8 +87,8 @@ class MainWindow:
         # Licence menu
         self.sub_menu12 = tk.Menu(self.menubar, activebackground=_activebackground,activeforeground='black',font=_default_font,tearoff=0)
         self.menubar.add_cascade(compound='left',font=_default_font, label='Help',menu=self.sub_menu12, )
-        self.sub_menu12.add_command(compound='left',font=_default_font, label='Licence')
-        self.sub_menu12.add_command(compound='left',font=_default_font, label='About')
+        self.sub_menu12.add_command(compound='left',font=_default_font, label='Licence', command=lambda:SUPPAI_support.show_license(self.top))
+        self.sub_menu12.add_command(compound='left',font=_default_font, label='About', command=lambda:SUPPAI_support.about_app(self.top))
 
         _style_code()
         self.TProgressbar1 = ttk.Progressbar(self.top)
@@ -168,7 +166,11 @@ class MainWindow:
 
     def _show_ACO(self):
         self.TLabelframeACO = self._new_frame("Ant Colony Optimization")
-        label_parameters = ["Alpha", "Beta", "Rho", "Q", "Tau min", "Tau max", "Number of production level", "Number of ants", "Number of iterations"]
+
+        # Con letras griegas ó con palabras?
+        label_parameters = ["Alpha", "Beta", "Rho", "Q", "Tau min", "Tau max", "Production levels", "Number of ants", "Number of iterations"]
+        label_parameters = ["α", "β", "ρ", "Q", "τ min", "τ max", "Production levels", "Number of ants", "Number of iterations"]
+
         self._render_parameters(self.TLabelframeACO, label_parameters)
         label_results = ["X", "Z"]
         self._render_results(self.TLabelframeACO, label_results)
