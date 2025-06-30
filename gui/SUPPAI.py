@@ -52,7 +52,6 @@ class MainWindow:
 
     def _set_active_heuristic(self, heuristic):
         self._active_heuristic = heuristic
-        print(f"[info] active heuristic: {self._active_heuristic}")
         self._update_heuristic_display()
         self._update_heuristic_menu_checkmark()
 
@@ -75,7 +74,7 @@ class MainWindow:
         self.sub_menu0.add_command(accelerator='CTRL+O', compound='left',font=_default_font,label='Connect to database...',command=lambda:SUPPAI_support.connect_to_database())
         self.sub_menu0.add_command(accelerator='CTRL+Q', compound='left' ,font=_default_font, label='Quit', command=self.top.quit)
 
-        # Heuristics menu (se creará una sola vez)
+        # Heuristics menu
         self.sub_menu1 = tk.Menu(self.menubar, activebackground=_activebackground,activeforeground='black',font=_default_font,tearoff=0)
         self.menubar.add_cascade(compound='left',font=_default_font,label='Heuristics',menu=self.sub_menu1, )
 
@@ -87,6 +86,7 @@ class MainWindow:
         self._setup_heuristic_menu()
         self._update_heuristic_display() 
 
+        # Licence menu
         self.sub_menu12 = tk.Menu(self.menubar, activebackground=_activebackground,activeforeground='black',font=_default_font,tearoff=0)
         self.menubar.add_cascade(compound='left',font=_default_font, label='Help',menu=self.sub_menu12, )
         self.sub_menu12.add_command(compound='left',font=_default_font, label='Licence')
@@ -180,8 +180,8 @@ class MainWindow:
     def _run_HC(self):
         param_values = self._get_params_values()
         step = param_values[0]
-        epsilon = param_values[0]
-        num_terations = param_values[0]
+        epsilon = param_values[1]
+        num_terations = param_values[2]
 
         results_hc = SUPPAI_support.run_hc(step, epsilon, num_terations)
         self._update_output_results(results_hc)
@@ -190,9 +190,9 @@ class MainWindow:
     def _run_RR(self):
         param_values = self._get_params_values()
         step = param_values[0]
-        epsilon = param_values[0]
-        num_terations = param_values[0]
-        num_restarts = param_values[0]
+        epsilon = param_values[1]
+        num_terations = param_values[2]
+        num_restarts = param_values[3]
 
         results_rr = SUPPAI_support.run_rr(step, epsilon, num_terations, num_restarts)
         self._update_output_results(results_rr)
