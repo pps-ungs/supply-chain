@@ -38,6 +38,10 @@ def run_aco(alpha, beta, rho, Q, tau_max, tau_min, num_prod_levels, num_ants, nu
     # return [solution["X"], solution["Z"]]
     return [[10, 10, 10, 10], 100]
 
+def run_rr(step, epsilon, num_restarts):
+    return [[10, 10, 10, 10], 100]
+
+
 def main(*args):
     global root
     root = tk.Tk()
