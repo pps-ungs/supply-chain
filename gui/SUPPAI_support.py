@@ -25,7 +25,7 @@ def get_active_heuristic():
     return "Aguante Cristina!"
 
 def run_aco(alpha, beta, rho, Q, tau_max, tau_min, num_prod_levels, num_ants, num_iterations):
-    F, S, P, E = connect_to_database()
+    # F, S, P, E = connect_to_database()
     # model_aco = AntColony(F, S, P, E, 
     #                 alpha=alpha, 
     #                     beta=beta, 

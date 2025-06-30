@@ -712,10 +712,7 @@ class MainWindow:
         self._render_buttons(buttons, actions)
 
     def _run_ACO(self):
-        param_values = []
-        for _, entry_widget in enumerate(self.input_entries):
-            value = entry_widget.get()
-            param_values.append(value)
+        param_values = self._get_params_values()
         alpha = param_values[0]
         beta = param_values[0]
         rho = param_values[0]
@@ -728,6 +725,13 @@ class MainWindow:
 
         results_aco = SUPPAI_support.run_aco(alpha, beta, rho, Q, tau_max, tau_min, num_prod_levels, num_ants, num_iterations)
         self._update_output_results(results_aco)
+
+    def _get_params_values(self):
+        param_values = []
+        for _, entry_widget in enumerate(self.input_entries):
+            value = entry_widget.get()
+            param_values.append(value)
+        return param_values
 
     def _update_output_results(self, results_data):
         for i, entry_widget in enumerate(self.output_entries):
