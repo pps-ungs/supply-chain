@@ -27,7 +27,6 @@ def _style_code():
 
     if _style_code_ran:
         return        
-
     try:
         # Themes not working good
         # Choose a theme
@@ -36,7 +35,6 @@ def _style_code():
         theme = "elegance"
         theme = "cornsilk-dark"
         theme = "viva perón"
-
         SUPPAI_support.root.tk.call('source', os.path.join(_location, 'themes', f"{theme}.tcl"))
         style = ttk.Style()
         style.theme_use(theme)
@@ -55,17 +53,18 @@ class MainWindow:
     def _set_active_heuristic(self, heuristic):
         self._active_heuristic = heuristic
         print(f"[info] active heuristic: {self._active_heuristic}")
+        self._update_heuristic_display()
+        self._update_heuristic_menu_checkmark()
 
     def __init__(self, top=None):
-        self._active_heuristic = "HC"  # Default heuristic
+        self.top = top
+        self._active_heuristic = "" 
 
         top.geometry("800x600")
         top.minsize(800, 600)
         # top.maxsize(1351, 738)
         top.resizable(1,  1)
         top.title("SUPPAI")
-
-        self.top = top
 
         self.menubar = tk.Menu(top,font=_default_font,bg=_bgcolor,fg=_fgcolor)
         top.configure(menu = self.menubar)
@@ -76,40 +75,17 @@ class MainWindow:
         self.sub_menu0.add_command(accelerator='CTRL+O', compound='left',font=_default_font,label='Connect to database...',command=lambda:SUPPAI_support.connect_to_database())
         self.sub_menu0.add_command(accelerator='CTRL+Q', compound='left' ,font=_default_font, label='Quit', command=self.top.quit)
 
-        # Heuristics menu
+        # Heuristics menu (se creará una sola vez)
         self.sub_menu1 = tk.Menu(self.menubar, activebackground=_activebackground,activeforeground='black',font=_default_font,tearoff=0)
         self.menubar.add_cascade(compound='left',font=_default_font,label='Heuristics',menu=self.sub_menu1, )
 
-        self.TLabelframeHC = ttk.Labelframe(self.top)
-        self.TLabelframeRR = ttk.Labelframe(self.top)
-        self.TLabelframeACO = ttk.Labelframe(self.top)
+        # Labelframes
+        self.TLabelframeHC = self._new_frame("Hill Climbing")
+        self.TLabelframeRR = self._new_frame("Random Restart")
+        self.TLabelframeACO = self._new_frame("Ant Colony Optimization")
 
-        # \begin{TODO}
-        self._set_active_heuristic("HC")
-        if self._active_heuristic == "HC":
-            self.sub_menu1.add_command(compound='left',font=_default_font, label='✔️ Hill Climbing', command=lambda:print("Viva Perón!"))
-            self.sub_menu1.add_command(compound='left',font=_default_font, label='Random Restart', command=lambda:print("Aguante Cristina!"))
-            self.sub_menu1.add_command(compound='left',font=_default_font, label='Ant Colony', command=lambda:self._set_active_heuristic("ACO"))
-            self._show_HC()
-            self.TLabelframeRR.destroy()
-            self.TLabelframeACO.destroy()
-        elif self._active_heuristic == "RR":
-            self.sub_menu1.add_command(compound='left',font=_default_font, label='Hill Climbing',)
-            self.sub_menu1.add_command(compound='left',font=_default_font, label='✔️ Random Restart',)
-            self.sub_menu1.add_command(compound='left',font=_default_font, label='Ant Colony',)
-            self.TLabelframeHC.destroy()
-            self._show_RR()
-            self.TLabelframeACO.destroy()
-        elif self._active_heuristic == "ACO":
-            self.sub_menu1.add_command(compound='left',font=_default_font, label='Hill Climbing',)
-            self.sub_menu1.add_command(compound='left',font=_default_font, label='Random Restart',)
-            self.sub_menu1.add_command(compound='left',font=_default_font, label='✔️ Ant Colony',)
-            self._show_ACO()
-            self.TLabelframeHC.destroy()
-            self.TLabelframeRR.destroy()
-        else:
-            print("?no heuristic active, defaulting to Hill Climbing")
-        # \end{TODO}
+        self._setup_heuristic_menu()
+        self._update_heuristic_display() 
 
         self.sub_menu12 = tk.Menu(self.menubar, activebackground=_activebackground,activeforeground='black',font=_default_font,tearoff=0)
         self.menubar.add_cascade(compound='left',font=_default_font, label='Help',menu=self.sub_menu12, )
@@ -121,36 +97,85 @@ class MainWindow:
         self.TProgressbar1.place(relx=0.025, rely=0.867, relwidth=0.95, relheight=0.0, height=19)
         self.TProgressbar1.configure(length="760")
 
+        self._set_active_heuristic("HC")
+
+
+    def _setup_heuristic_menu(self):
+        self.sub_menu1.add_command(compound='left',font=_default_font, label='Hill Climbing', command=lambda:self._set_active_heuristic("HC"))
+        self.sub_menu1.add_command(compound='left',font=_default_font, label='Random Restart', command=lambda:self._set_active_heuristic("RR"))
+        self.sub_menu1.add_command(compound='left',font=_default_font, label='Ant Colony', command=lambda:self._set_active_heuristic("ACO"))
+
+
+    def _update_heuristic_menu_checkmark(self):
+        self.sub_menu1.delete(0, tk.END)
+        self.sub_menu1.add_command(
+            compound='left',
+            font=_default_font,
+            label='✔️ Hill Climbing' if self._active_heuristic == "HC" else 'Hill Climbing',
+            command=lambda:self._set_active_heuristic("HC")
+        )
+        self.sub_menu1.add_command(
+            compound='left',
+            font=_default_font,
+            label='✔️ Random Restart' if self._active_heuristic == "RR" else 'Random Restart',
+            command=lambda:self._set_active_heuristic("RR")
+        )
+        self.sub_menu1.add_command(
+            compound='left',
+            font=_default_font,
+            label='✔️ Ant Colony' if self._active_heuristic == "ACO" else 'Ant Colony',
+            command=lambda:self._set_active_heuristic("ACO")
+        )
+
+
+    def _update_heuristic_display(self):
+        self.TLabelframeHC.place_forget()
+        self.TLabelframeRR.place_forget()
+        self.TLabelframeACO.place_forget()
+
+        if self._active_heuristic == "RR":
+            self.TLabelframeRR.place(relx=0.025, rely=0.017, relheight=0.827, relwidth=0.953)
+            self._show_RR()
+        elif self._active_heuristic == "ACO":
+            self.TLabelframeACO.place(relx=0.025, rely=0.017, relheight=0.827, relwidth=0.953)
+            self._show_ACO()
+        else:
+            self.TLabelframeHC.place(relx=0.025, rely=0.017, relheight=0.827, relwidth=0.953)
+            self._show_HC()
+
 
     def _show_HC(self):
-        TLabelframeARR = self._new_frame("Hill Climbing")
+        self.TLabelframeHC = self._new_frame("Hill Climbing")
         label_parameters = ["Step", "Epsilon", "Number of iterations"]
-        self._render_parameters(TLabelframeARR, label_parameters)
+        self._render_parameters(self.TLabelframeHC, label_parameters)
         label_results = ["X", "Z"]
-        self._render_results(TLabelframeARR, label_results)
+        self._render_results(self.TLabelframeHC, label_results)
         buttons = ["Abort", "Run"]
         actions = [self._run_HC, self._run_HC]
         self._render_buttons(buttons, actions)
 
+
     def _show_RR(self):
-        TLabelframeARR = self._new_frame("Random Restart")
+        self.TLabelframeRR = self._new_frame("Random Restart")
         label_parameters = ["Step", "Epsilon", "Number of iterations", "Number of restarts"]
-        self._render_parameters(TLabelframeARR, label_parameters)
+        self._render_parameters(self.TLabelframeRR, label_parameters)
         label_results = ["X", "Z"]
-        self._render_results(TLabelframeARR, label_results)
+        self._render_results(self.TLabelframeRR, label_results)
         buttons = ["Abort", "Run"]
         actions = [self._run_RR, self._run_RR]
         self._render_buttons(buttons, actions)
 
+
     def _show_ACO(self):
-        TLabelframeACO = self._new_frame("Ant Colony Optimization")
+        self.TLabelframeACO = self._new_frame("Ant Colony Optimization")
         label_parameters = ["Alpha", "Beta", "Rho", "Q", "Tau min", "Tau max", "Number of production level", "Number of ants", "Number of iterations"]
-        self._render_parameters(TLabelframeACO, label_parameters)
+        self._render_parameters(self.TLabelframeACO, label_parameters)
         label_results = ["X", "Z"]
-        self._render_results(TLabelframeACO, label_results)
+        self._render_results(self.TLabelframeACO, label_results)
         buttons = ["Abort", "Run"]
         actions = [self._run_ACO, self._run_ACO]
         self._render_buttons(buttons, actions)
+
 
     def _run_HC(self):
         param_values = self._get_params_values()
@@ -161,6 +186,7 @@ class MainWindow:
         results_hc = SUPPAI_support.run_hc(step, epsilon, num_terations)
         self._update_output_results(results_hc)
 
+
     def _run_RR(self):
         param_values = self._get_params_values()
         step = param_values[0]
@@ -170,6 +196,7 @@ class MainWindow:
 
         results_rr = SUPPAI_support.run_rr(step, epsilon, num_terations, num_restarts)
         self._update_output_results(results_rr)
+
 
     def _run_ACO(self):
         param_values = self._get_params_values()
@@ -186,12 +213,14 @@ class MainWindow:
         results_aco = SUPPAI_support.run_aco(alpha, beta, rho, Q, tau_max, tau_min, num_prod_levels, num_ants, num_iterations)
         self._update_output_results(results_aco)
 
+
     def _get_params_values(self):
         param_values = []
         for _, entry_widget in enumerate(self.input_entries):
             value = entry_widget.get()
             param_values.append(value)
         return param_values
+
 
     def _update_output_results(self, results_data):
         for i, entry_widget in enumerate(self.output_entries):
@@ -201,12 +230,14 @@ class MainWindow:
             else:
                 entry_widget.delete(0, tk.END)
 
+
     def _new_frame(self, title):
         labelFrame = ttk.Labelframe(self.top)
         labelFrame.place(relx=0.025, rely=0.017, relheight=0.827, relwidth=0.953)
         labelFrame.configure(relief='')
         labelFrame.configure(text=title)
         return labelFrame
+
 
     def _render_buttons(self, label_buttons, commands):
         initial_relax = 0.75
@@ -219,6 +250,7 @@ class MainWindow:
             TButton.configure(compound='left')
             TButton.configure(command=commands[i])
             initial_relax += relax_increment
+
 
     def _render_results(self, frame, label_results):
         frame = ttk.Labelframe(frame)
@@ -245,6 +277,7 @@ class MainWindow:
             self.output_entries.append(result_entry)
             initial_rely += rely_increment
 
+
     def _render_parameters(self, frame, label_parameters):
         frame = ttk.Labelframe(frame)
         frame.place(relx=0.026, rely=0.081, relheight=0.861, relwidth=0.459, bordermode='ignore')
@@ -269,6 +302,7 @@ class MainWindow:
             result_entry.configure(font=_default_font)
             self.input_entries.append(result_entry)
             initial_rely += rely_increment
+
 
 def start_up():
     SUPPAI_support.main()
