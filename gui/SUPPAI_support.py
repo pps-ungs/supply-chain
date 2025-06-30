@@ -8,6 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../.
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.constants import *
+from tkinter import filedialog
 import setup
 import db.config as dbconfig
 # from models.ant_colony import AntColony
@@ -16,10 +17,14 @@ import SUPPAI
 _debug = True
 
 def connect_to_database():
-    config = dbconfig.load_config('db/database.ini', 'supply_chain')
-    data = setup.read_database(config)
-    return data["F"], data["S"], data["P"], data["E"]
- 
+    file_path = filedialog.askopenfilename(
+        title="Open database configuration file",
+        filetypes=[("INI files", "*.ini"), ("All files", "*.*")]
+    )
+    if file_path:
+        print(f"INI file selected: {file_path}")
+    else:
+        print("No file selected.")
 
 def get_active_heuristic():
     return "Aguante Cristina!"
