@@ -38,7 +38,10 @@ def run_aco(alpha, beta, rho, Q, tau_max, tau_min, num_prod_levels, num_ants, nu
     # return [solution["X"], solution["Z"]]
     return [[10, 10, 10, 10], 100]
 
-def run_rr(step, epsilon, num_restarts):
+def run_rr(step, epsilon, num_iterations, num_restarts):
+    return [[10, 10, 10, 10], 100]
+
+def run_hc(step, epsilon, num_iterations):
     return [[10, 10, 10, 10], 100]
 
 

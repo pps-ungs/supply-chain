@@ -85,7 +85,7 @@ class MainWindow:
         self.TLabelframeACO = ttk.Labelframe(self.top)
 
         # \begin{TODO}
-        self._set_active_heuristic("ACO")
+        self._set_active_heuristic("HC")
         if self._active_heuristic == "HC":
             self.sub_menu1.add_command(compound='left',font=_default_font, label='✔️ Hill Climbing', command=lambda:print("Viva Perón!"))
             self.sub_menu1.add_command(compound='left',font=_default_font, label='Random Restart', command=lambda:print("Aguante Cristina!"))
@@ -123,318 +123,43 @@ class MainWindow:
 
 
     def _show_HC(self):
-        self.TLabelframeHC = ttk.Labelframe(self.top)
-        self.TLabelframeHC.place(relx=0.025, rely=0.017, relheight=0.827, relwidth=0.953)
-        self.TLabelframeHC.configure(relief='')
-        self.TLabelframeHC.configure(text='''Hill Climbing''')
-
-        self.TLabelframeOutput = ttk.Labelframe(self.TLabelframeHC)
-        self.TLabelframeOutput.place(relx=0.512, rely=0.081, relheight=0.861, relwidth=0.459, bordermode='ignore')
-        self.TLabelframeOutput.configure(relief='')
-        self.TLabelframeOutput.configure(text='''Results''')
-
-        self.TEntry1_3_1 = ttk.Entry(self.TLabelframeOutput)
-        self.TEntry1_3_1.place(relx=0.486, rely=0.344, relheight=0.054 , relwidth=0.469, bordermode='ignore')
-        self.TEntry1_3_1.configure(font=_default_font)
-        self.TEntry1_3_1.configure(cursor="xterm")
-
-        self.TEntry1_4_1 = ttk.Entry(self.TLabelframeOutput)
-        self.TEntry1_4_1.place(relx=0.486, rely=0.438, relheight=0.052 , relwidth=0.469, bordermode='ignore')
-        self.TEntry1_4_1.configure(font=_default_font)
-        self.TEntry1_4_1.configure(cursor="xterm")
-
-        self.TEntry1_7_1 = ttk.Entry(self.TLabelframeOutput)
-        self.TEntry1_7_1.place(relx=0.486, rely=0.712, relheight=0.054, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_7_1.configure(font=_default_font)
-        self.TEntry1_7_1.configure(cursor="xterm")
-
-        self.TEntry1_5_1 = ttk.Entry(self.TLabelframeOutput)
-        self.TEntry1_5_1.place(relx=0.486, rely=0.529, relheight=0.054, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_5_1.configure(font=_default_font)
-        self.TEntry1_5_1.configure(cursor="xterm")
-
-        self.TEntry1_6_1 = ttk.Entry(self.TLabelframeOutput)
-        self.TEntry1_6_1.place(relx=0.486, rely=0.621, relheight=0.054, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_6_1.configure(font=_default_font)
-        self.TEntry1_6_1.configure(cursor="xterm")
-
-        self.TLabel1_7_1 = ttk.Label(self.TLabelframeOutput)
-        self.TLabel1_7_1.place(relx=0.029, rely=0.712, height=21, width=150, bordermode='ignore')
-        self.TLabel1_7_1.configure(font=_default_font)
-        self.TLabel1_7_1.configure(relief="flat")
-        self.TLabel1_7_1.configure(anchor='e')
-        self.TLabel1_7_1.configure(text='''Tlabel''')
-        self.TLabel1_7_1.configure(compound='left')
-
-        self.TLabel1_6_1 = ttk.Label(self.TLabelframeOutput)
-        self.TLabel1_6_1.place(relx=0.029, rely=0.621, height=21, width=150, bordermode='ignore')
-        self.TLabel1_6_1.configure(font=_default_font)
-        self.TLabel1_6_1.configure(relief="flat")
-        self.TLabel1_6_1.configure(anchor='e')
-        self.TLabel1_6_1.configure(text='''Tlabel''')
-        self.TLabel1_6_1.configure(compound='left')
-
-        self.TLabel1_5_1 = ttk.Label(self.TLabelframeOutput)
-        self.TLabel1_5_1.place(relx=0.029, rely=0.529, height=20, width=150, bordermode='ignore')
-        self.TLabel1_5_1.configure(font=_default_font)
-        self.TLabel1_5_1.configure(relief="flat")
-        self.TLabel1_5_1.configure(anchor='e')
-        self.TLabel1_5_1.configure(text='''Tlabel''')
-        self.TLabel1_5_1.configure(compound='left')
-
-        self.TLabel1_4_1 = ttk.Label(self.TLabelframeOutput)
-        self.TLabel1_4_1.place(relx=0.029, rely=0.438, height=20, width=150, bordermode='ignore')
-        self.TLabel1_4_1.configure(font=_default_font)
-        self.TLabel1_4_1.configure(relief="flat")
-        self.TLabel1_4_1.configure(anchor='e')
-        self.TLabel1_4_1.configure(text='''Tlabel''')
-        self.TLabel1_4_1.configure(compound='left')
-
-        self.TEntry1_8_1 = ttk.Entry(self.TLabelframeOutput)
-        self.TEntry1_8_1.place(relx=0.486, rely=0.806, relheight=0.052, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_8_1.configure(font=_default_font)
-        self.TEntry1_8_1.configure(cursor="xterm")
-
-        self.TLabel1_3_1 = ttk.Label(self.TLabelframeOutput)
-        self.TLabel1_3_1.place(relx=0.029, rely=0.344, height=21, width=150, bordermode='ignore')
-        self.TLabel1_3_1.configure(font=_default_font)
-        self.TLabel1_3_1.configure(relief="flat")
-        self.TLabel1_3_1.configure(anchor='e')
-        self.TLabel1_3_1.configure(text='''Tlabel''')
-        self.TLabel1_3_1.configure(compound='left')
-
-        self.TEntry1_2_1 = ttk.Entry(self.TLabelframeOutput)
-        self.TEntry1_2_1.place(relx=0.486, rely=0.253, relheight=0.054, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_2_1.configure(font=_default_font)
-        self.TEntry1_2_1.configure(cursor="xterm")
-
-        self.TEntry1_0_1 = ttk.Entry(self.TLabelframeOutput)
-        self.TEntry1_0_1.place(relx=0.486, rely=0.068, relheight=0.054, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_0_1.configure(font=_default_font)
-        self.TEntry1_0_1.configure(cursor="xterm")
-
-        self.TEntry1_1_1 = ttk.Entry(self.TLabelframeOutput)
-        self.TEntry1_1_1.place(relx=0.486, rely=0.162, relheight=0.052, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_1_1.configure(font=_default_font)
-        self.TEntry1_1_1.configure(cursor="xterm")
-
-        self.TLabel1_1_1 = ttk.Label(self.TLabelframeOutput)
-        self.TLabel1_1_1.place(relx=0.029, rely=0.162, height=20, width=150, bordermode='ignore')
-        self.TLabel1_1_1.configure(font=_default_font)
-        self.TLabel1_1_1.configure(relief="flat")
-        self.TLabel1_1_1.configure(anchor='e')
-        self.TLabel1_1_1.configure(text='''Tlabel''')
-        self.TLabel1_1_1.configure(compound='left')
-
-        self.TLabel1_2_1 = ttk.Label(self.TLabelframeOutput)
-        self.TLabel1_2_1.place(relx=0.029, rely=0.253, height=21, width=150, bordermode='ignore')
-        self.TLabel1_2_1.configure(font=_default_font)
-        self.TLabel1_2_1.configure(relief="flat")
-        self.TLabel1_2_1.configure(anchor='e')
-        self.TLabel1_2_1.configure(text='''Tlabel''')
-        self.TLabel1_2_1.configure(compound='left')
-
-        self.TLabel1_8_1 = ttk.Label(self.TLabelframeOutput)
-        self.TLabel1_8_1.place(relx=0.029, rely=0.806, height=20, width=150, bordermode='ignore')
-        self.TLabel1_8_1.configure(font=_default_font)
-        self.TLabel1_8_1.configure(relief="flat")
-        self.TLabel1_8_1.configure(anchor='e')
-        self.TLabel1_8_1.configure(text='''Tlabel''')
-        self.TLabel1_8_1.configure(compound='left')
-
-        self.TEntry1_9_1 = ttk.Entry(self.TLabelframeOutput)
-        self.TEntry1_9_1.place(relx=0.486, rely=0.897, relheight=0.054, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_9_1.configure(font=_default_font)
-        self.TEntry1_9_1.configure(cursor="xterm")
-
-        self.TLabel1_9_1 = ttk.Label(self.TLabelframeOutput)
-        self.TLabel1_9_1.place(relx=0.029, rely=0.897, height=21, width=150, bordermode='ignore')
-        self.TLabel1_9_1.configure(font=_default_font)
-        self.TLabel1_9_1.configure(relief="flat")
-        self.TLabel1_9_1.configure(anchor='e')
-        self.TLabel1_9_1.configure(text='''Tlabel''')
-        self.TLabel1_9_1.configure(compound='left')
-
-        self.TLabel1_0_1 = ttk.Label(self.TLabelframeOutput)
-        self.TLabel1_0_1.place(relx=0.029, rely=0.068, height=21, width=150, bordermode='ignore')
-        self.TLabel1_0_1.configure(font=_default_font)
-        self.TLabel1_0_1.configure(relief="flat")
-        self.TLabel1_0_1.configure(anchor='e')
-        self.TLabel1_0_1.configure(text='''X''')
-        self.TLabel1_0_1.configure(compound='left')
-
-        self.TLabelframeInput = ttk.Labelframe(self.TLabelframeHC)
-        self.TLabelframeInput.place(relx=0.026, rely=0.081, relheight=0.861, relwidth=0.459, bordermode='ignore')
-        self.TLabelframeInput.configure(relief='')
-        self.TLabelframeInput.configure(text='''Parameters''')
-
-        self.TEntry1_3_1_1 = ttk.Entry(self.TLabelframeInput)
-        self.TEntry1_3_1_1.place(relx=0.486, rely=0.344, relheight=0.054, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_3_1_1.configure(font=_default_font)
-        self.TEntry1_3_1_1.configure(cursor="xterm")
-
-        self.TEntry1_4_1_1 = ttk.Entry(self.TLabelframeInput)
-        self.TEntry1_4_1_1.place(relx=0.486, rely=0.438, relheight=0.052, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_4_1_1.configure(font=_default_font)
-        self.TEntry1_4_1_1.configure(cursor="xterm")
-
-        self.TEntry1_7_1_1 = ttk.Entry(self.TLabelframeInput)
-        self.TEntry1_7_1_1.place(relx=0.486, rely=0.712, relheight=0.054, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_7_1_1.configure(font=_default_font)
-        self.TEntry1_7_1_1.configure(cursor="xterm")
-
-        self.TEntry1_5_1_1 = ttk.Entry(self.TLabelframeInput)
-        self.TEntry1_5_1_1.place(relx=0.486, rely=0.529, relheight=0.054, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_5_1_1.configure(font=_default_font)
-        self.TEntry1_5_1_1.configure(cursor="xterm")
-
-        self.TEntry1_6_1_1 = ttk.Entry(self.TLabelframeInput)
-        self.TEntry1_6_1_1.place(relx=0.486, rely=0.621, relheight=0.054, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_6_1_1.configure(font=_default_font)
-        self.TEntry1_6_1_1.configure(cursor="xterm")
-
-        self.TLabel1_7_1_1 = ttk.Label(self.TLabelframeInput)
-        self.TLabel1_7_1_1.place(relx=0.029, rely=0.712, height=21, width=150, bordermode='ignore')
-        self.TLabel1_7_1_1.configure(font=_default_font)
-        self.TLabel1_7_1_1.configure(relief="flat")
-        self.TLabel1_7_1_1.configure(anchor='e')
-        self.TLabel1_7_1_1.configure(text='''Tlabel''')
-        self.TLabel1_7_1_1.configure(compound='left')
-
-        self.TLabel1_6_1_1 = ttk.Label(self.TLabelframeInput)
-        self.TLabel1_6_1_1.place(relx=0.029, rely=0.621, height=21, width=150, bordermode='ignore')
-        self.TLabel1_6_1_1.configure(font=_default_font)
-        self.TLabel1_6_1_1.configure(relief="flat")
-        self.TLabel1_6_1_1.configure(anchor='e')
-        self.TLabel1_6_1_1.configure(text='''Tlabel''')
-        self.TLabel1_6_1_1.configure(compound='left')
-
-        self.TLabel1_5_1_1 = ttk.Label(self.TLabelframeInput)
-        self.TLabel1_5_1_1.place(relx=0.029, rely=0.529, height=20, width=150, bordermode='ignore')
-        self.TLabel1_5_1_1.configure(font=_default_font)
-        self.TLabel1_5_1_1.configure(relief="flat")
-        self.TLabel1_5_1_1.configure(anchor='e')
-        self.TLabel1_5_1_1.configure(text='''Tlabel''')
-        self.TLabel1_5_1_1.configure(compound='left')
-
-        self.TLabel1_4_1_1 = ttk.Label(self.TLabelframeInput)
-        self.TLabel1_4_1_1.place(relx=0.029, rely=0.438, height=20, width=150, bordermode='ignore')
-        self.TLabel1_4_1_1.configure(font=_default_font)
-        self.TLabel1_4_1_1.configure(relief="flat")
-        self.TLabel1_4_1_1.configure(anchor='e')
-        self.TLabel1_4_1_1.configure(text='''Tlabel''')
-        self.TLabel1_4_1_1.configure(compound='left')
-
-        self.TEntry1_8_1_1 = ttk.Entry(self.TLabelframeInput)
-        self.TEntry1_8_1_1.place(relx=0.486, rely=0.806, relheight=0.052, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_8_1_1.configure(font=_default_font)
-        self.TEntry1_8_1_1.configure(cursor="xterm")
-
-        self.TLabel1_3_1_1 = ttk.Label(self.TLabelframeInput)
-        self.TLabel1_3_1_1.place(relx=0.029, rely=0.344, height=21, width=150, bordermode='ignore')
-        self.TLabel1_3_1_1.configure(font=_default_font)
-        self.TLabel1_3_1_1.configure(relief="flat")
-        self.TLabel1_3_1_1.configure(anchor='e')
-        self.TLabel1_3_1_1.configure(text='''Tlabel''')
-        self.TLabel1_3_1_1.configure(compound='left')
-
-        self.TEntry1_2_1_1 = ttk.Entry(self.TLabelframeInput)
-        self.TEntry1_2_1_1.place(relx=0.486, rely=0.253, relheight=0.054, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_2_1_1.configure(font=_default_font)
-        self.TEntry1_2_1_1.configure(cursor="xterm")
-
-        self.TEntry1_0_1_1 = ttk.Entry(self.TLabelframeInput)
-        self.TEntry1_0_1_1.place(relx=0.486, rely=0.068, relheight=0.054, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_0_1_1.configure(font=_default_font)
-        self.TEntry1_0_1_1.configure(cursor="xterm")
-
-        self.TEntry1_1_1_1 = ttk.Entry(self.TLabelframeInput)
-        self.TEntry1_1_1_1.place(relx=0.486, rely=0.162, relheight=0.052, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_1_1_1.configure(font=_default_font)
-        self.TEntry1_1_1_1.configure(cursor="xterm")
-
-        self.TLabel1_2_1_1 = ttk.Label(self.TLabelframeInput)
-        self.TLabel1_2_1_1.place(relx=0.029, rely=0.253, height=21, width=150, bordermode='ignore')
-        self.TLabel1_2_1_1.configure(font=_default_font)
-        self.TLabel1_2_1_1.configure(relief="flat")
-        self.TLabel1_2_1_1.configure(anchor='e')
-        self.TLabel1_2_1_1.configure(text='''Tlabel''')
-        self.TLabel1_2_1_1.configure(compound='left')
-
-        self.TLabel1_8_1_1 = ttk.Label(self.TLabelframeInput)
-        self.TLabel1_8_1_1.place(relx=0.029, rely=0.806, height=20, width=150, bordermode='ignore')
-        self.TLabel1_8_1_1.configure(font=_default_font)
-        self.TLabel1_8_1_1.configure(relief="flat")
-        self.TLabel1_8_1_1.configure(anchor='e')
-        self.TLabel1_8_1_1.configure(text='''Tlabel''')
-        self.TLabel1_8_1_1.configure(compound='left')
-
-        self.TEntry1_9_1_1 = ttk.Entry(self.TLabelframeInput)
-        self.TEntry1_9_1_1.place(relx=0.486, rely=0.897, relheight=0.054, relwidth=0.469, bordermode='ignore')
-        self.TEntry1_9_1_1.configure(font=_default_font)
-        self.TEntry1_9_1_1.configure(cursor="xterm")
-
-        self.TLabel1_9_1_1 = ttk.Label(self.TLabelframeInput)
-        self.TLabel1_9_1_1.place(relx=0.029, rely=0.897, height=21, width=150, bordermode='ignore')
-        self.TLabel1_9_1_1.configure(font=_default_font)
-        self.TLabel1_9_1_1.configure(relief="flat")
-        self.TLabel1_9_1_1.configure(anchor='e')
-        self.TLabel1_9_1_1.configure(text='''Tlabel''')
-        self.TLabel1_9_1_1.configure(compound='left')
-
-        self.TLabel1_1_1_1 = ttk.Label(self.TLabelframeInput)
-        self.TLabel1_1_1_1.place(relx=0.029, rely=0.162, height=20, width=150, bordermode='ignore')
-        self.TLabel1_1_1_1.configure(font=_default_font)
-        self.TLabel1_1_1_1.configure(relief="flat")
-        self.TLabel1_1_1_1.configure(anchor='e')
-        self.TLabel1_1_1_1.configure(text='''Tlabel''')
-        self.TLabel1_1_1_1.configure(compound='left')
-
-        self.TLabel1_0_1_1 = ttk.Label(self.TLabelframeInput)
-        self.TLabel1_0_1_1.place(relx=0.029, rely=0.068, height=21, width=150, bordermode='ignore')
-        self.TLabel1_0_1_1.configure(font=_default_font)
-        self.TLabel1_0_1_1.configure(relief="flat")
-        self.TLabel1_0_1_1.configure(anchor='e')
-        self.TLabel1_0_1_1.configure(text='''Step size''')
-        self.TLabel1_0_1_1.configure(compound='left')
-
-        self.TButtonRun = ttk.Button(self.top)
-        self.TButtonRun.place(relx=0.875, rely=0.917, height=30, width=83)
-        self.TButtonRun.configure(takefocus="")
-        self.TButtonRun.configure(text='''Run''')
-        self.TButtonRun.configure(compound='left')
-
-        self.TButtonAbort = ttk.Button(self.top)
-        self.TButtonAbort.place(relx=0.75, rely=0.917, height=30, width=83)
-        self.TButtonAbort.configure(takefocus="")
-        self.TButtonAbort.configure(text='''Abort''')
-        self.TButtonAbort.configure(compound='left')
+        TLabelframeARR = self._new_frame("Hill Climbing")
+        label_parameters = ["Step", "Epsilon", "Number of iterations"]
+        self._render_parameters(TLabelframeARR, label_parameters)
+        label_results = ["X", "Z"]
+        self._render_results(TLabelframeARR, label_results)
+        buttons = ["Abort", "Run"]
+        actions = [self._run_HC, self._run_HC]
+        self._render_buttons(buttons, actions)
 
     def _show_RR(self):
         TLabelframeARR = self._new_frame("Random Restart")
-
         label_parameters = ["Step", "Epsilon", "Number of iterations", "Number of restarts"]
         self._render_parameters(TLabelframeARR, label_parameters)
-        
         label_results = ["X", "Z"]
         self._render_results(TLabelframeARR, label_results)
-
         buttons = ["Abort", "Run"]
         actions = [self._run_RR, self._run_RR]
         self._render_buttons(buttons, actions)
 
     def _show_ACO(self):
         TLabelframeACO = self._new_frame("Ant Colony Optimization")
-
         label_parameters = ["Alpha", "Beta", "Rho", "Q", "Tau min", "Tau max", "Number of production level", "Number of ants", "Number of iterations"]
         self._render_parameters(TLabelframeACO, label_parameters)
-        
         label_results = ["X", "Z"]
         self._render_results(TLabelframeACO, label_results)
-
         buttons = ["Abort", "Run"]
         actions = [self._run_ACO, self._run_ACO]
         self._render_buttons(buttons, actions)
+
+    def _run_HC(self):
+        param_values = self._get_params_values()
+        step = param_values[0]
+        epsilon = param_values[0]
+        num_terations = param_values[0]
+
+        results_hc = SUPPAI_support.run_hc(step, epsilon, num_terations)
+        self._update_output_results(results_hc)
 
     def _run_RR(self):
         param_values = self._get_params_values()
@@ -443,7 +168,7 @@ class MainWindow:
         num_terations = param_values[0]
         num_restarts = param_values[0]
 
-        results_rr = SUPPAI_support.run_rr(step, epsilon, num_restarts)
+        results_rr = SUPPAI_support.run_rr(step, epsilon, num_terations, num_restarts)
         self._update_output_results(results_rr)
 
     def _run_ACO(self):
