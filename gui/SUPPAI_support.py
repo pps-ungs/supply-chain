@@ -10,7 +10,7 @@ import tkinter.ttk as ttk
 from tkinter.constants import *
 import setup
 import db.config as dbconfig
-from models.ant_colony import AntColony
+# from models.ant_colony import AntColony
 import SUPPAI
 
 _debug = True
@@ -26,16 +26,17 @@ def get_active_heuristic():
 
 def run_aco(alpha, beta, rho, Q, tau_max, tau_min, num_prod_levels, num_ants, num_iterations):
     F, S, P, E = connect_to_database()
-    model_aco = AntColony(F, S, P, E, 
-                    alpha=alpha, 
-                        beta=beta, 
-                        rho=rho,
-                        Q= Q if Q else None,
-                        tau_max= tau_max if tau_max else None,
-                        tau_min= tau_min if tau_min else None,
-                        num_prod_levels=num_prod_levels)
-
-    return model_aco.solve(num_ants=num_ants, max_iterations=num_iterations)
+    # model_aco = AntColony(F, S, P, E, 
+    #                 alpha=alpha, 
+    #                     beta=beta, 
+    #                     rho=rho,
+    #                     Q= Q if Q else None,
+    #                     tau_max= tau_max if tau_max else None,
+    #                     tau_min= tau_min if tau_min else None,
+    #                     num_prod_levels=num_prod_levels)
+    # solution = model_aco.solve(num_ants=num_ants, max_iterations=num_iterations)
+    # return [solution["X"], solution["Z"]]
+    return [[10, 10, 10, 10], 100]
 
 def main(*args):
     global root

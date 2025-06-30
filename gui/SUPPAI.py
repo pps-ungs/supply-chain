@@ -737,7 +737,6 @@ class MainWindow:
             else:
                 entry_widget.delete(0, tk.END)
 
-
     def _new_frame(self, title):
         labelFrame = ttk.Labelframe(self.top)
         labelFrame.place(relx=0.025, rely=0.017, relheight=0.827, relwidth=0.953)
@@ -779,7 +778,7 @@ class MainWindow:
             result_entry.place(relx=0.486, rely=initial_rely, relheight=0.054, relwidth=0.469, bordermode='ignore')
             result_entry.configure(cursor="xterm")
             result_entry.configure(font=_default_font)
-            self.output_labels.append(result_entry)
+            self.output_entries.append(result_entry)
             initial_rely += rely_increment
 
     def _render_parameters(self, frame, label_parameters):
