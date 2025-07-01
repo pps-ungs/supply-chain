@@ -218,12 +218,10 @@ class MainWindow(Observer):
         param_values = []
         for _, entry_widget in enumerate(self.input_entries):
             value = entry_widget.get()
-            print(value)
             if value != "":
                 param_values.append(float(value))
             else:
                 param_values.append(None)
-        print(param_values)
         return param_values
 
 

@@ -63,8 +63,9 @@ class Optimizer():
     def run_hc(self, step, epsilon, num_iterations, observer=None):
         model = HillClimbing(self.F, self.S, self.P, self.E)
         x = initial_x.get_initial_X_from_most_probable_scenario(model, self.F, self.E)
+        ep = epsilon if epsilon else 1e-12
         model.add_observer(observer)
-        _ = model.solve(step=step, epsilon=epsilon, max_iterations_allowed=num_iterations, initial_X=x)
+        _ = model.solve(step=step, epsilon=ep, max_iterations_allowed=num_iterations, initial_X=x)
 
 
 def about_app(root):
