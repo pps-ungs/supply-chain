@@ -71,8 +71,6 @@ def create_tables(conn: psycopg.Connection) -> None:
     except (psycopg.DatabaseError, Exception) as e:
         print(f"?error creating tables: {e}")
 
-
-# ?
 def insert_data_from_csv(conn: psycopg.Connection, insert_statement: str, csv_file: str) -> None:
     try:
         with conn.cursor() as cur:
@@ -86,7 +84,6 @@ def insert_data_from_csv(conn: psycopg.Connection, insert_statement: str, csv_fi
     except (psycopg.DatabaseError, Exception) as e:
         print(f"?error inserting data: {e}")
 
-# ?
 def insert_data_from_csv_json(conn: psycopg.Connection, insert_statement: str, csv_file: str) -> None:
     try:
         with conn.cursor() as cur:
@@ -102,17 +99,6 @@ def insert_data_from_csv_json(conn: psycopg.Connection, insert_statement: str, c
     except (psycopg.DatabaseError, Exception) as e:
         print(f"?error inserting data: {e}")
 
-
-########################################################################
-# DONE
-# This function reads data from a PostgreSQL database and returns it as
-# a pandas DataFrame.
-#
-# conn: a psycopg.Connection object representing the connection to the
-#       PostgreSQL database
-# select_statement: a string containing the SQL select statement to be
-#                   executed
-# df: a pandas DataFrame containing the data returned by the query
 def read(conn: psycopg.Connection, select_statement: str) -> pd.DataFrame:
     try:
         df = pd.read_sql_query(select_statement, conn)
@@ -121,19 +107,7 @@ def read(conn: psycopg.Connection, select_statement: str) -> pd.DataFrame:
     except (psycopg.DatabaseError, Exception) as e:
         print(f"?error reading data': {e}")
         return pd.DataFrame()
-# 
-########################################################################
     
-# Not used?
-def insert(conn: psycopg.Connection, insert_statement: str, data: list) -> None:
-    try:
-        with conn.cursor() as cur:
-            cur.execute(insert_statement, data)  
-            conn.commit()
-            print("[okay] Data inserted")
-    except (psycopg.DatabaseError, Exception) as e:
-        print(f"?error inserting data: {e}")
-
 def execute(conn: psycopg.Connection, statement: str) -> None:
     try:
         with conn.cursor() as cur:
@@ -142,18 +116,6 @@ def execute(conn: psycopg.Connection, statement: str) -> None:
             print("[okay] Statement executed")
     except (psycopg.DatabaseError, Exception) as e:
         print(f"?error executing statement: {e}")
-
-# FIXME
-# def insert_data_from_dataframe(conn: psycopg.Connection, insert_statement: str, df: pd.DataFrame) -> None:
-#     try:
-#         with conn.cursor() as cur:
-#             for index, row in df.iterrows():
-#                 cur.execute(insert_statement, tuple(row))
-#             conn.commit()
-#             print("[okay] Data inserted from DataFrame")
-#     except (psycopg.DatabaseError, Exception) as e:
-#         print(f"?error inserting data: {e}")
-#
 
 def dump(filepath: str, config: dict) -> None:
     dbname = "supply_chain"

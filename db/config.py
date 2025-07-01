@@ -1,7 +1,5 @@
 from configparser import ConfigParser
 
-
-# DONE
 # This function loads a configuration file and returns the parameters in
 # the specified section as a dictionary.
 #
