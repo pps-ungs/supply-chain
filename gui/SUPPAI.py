@@ -164,7 +164,7 @@ class MainWindow(Observer):
     def _show_RR(self):
         self.TLabelframeRR = self._new_frame("Random Restart")
         label_parameters = ["Step", "Epsilon", "Maximum iterations HC", 
-                            "Maximum loops without improvement", "Maximum restarts"]
+                            "Loops without improvement", "Maximum restarts"]
         self._render_parameters(self.TLabelframeRR, label_parameters)
         label_results = [ "X", "Z", "margin", "pStk", "pDIn", "CTf2s", "CTs2p", "Iteration number" ]
         self._render_results(self.TLabelframeRR, label_results)
