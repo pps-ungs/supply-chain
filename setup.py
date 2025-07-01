@@ -2,6 +2,7 @@
 
 import models.model as model
 import db.database as db
+import db.queries as queries
 
 def create_database(config):
     ####################################################################
@@ -13,13 +14,13 @@ def create_database(config):
 
     ####################################################################
     # Centros de fabricación
-    db.insert_data_from_csv(conn, model.fabrication_centers_write(), "./db/data/sets/fabrication_centers.csv")
+    db.insert_data_from_csv(conn, "insert into centro_de_fabricacion (nombre, data) values (%s, %s);", "./db/data/sets/fabrication_centers.csv")
     # Centros de distribución
-    db.insert_data_from_csv(conn, model.distribution_centers_write(), "./db/data/sets/distribution_centers.csv")
+    db.insert_data_from_csv(conn, "insert into centro_de_distribucion (nombre, data) values (%s, %s);", "./db/data/sets/distribution_centers.csv")
     # Puntos de venta
-    db.insert_data_from_csv(conn, model.points_of_sale_write(), "./db/data/sets/points_of_sale.csv")
+    db.insert_data_from_csv(conn,  "insert into punto_de_venta (nombre, data) values (%s, %s);", "./db/data/sets/points_of_sale.csv")
     # Escenarios
-    db.insert_data_from_csv_json(conn, model.scenarios_write(), "./db/data/sets/scenarios-normal.csv")
+    db.insert_data_from_csv_json(conn, "insert into escenario (nombre, data) values (%s, %s);", "./db/data/sets/scenarios-normal.csv")
     ####################################################################
     print("[okay] Database created")
 
@@ -42,10 +43,10 @@ def restore_database():
 
 def read_database(config):
     conn = db.get_connection(config)
-    F = db.read(conn, "SELECT * FROM centro_de_fabricacion").to_dict(orient='records')
-    S = db.read(conn, "SELECT * FROM centro_de_distribucion").to_dict(orient='records')
-    P = db.read(conn, "SELECT * FROM punto_de_venta").to_dict(orient='records')
-    E = db.read(conn, "SELECT * FROM escenario").to_dict(orient='records')
+    F = db.read(conn, queries.get_fabrication_centers_query()).to_dict(orient='records')
+    S = db.read(conn, queries.get_distribution_centers_query()).to_dict(orient='records')
+    P = db.read(conn, queries.get_points_of_sale_query()).to_dict(orient='records')
+    E = db.read(conn, queries.get_scenarios_query()).to_dict(orient='records')
     
     print("[okay] Data read from database")
     conn.close()
