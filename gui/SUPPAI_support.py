@@ -14,6 +14,9 @@ import tkinter.ttk as ttk
 from tkinter.constants import *
 from tkinter import filedialog
 from models.ant_colony import AntColony
+from models.hill_climbing import HillClimbing
+from models.random_restart import RandomRestart
+import experiments.initial_x.initial_x as initial_x
 
 import SUPPAI
 
@@ -34,7 +37,7 @@ def get_active_heuristic():
 
 def run_aco(alpha, beta, rho, Q, tau_max, tau_min, num_prod_levels, num_ants, num_iterations):
     F, S, P, E = connect_to_database()
-    model_aco = AntColony(F, S, P, E, 
+    model = AntColony(F, S, P, E, 
                     alpha=alpha, 
                         beta=beta, 
                         rho=rho,
@@ -42,15 +45,22 @@ def run_aco(alpha, beta, rho, Q, tau_max, tau_min, num_prod_levels, num_ants, nu
                         tau_max= tau_max if tau_max else None,
                         tau_min= tau_min if tau_min else None,
                         num_prod_levels=num_prod_levels)
-    solution = model_aco.solve(num_ants=num_ants, max_iterations=num_iterations)
+    solution = model.solve(num_ants=num_ants, max_iterations=num_iterations)
     return [solution["X"], solution["Z"]]
-    return [[10, 10, 10, 10], 100]
 
 def run_rr(step, epsilon, num_iterations, num_restarts):
-    return [[10, 10, 10, 10], 100]
+    F, S, P, E = connect_to_database()
+    model = RandomRestart(F, S, P, E)
+    x = initial_x.get_initial_X_from_most_probable_scenario(model, F, E)
+    solution = model.solve(step=step, epsilon=epsilon, max_iterations_allowed=num_iterations, initial_X=x, max_restarts=num_restarts)
+    return [solution["X"], solution["Z"]]
 
 def run_hc(step, epsilon, num_iterations):
-    return [[10, 10, 10, 10], 100]
+    F, S, P, E = connect_to_database()
+    model = HillClimbing(F, S, P, E)
+    x = initial_x.get_initial_X_from_most_probable_scenario(model, F, E)
+    solution = model.solve(step=step, epsilon=epsilon, max_iterations_allowed=num_iterations, initial_X=x)
+    return [solution["X"], solution["Z"]]
 
 def about_app(root):
     about_window = tk.Toplevel(root)
