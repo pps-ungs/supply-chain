@@ -5,6 +5,7 @@ import tkinter.ttk as ttk
 from tkinter.constants import *
 import os.path
 import SUPPAI_support
+from observer import Observer
 
 _location = os.path.dirname(__file__)
 
@@ -27,8 +28,6 @@ def _style_code():
     if _style_code_ran:
         return        
     try:
-        # Themes not working good
-        # Choose a theme
         theme = "page-dark"
         theme = "elegance"
         theme = "elegance"
@@ -38,7 +37,6 @@ def _style_code():
         style = ttk.Style()
         style.theme_use(theme)
     except:
-        print("?theme not found, using default theme")
         style = ttk.Style()
         style.theme_use('default')
 
@@ -47,7 +45,8 @@ def _style_code():
        style.theme_use('winnative')
     _style_code_ran = 1
 
-class MainWindow:
+
+class MainWindow(Observer):
 
     def _set_active_heuristic(self, heuristic):
         self._active_heuristic = heuristic
@@ -55,6 +54,7 @@ class MainWindow:
         self._update_heuristic_menu_checkmark()
 
     def __init__(self, top=None):
+        self.optimizer = SUPPAI_support.Optimizer()
         self.top = top
         self._active_heuristic = ""
 
@@ -69,7 +69,7 @@ class MainWindow:
         # File menu
         self.sub_menu0 = tk.Menu(self.menubar, activebackground=_activebackground,activeforeground='black',font=_default_font,tearoff=0)
         self.menubar.add_cascade(compound='left',font=_default_font,label='File',menu=self.sub_menu0, )
-        self.sub_menu0.add_command(accelerator='CTRL+O', compound='left',font=_default_font,label='Connect to database...',command=lambda:SUPPAI_support.connect_to_database())
+        self.sub_menu0.add_command(accelerator='CTRL+O', compound='left',font=_default_font,label='Connect to database...',command=lambda:self.optimizer.connect_to_database())
         self.sub_menu0.add_command(accelerator='CTRL+Q', compound='left' ,font=_default_font, label='Quit', command=self.top.quit)
 
         # Heuristics menu
@@ -146,7 +146,7 @@ class MainWindow:
         self.TLabelframeHC = self._new_frame("Hill Climbing")
         label_parameters = ["Step", "Epsilon", "Number of iterations"]
         self._render_parameters(self.TLabelframeHC, label_parameters)
-        label_results = ["X", "Z"]
+        label_results = [ "X", "Z", "margin", "pStk", "pDIn", "CTf2s", "CTs2p", "Iterations" ]
         self._render_results(self.TLabelframeHC, label_results)
         buttons = ["Abort", "Run"]
         actions = [self._run_HC, self._run_HC]
@@ -157,7 +157,7 @@ class MainWindow:
         self.TLabelframeRR = self._new_frame("Random Restart")
         label_parameters = ["Step", "Epsilon", "Number of iterations", "Number of restarts"]
         self._render_parameters(self.TLabelframeRR, label_parameters)
-        label_results = ["X", "Z"]
+        label_results = [ "X", "Z", "margin", "pStk", "pDIn", "CTf2s", "CTs2p", "Iterations" ]
         self._render_results(self.TLabelframeRR, label_results)
         buttons = ["Abort", "Run"]
         actions = [self._run_RR, self._run_RR]
@@ -172,7 +172,8 @@ class MainWindow:
         label_parameters = ["α", "β", "ρ", "Q", "τ min", "τ max", "Production levels", "Number of ants", "Number of iterations"]
 
         self._render_parameters(self.TLabelframeACO, label_parameters)
-        label_results = ["X", "Z"]
+        label_results = [ "X", "Z", "margin", "pStk", "pDIn", "CTf2s", "CTs2p", "Iterations" ]
+
         self._render_results(self.TLabelframeACO, label_results)
         buttons = ["Abort", "Run"]
         actions = [self._run_ACO, self._run_ACO]
@@ -185,8 +186,7 @@ class MainWindow:
         epsilon = param_values[1]
         num_terations = param_values[2]
 
-        results_hc = SUPPAI_support.run_hc(step, epsilon, num_terations)
-        self._update_output_results(results_hc)
+        self.optimizer.run_hc(step, epsilon, num_terations, observer=self)
 
 
     def _run_RR(self):
@@ -196,8 +196,7 @@ class MainWindow:
         num_terations = param_values[2]
         num_restarts = param_values[3]
 
-        results_rr = SUPPAI_support.run_rr(step, epsilon, num_terations, num_restarts)
-        self._update_output_results(results_rr)
+        self.optimizer.run_rr(step, epsilon, num_terations, num_restarts, observer=self)
 
 
     def _run_ACO(self):
@@ -212,23 +211,27 @@ class MainWindow:
         num_ants = param_values[7]
         num_iterations = param_values[8]
 
-        results_aco = SUPPAI_support.run_aco(alpha, beta, rho, Q, tau_max, tau_min, num_prod_levels, num_ants, num_iterations)
-        self._update_output_results(results_aco)
+        self.optimizer.run_aco(alpha, beta, rho, Q, tau_max, tau_min, num_prod_levels, num_ants, num_iterations, observer=self)
 
 
     def _get_params_values(self):
         param_values = []
         for _, entry_widget in enumerate(self.input_entries):
             value = entry_widget.get()
-            param_values.append(value)
+            param_values.append(float(value))
         return param_values
 
 
-    def _update_output_results(self, results_data):
+    def update(self, msg):
+        self.update_output_results(msg)
+
+
+    def update_output_results(self, results_data):
         for i, entry_widget in enumerate(self.output_entries):
             if i < len(results_data):
                 entry_widget.delete(0, tk.END)
                 entry_widget.insert(0, str(results_data[i]))
+                print(f"[info] Updated output entry {i} with value: {results_data[i]}")
             else:
                 entry_widget.delete(0, tk.END)
 

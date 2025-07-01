@@ -62,6 +62,8 @@ class HillClimbing(Model):
                 X_current = best_n
                 Z_previous = Z_current
                 Z_current = best_z
+                margin, pStk, pDIn, CTf2s, CTs2p = self.get_objective_function_values(F, S, P, E, X_current)
+                self.notify_observers([ X_current, Z_current, margin, pStk, pDIn, CTf2s, CTs2p, it ])
 
             ################################################################
             # Criterios de parada

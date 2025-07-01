@@ -20,50 +20,52 @@ import SUPPAI
 
 _debug = True
 
-def connect_to_database():
-    file_path = filedialog.askopenfilename(
-        title="Open database configuration file",
-        filetypes=[("INI files", "*.ini"), ("All files", "*.*")]
-    )
-    if file_path:
-        # ay no sé cómo sería esto :(
-        config = dbconfig.load_config(file_path, 'supply_chain')
-        setup.create_database(config) # Acá rompe porque no existen más las funciones de ahí
-        data = setup.read_database(config)
-        F, S, P, E = data["F"], data["S"], data["P"], data["E"]
-        print(f"INI file selected: {file_path}, data:", F, S, P, E )
-    else:
-        print("No file selected.")
+class Optimizer():
 
-def get_active_heuristic():
-    return "Aguante Cristina!"
+    def __init__(self):
+        self.F = []
+        self.S = []
+        self.P = []
+        self.E = []
 
-def run_aco(alpha, beta, rho, Q, tau_max, tau_min, num_prod_levels, num_ants, num_iterations):
-    F, S, P, E = connect_to_database()
-    model = AntColony(F, S, P, E, 
-                    alpha=alpha, 
-                    beta=beta, 
-                    rho=rho,
-                    Q= Q if Q else None,
-                    tau_max= tau_max if tau_max else None,
-                    tau_min= tau_min if tau_min else None,
-                    num_prod_levels=num_prod_levels)
-    solution = model.solve(num_ants=num_ants, max_iterations=num_iterations)
-    return [solution["X"], solution["Z"]]
+    def connect_to_database(self):
+        file_path = filedialog.askopenfilename(
+            title="Open database configuration file",
+            filetypes=[("INI files", "*.ini"), ("All files", "*.*")]
+        )
+        if file_path:
+            config = dbconfig.load_config(file_path, 'supply_chain')
+            data = setup.read_database(config)
+            self.F, self.S, self.P, self.E = data["F"], data["S"], data["P"], data["E"]
+            print(f"[info] ini file read: {file_path}")
+        else:
+            print("?no file selected.")
 
-def run_rr(step, epsilon, num_iterations, num_restarts):
-    F, S, P, E = connect_to_database()
-    model = RandomRestart(F, S, P, E)
-    x = initial_x.get_initial_X_from_most_probable_scenario(model, F, E)
-    solution = model.solve(step=step, epsilon=epsilon, max_iterations_allowed=num_iterations, initial_X=x, max_restarts=num_restarts)
-    return [solution["X"], solution["Z"]]
 
-def run_hc(step, epsilon, num_iterations):
-    F, S, P, E = connect_to_database()
-    model = HillClimbing(F, S, P, E)
-    x = initial_x.get_initial_X_from_most_probable_scenario(model, F, E)
-    solution = model.solve(step=step, epsilon=epsilon, max_iterations_allowed=num_iterations, initial_X=x)
-    return [solution["X"], solution["Z"]]
+    def run_aco(self, alpha, beta, rho, Q, tau_min, tau_max, num_prod_levels, num_ants, num_iterations, observer=None):
+        model = AntColony(
+            self.F, self.S, self.P, self.E,
+            alpha=float(alpha), beta=float(beta), rho=rho,
+            Q = int(Q) if Q else 100,
+            tau_min = float(tau_min) if tau_min else 0.01,
+            tau_max = float(tau_max) if tau_max else 10.0,
+            num_prod_levels = int(num_prod_levels)
+        )
+        model.add_observer(observer)
+        _ = model.solve(num_ants=int(num_ants), max_iterations=int(num_iterations))
+
+    def run_rr(self, step, epsilon, num_iterations, num_restarts, observer=None):
+        model = RandomRestart(self.F, self.S, self.P, self.E)
+        x = initial_x.get_initial_X_from_most_probable_scenario(model, self.F, self.E)
+        model.add_observer(observer)
+        _ = model.solve(step=step, epsilon=epsilon, max_iterations_allowed=num_iterations, initial_X=x, max_restarts=num_restarts)
+
+    def run_hc(self, step, epsilon, num_iterations, observer=None):
+        model = HillClimbing(self.F, self.S, self.P, self.E)
+        x = initial_x.get_initial_X_from_most_probable_scenario(model, self.F, self.E)
+        model.add_observer(observer)
+        _ = model.solve(step=step, epsilon=epsilon, max_iterations_allowed=num_iterations, initial_X=x)
+
 
 def about_app(root):
     about_window = tk.Toplevel(root)
@@ -71,7 +73,6 @@ def about_app(root):
     about_window.geometry("300x150")
     about_window.resizable(False, False)
 
-    # Center contents
     msg = "SUPPly chAIn Optimizer App\n\nCopyright © 2025 Ebertz, Rondelli, Soria"
     label = tk.Label(about_window, text=msg, justify="center", pady=20)
     label.pack()

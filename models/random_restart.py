@@ -1,4 +1,5 @@
-import random, time
+import random
+import time
 
 from models.hill_climbing import HillClimbing
 

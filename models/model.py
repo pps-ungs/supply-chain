@@ -13,6 +13,8 @@ class Model(ABC):
         self.P = P
         self.E = E
 
+        self.observers = []
+
     ########################################################################
     # 2. y 5. Variables de decisión y sus restricciones
     ########################################################################
@@ -425,6 +427,19 @@ class Model(ABC):
 
         return [margin, pStk, pDIn, CTf2s, CTs2p]
     
+
+    def add_observer(self, o):
+        if o not in self.observers:
+            self.observers.append(o)
+
+    def remove_observer(self, o):
+        if o in self.observers:
+            self.observers.remove(o)
+
+    def notify_observers(self, message):
+        for o in self.observers:
+            o.update(message)
+
     @abstractmethod
     def solve(self, **kwargs):
         pass

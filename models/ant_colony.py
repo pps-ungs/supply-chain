@@ -69,7 +69,7 @@ class AntColony(Model):
         
         # print("[info] Starting Ant Colony optimization...")
 
-        for iteration in range(max_iterations):
+        for _ in range(max_iterations):
             solutions_this_iteration = [] 
             
             # 1. Cada hormiga construye una solución
@@ -92,6 +92,7 @@ class AntColony(Model):
                     self.best_pDIn = details_ant['pDIn']
                     self.best_CTf2s = details_ant['CTf2s']
                     self.best_CTs2p = details_ant['CTs2p']
+                    self.notify_observers([ self.best_solution_X, self.best_solution_Z, self.best_margin, self.best_pStk, self.best_pDIn, self.best_CTf2s, self.best_CTs2p, max_iterations ])
 
             # 3. Evaporación de feromonas
             self.pheromones = (1 - self.rho) * self.pheromones
