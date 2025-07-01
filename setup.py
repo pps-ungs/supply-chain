@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
-import models.model as model
 import db.database as db
 import db.queries as queries
+import db.config as dbconfig
 
 def create_database(config):
     ####################################################################
     # DB
-    db.create_supply_chain_database(config)
+    postgres_config = dbconfig.load_config('db/database.ini', 'postgres')
+    db.create_supply_chain_database(postgres_config)
     conn = db.get_connection(config)
 
     db.create_tables(conn)
