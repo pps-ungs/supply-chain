@@ -230,6 +230,8 @@ class MainWindow(Observer):
 
 
     def update_output_results(self, results_data):
+        SUPPAI_support.root.update()
+
         for i, entry_widget in enumerate(self.output_entries):
             if i < len(results_data):
                 entry_widget.delete(0, tk.END)
