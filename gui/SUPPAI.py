@@ -151,9 +151,9 @@ class MainWindow(Observer):
 
     def _show_HC(self):
         self.TLabelframeHC = self._new_frame("Hill Climbing")
-        label_parameters = ["Step", "Epsilon", "Number of iterations"]
+        label_parameters = ["Step", "Epsilon", "Maximum iterations"]
         self._render_parameters(self.TLabelframeHC, label_parameters)
-        label_results = [ "X", "Z", "margin", "pStk", "pDIn", "CTf2s", "CTs2p", "Iterations" ]
+        label_results = [ "X", "Z", "margin", "pStk", "pDIn", "CTf2s", "CTs2p", "Iteration number" ]
         self._render_results(self.TLabelframeHC, label_results)
         buttons = ["Abort", "Run"]
         actions = [self._run_HC, self._run_HC]
@@ -162,9 +162,9 @@ class MainWindow(Observer):
 
     def _show_RR(self):
         self.TLabelframeRR = self._new_frame("Random Restart")
-        label_parameters = ["Step", "Epsilon", "Number of iterations", "Number of restarts"]
+        label_parameters = ["Step", "Epsilon", "Maximum iterations", "Number of restarts"]
         self._render_parameters(self.TLabelframeRR, label_parameters)
-        label_results = [ "X", "Z", "margin", "pStk", "pDIn", "CTf2s", "CTs2p", "Iterations" ]
+        label_results = [ "X", "Z", "margin", "pStk", "pDIn", "CTf2s", "CTs2p", "Iteration number" ]
         self._render_results(self.TLabelframeRR, label_results)
         buttons = ["Abort", "Run"]
         actions = [self._run_RR, self._run_RR]
@@ -175,11 +175,11 @@ class MainWindow(Observer):
         self.TLabelframeACO = self._new_frame("Ant Colony Optimization")
 
         # Con letras griegas ó con palabras?
-        label_parameters = ["Alpha", "Beta", "Rho", "Q", "Tau min", "Tau max", "Production levels", "Number of ants", "Number of iterations"]
-        label_parameters = ["α", "β", "ρ", "Q", "τ min", "τ max", "Production levels", "Number of ants", "Number of iterations"]
+        label_parameters = ["Alpha", "Beta", "Rho", "Q", "Tau min", "Tau max", "Production levels", "Number of ants", "Maximum iterations"]
+        label_parameters = ["α", "β", "ρ", "Q", "τ min", "τ max", "Production levels", "Number of ants", "Maximum iterations"]
 
         self._render_parameters(self.TLabelframeACO, label_parameters)
-        label_results = [ "X", "Z", "margin", "pStk", "pDIn", "CTf2s", "CTs2p", "Iterations" ]
+        label_results = [ "X", "Z", "margin", "pStk", "pDIn", "CTf2s", "CTs2p", "Iteration number" ]
 
         self._render_results(self.TLabelframeACO, label_results)
         buttons = ["Abort", "Run"]
