@@ -13,14 +13,10 @@ def create_database(config):
     db.create_tables(conn)
 
     ####################################################################
-    # Centros de fabricación
-    db.insert_data_from_csv(conn, "insert into centro_de_fabricacion (nombre, data) values (%s, %s);", "./db/data/sets/fabrication_centers.csv")
-    # Centros de distribución
-    db.insert_data_from_csv(conn, "insert into centro_de_distribucion (nombre, data) values (%s, %s);", "./db/data/sets/distribution_centers.csv")
-    # Puntos de venta
-    db.insert_data_from_csv(conn,  "insert into punto_de_venta (nombre, data) values (%s, %s);", "./db/data/sets/points_of_sale.csv")
-    # Escenarios
-    db.insert_data_from_csv_json(conn, "insert into escenario (nombre, data) values (%s, %s);", "./db/data/sets/scenarios-normal.csv")
+    db.insert_data_from_csv(conn, queries.insert_fabrication_center_query(), "./db/data/sets/fabrication_centers.csv")
+    db.insert_data_from_csv(conn, queries.insert_distribution_center_query(), "./db/data/sets/distribution_centers.csv")
+    db.insert_data_from_csv(conn, queries.insert_point_of_sale_query(), "./db/data/sets/points_of_sale.csv")
+    db.insert_data_from_csv_json(conn, queries.insert_scenario_query(), "./db/data/sets/scenarios-normal.csv")
     ####################################################################
     print("[okay] Database created")
 
