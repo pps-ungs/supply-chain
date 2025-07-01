@@ -31,14 +31,14 @@ def create_database(config):
     # Dump the database
     ans = input("Do you want to dump (backup to a file) the database? (y/n): ")
     if ans == "y":
-        db.dump("db/data/supply_chain_dump.sql", config)
-        print("[okay] Database dumped to db/data/supply_chain_dump.sql")
+        db.dump("db/data/dumps/supply-chain-dump.sql", config)
+        print("[okay] Database dumped to db/data/dumps/supply-chain-dump.sql")
     else:
         print("[okay] Database not dumped")
 
 def restore_database():
-    db.restore("db/data/supply_chain_dump.sql")
-    print("[okay] Database restored from db/data/supply_chain_dump.sql")
+    db.restore("db/data/dumps/supply-chain-dump.sql")
+    print("[okay] Database restored from db/data/dumps/supply-chain-dump.sql")
 
 def read_database(config):
     conn = db.get_connection(config)

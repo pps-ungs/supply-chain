@@ -56,9 +56,8 @@ class Optimizer():
 
     def run_rr(self, step, epsilon, num_iterations, num_restarts, observer=None):
         model = RandomRestart(self.F, self.S, self.P, self.E)
-        x = initial_x.get_initial_X_from_most_probable_scenario(model, self.F, self.E)
         model.add_observer(observer)
-        _ = model.solve(step=step, epsilon=epsilon, max_iterations_allowed=num_iterations, initial_X=x, max_restarts=num_restarts)
+        _ = model.solve(step=step, epsilon=epsilon, max_iterations_allowed=num_iterations, max_restarts=num_restarts)
 
     def run_hc(self, step, epsilon, num_iterations, observer=None):
         model = HillClimbing(self.F, self.S, self.P, self.E)
