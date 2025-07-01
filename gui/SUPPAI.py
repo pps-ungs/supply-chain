@@ -26,23 +26,30 @@ def _style_code():
     global _style_code_ran
 
     if _style_code_ran:
-        return        
-    try:
-        theme = "page-dark"
-        theme = "elegance"
-        theme = "elegance"
-        theme = "cornsilk-dark"
-        theme = "viva perón"
-        SUPPAI_support.root.tk.call('source', os.path.join(_location, 'themes', f"{theme}.tcl"))
-        style = ttk.Style()
-        style.theme_use(theme)
-    except:
-        style = ttk.Style()
-        style.theme_use('default')
+        return
 
+    # try:
+    #     theme = "page-dark"
+    #     theme = "elegance"
+    #     theme = "elegance"
+    #     theme = "cornsilk-dark"
+    #     theme = "viva perón"
+    #     SUPPAI_support.root.tk.call('source', os.path.join(_location, 'themes', f"{theme}.tcl"))
+    #     style = ttk.Style()
+    #     style.theme_use(theme)
+    # except:
+    #     style = ttk.Style()
+    #     style.theme_use('default')
+
+    style = ttk.Style()
     style.configure('.', font = _default_font)
+
     if sys.platform == "win32":
        style.theme_use('winnative')
+    elif sys.platform == "darwin":
+         style.theme_use('aqua')
+    else:
+         style.theme_use('default')
     _style_code_ran = 1
 
 
