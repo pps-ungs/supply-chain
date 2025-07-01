@@ -2,17 +2,15 @@
 import os
 import sys
 
-# sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))s
-# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../models/')))
-
 
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.constants import *
 from tkinter import filedialog
+import db.config as dbconfig
+import setup
 from models.ant_colony import AntColony
 from models.hill_climbing import HillClimbing
 from models.random_restart import RandomRestart
@@ -28,7 +26,12 @@ def connect_to_database():
         filetypes=[("INI files", "*.ini"), ("All files", "*.*")]
     )
     if file_path:
-        print(f"INI file selected: {file_path}")
+        # ay no sé cómo sería esto :(
+        config = dbconfig.load_config(file_path, 'supply_chain')
+        setup.create_database(config) # Acá rompe porque no existen más las funciones de ahí
+        data = setup.read_database(config)
+        F, S, P, E = data["F"], data["S"], data["P"], data["E"]
+        print(f"INI file selected: {file_path}, data:", F, S, P, E )
     else:
         print("No file selected.")
 
@@ -39,12 +42,12 @@ def run_aco(alpha, beta, rho, Q, tau_max, tau_min, num_prod_levels, num_ants, nu
     F, S, P, E = connect_to_database()
     model = AntColony(F, S, P, E, 
                     alpha=alpha, 
-                        beta=beta, 
-                        rho=rho,
-                        Q= Q if Q else None,
-                        tau_max= tau_max if tau_max else None,
-                        tau_min= tau_min if tau_min else None,
-                        num_prod_levels=num_prod_levels)
+                    beta=beta, 
+                    rho=rho,
+                    Q= Q if Q else None,
+                    tau_max= tau_max if tau_max else None,
+                    tau_min= tau_min if tau_min else None,
+                    num_prod_levels=num_prod_levels)
     solution = model.solve(num_ants=num_ants, max_iterations=num_iterations)
     return [solution["X"], solution["Z"]]
 
