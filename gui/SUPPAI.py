@@ -3,6 +3,7 @@ import sys
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.constants import *
+from tkinter import messagebox
 import os.path
 import SUPPAI_support
 from observer import Observer
@@ -156,7 +157,7 @@ class MainWindow(Observer):
         label_results = [ "X", "Z", "margin", "pStk", "pDIn", "CTf2s", "CTs2p", "Iteration number" ]
         self._render_results(self.TLabelframeHC, label_results)
         buttons = ["Abort", "Run"]
-        actions = [self._run_HC, self._run_HC]
+        actions = [self._abort, self._run_HC]
         self._render_buttons(buttons, actions)
 
 
@@ -167,7 +168,7 @@ class MainWindow(Observer):
         label_results = [ "X", "Z", "margin", "pStk", "pDIn", "CTf2s", "CTs2p", "Iteration number" ]
         self._render_results(self.TLabelframeRR, label_results)
         buttons = ["Abort", "Run"]
-        actions = [self._run_RR, self._run_RR]
+        actions = [self._abort, self._run_RR]
         self._render_buttons(buttons, actions)
 
 
@@ -183,9 +184,13 @@ class MainWindow(Observer):
 
         self._render_results(self.TLabelframeACO, label_results)
         buttons = ["Abort", "Run"]
-        actions = [self._run_ACO, self._run_ACO]
+        actions = [self._abort, self._run_ACO]
         self._render_buttons(buttons, actions)
 
+
+    def _abort(self):
+        if messagebox.askokcancel("Exit", "Are you sure you want to abort the process?"):
+            os._exit(0)
 
     def _run_HC(self):
         param_values = self._get_params_values()
@@ -319,6 +324,9 @@ class MainWindow(Observer):
             result_entry.configure(font=_default_font)
             self.input_entries.append(result_entry)
             initial_rely += rely_increment
+
+    def update_progressbar(self, value):
+        pass
 
 
 def start_up():
