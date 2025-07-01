@@ -6,7 +6,6 @@ import json
 import pandas as pd
 import db.config as dbconfig
 
-
 def create_supply_chain_database(config: dict) -> None:
     try:
         with get_connection(config) as conn:
