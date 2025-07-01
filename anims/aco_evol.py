@@ -84,7 +84,6 @@ def x_label_formatter(x_solution):
 
 x_labels_sequence = [x_label_formatter(x_sol) for x_sol in filtered_x_full]
 
-# --- Configuración inicial del gráfico ---
 fig, ax = plt.subplots(figsize=(10, 5))
 ax.set_facecolor('#d1d2db')
 fig.patch.set_facecolor('#d1d2db')
@@ -108,8 +107,6 @@ texts = []
 best_z_overall = obj_sequence.max()
 idx_best_z = np.argmax(obj_sequence)
 iter_best_z = iterations_sequence[idx_best_z]
-
-print("AAAAAAAAAA", best_z_overall, idx_best_z, iter_best_z, x_labels_sequence[idx_best_z])
 
 ax.axhline(y=best_z_overall, color='#5666f8', linestyle='--', linewidth=1, alpha=0.7, zorder=4)
 
