@@ -163,7 +163,8 @@ class MainWindow(Observer):
 
     def _show_RR(self):
         self.TLabelframeRR = self._new_frame("Random Restart")
-        label_parameters = ["Step", "Epsilon", "Maximum iterations", "Number of restarts"]
+        label_parameters = ["Step", "Epsilon", "Maximum iterations HC", 
+                            "Maximum loops without improvement", "Maximum restarts"]
         self._render_parameters(self.TLabelframeRR, label_parameters)
         label_results = [ "X", "Z", "margin", "pStk", "pDIn", "CTf2s", "CTs2p", "Iteration number" ]
         self._render_results(self.TLabelframeRR, label_results)
@@ -205,10 +206,11 @@ class MainWindow(Observer):
         param_values = self._get_params_values()
         step = param_values[0]
         epsilon = param_values[1]
-        num_terations = param_values[2]
-        num_restarts = param_values[3]
+        num_iterations_hc = param_values[2]
+        num_loops_wo_improvement = param_values[3]
+        num_restarts = param_values[4]
 
-        self.optimizer.run_rr(step, epsilon, num_terations, num_restarts, observer=self)
+        self.optimizer.run_rr(step, epsilon, num_iterations_hc, num_loops_wo_improvement, num_restarts, observer=self)
 
 
     def _run_ACO(self):
