@@ -29,11 +29,13 @@ def main() -> None:
     ################################################################################
     # Parameters Hill Climbing
     hill_climbing_step           = 936 # 936
-    hill_climbing_max_iterations = 5 # 100
+    hill_climbing_max_iterations = 5 # 45
     ################################################################################
     # Parameters Random Restart
     random_restart_step           = 936 # 936
-    random_restart_max_iterations = 2 # 100
+    random_restart_max_iterations = 2 # 45
+    random_restart_max_loops_without_improvement = 10
+    random_restart_max_restarts = 10
     ################################################################################
 
     config = dbconfig.load_config('db/database.ini', 'supply_chain')
@@ -111,7 +113,7 @@ def main() -> None:
     print(f"    step: {random_restart_step}, max_iterations_allowed: {random_restart_max_iterations}")
     print("--------------------------------------------------------------------------------")
 
-    result = model.solve(step=random_restart_step, max_iterations_allowed=random_restart_max_iterations)
+    result = model.solve(step=random_restart_step, max_iterations_allowed=random_restart_max_iterations, max_loops_without_improvement=random_restart_max_loops_without_improvement, max_restarts=random_restart_max_restarts)
 
     print("RESULTS")
     print("                X:", result["X"])
