@@ -20,20 +20,20 @@ def main() -> None:
     # All the parameters for the experiments are defined here.
     ################################################################################
     # Parameters ACO
-    num_ants        = 5 # 100
-    max_iterations  = 10 # 1000
+    num_ants        = 100
+    max_iterations  = 1000
     alpha           = 0.5
     beta            = 3.0
-    rho             = 0.3
-    num_prod_levels = 500
+    rho             = 0.1
+    num_prod_levels = 200
     ################################################################################
     # Parameters Hill Climbing
-    hill_climbing_step           = 936 # 936
-    hill_climbing_max_iterations = 5 # 45
+    hill_climbing_step           = 936
+    hill_climbing_max_iterations = 45
     ################################################################################
     # Parameters Random Restart
-    random_restart_step           = 936 # 936
-    random_restart_max_iterations = 2 # 45
+    random_restart_step           = 936
+    random_restart_max_iterations = 45
     random_restart_max_loops_without_improvement = 10
     random_restart_max_restarts = 10
     ################################################################################
