@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 import os
 import sys
+import time
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../models/')))
@@ -9,6 +10,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.constants import *
 from tkinter import filedialog
+from tkinter import messagebox
 import db.config as dbconfig
 import setup
 from models.ant_colony import AntColony
@@ -28,15 +30,20 @@ class Optimizer():
         self.P = []
         self.E = []
 
+        self.is_connected = False
+        self.time_start = 0.0
+
     def connect_to_database(self):
         file_path = filedialog.askopenfilename(
             title="Open database configuration file",
+            # initialdir=os.path.expanduser("~"),
             filetypes=[("INI files", "*.ini"), ("All files", "*.*")]
         )
         if file_path:
             config = dbconfig.load_config(file_path, 'supply_chain')
             data = setup.read_database(config)
             self.F, self.S, self.P, self.E = data["F"], data["S"], data["P"], data["E"]
+            self.is_connected = True
             print(f"[info] ini file read: {file_path}")
         else:
             print("?no file selected.")
@@ -52,17 +59,20 @@ class Optimizer():
             num_prod_levels = int(num_prod_levels)
         )
         model.add_observer(observer)
+        self.time_start = time.time()
         _ = model.solve(num_ants=int(num_ants), max_iterations=int(num_iterations))
 
     def run_rr(self, step, epsilon, num_iterations_hc, num_loops_wo_improvement, num_restarts, observer=None):
         model = RandomRestart(self.F, self.S, self.P, self.E)
         model.add_observer(observer)
+        self.time_start = time.time()
         _ = model.solve(step=step, epsilon=epsilon if epsilon else 1e-12, max_iterations_allowed=num_iterations_hc, max_loops_without_improvement=num_loops_wo_improvement, max_restarts=num_restarts)
 
     def run_hc(self, step, epsilon, num_iterations, observer=None):
         model = HillClimbing(self.F, self.S, self.P, self.E)
         x = initial_x.get_initial_X_from_most_probable_scenario(model, self.F, self.E)
         model.add_observer(observer)
+        self.time_start = time.time()
         _ = model.solve(step=step, epsilon=epsilon if epsilon else 1e-12, max_iterations_allowed=num_iterations, initial_X=x)
 
 
@@ -131,6 +141,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     license_window.transient(root)
     license_window.grab_set()
     root.wait_window(license_window)
+
+def show_database_error():
+    messagebox.showerror(
+        title="Database Connection Error",
+        message="Please connect to an apropriate database first before running the heuristics.\n\nGo to File → Connect to database..."
+    )
 
 def main(*args):
     global root

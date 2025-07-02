@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 import sys
+import time
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.constants import *
@@ -29,28 +30,17 @@ def _style_code():
     if _style_code_ran:
         return
 
-    # try:
-    #     theme = "page-dark"
-    #     theme = "elegance"
-    #     theme = "elegance"
-    #     theme = "cornsilk-dark"
-    #     theme = "viva perón"
-    #     SUPPAI_support.root.tk.call('source', os.path.join(_location, 'themes', f"{theme}.tcl"))
-    #     style = ttk.Style()
-    #     style.theme_use(theme)
-    # except:
-    #     style = ttk.Style()
-    #     style.theme_use('default')
-
     style = ttk.Style()
     style.configure('.', font = _default_font)
+    print(style.theme_names())
 
     if sys.platform == "win32":
-       style.theme_use('winnative')
+       style.theme_use('vista')
     elif sys.platform == "darwin":
          style.theme_use('aqua')
     else:
-         style.theme_use('default')
+        style.theme_use('default')
+
     _style_code_ran = 1
 
 
@@ -169,8 +159,7 @@ class MainWindow(Observer):
 
     def _show_RR(self):
         self.TLabelframeRR = self._new_frame("Random Restart")
-        label_parameters = ["Step", "Epsilon", "Maximum iterations HC", 
-                            "Loops without improvement", "Maximum restarts"]
+        label_parameters = ["Step", "Epsilon", "Maximum iterations HC", "Loops w/o improvement", "Maximum restarts"]
         self._render_parameters(self.TLabelframeRR, label_parameters)
         label_results = [ "X", "Z", "margin", "pStk", "pDIn", "CTf2s", "CTs2p", "Iteration number" ]
         self._render_results(self.TLabelframeRR, label_results)
@@ -197,6 +186,10 @@ class MainWindow(Observer):
             os._exit(0)
 
     def _run_HC(self):
+        if self.optimizer.is_connected is False:
+            SUPPAI_support.show_database_error()
+            return
+
         param_values = self._get_params_values()
         step = param_values[0]
         epsilon = param_values[1]
@@ -209,6 +202,10 @@ class MainWindow(Observer):
 
 
     def _run_RR(self):
+        if self.optimizer.is_connected is False:
+            SUPPAI_support.show_database_error()
+            return
+
         param_values = self._get_params_values()
         step = param_values[0]
         epsilon = param_values[1]
@@ -225,6 +222,10 @@ class MainWindow(Observer):
 
 
     def _run_ACO(self):
+        if self.optimizer.is_connected is False:
+            SUPPAI_support.show_database_error()
+            return
+
         param_values = self._get_params_values()
         alpha = param_values[0]
         beta = param_values[1]
@@ -270,6 +271,11 @@ class MainWindow(Observer):
         if results_data and isinstance(results_data[-1], (int, float)):
             current_iteration = int(results_data[-1])
             self.update_progressbar(current_iteration)
+            if current_iteration == self.max_iterations:
+                messagebox.showinfo(
+                    title="Success!",
+                    message=f"The optimization process has completed successfully.\n\nTime elapsed: {time.time() - self.optimizer.time_start:.2f} seconds."
+                )
 
 
     def _new_frame(self, title):
