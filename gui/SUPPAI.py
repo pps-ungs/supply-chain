@@ -72,6 +72,11 @@ class MainWindow(Observer):
         top.resizable(1,  1)
         top.title("SUPPAI")
 
+        self.TProgressbar1 = ttk.Progressbar(self.top)
+        self.TProgressbar1.place(relx=0.025, rely=0.867, relwidth=0.95, relheight=0.0, height=19)
+        self.TProgressbar1.configure(length="760")
+        self.TProgressbar1.configure(value=0)
+
         self.menubar = tk.Menu(top,font=_default_font,bg=_bgcolor,fg=_fgcolor)
         top.configure(menu = self.menubar)
 
@@ -100,9 +105,6 @@ class MainWindow(Observer):
         self.sub_menu12.add_command(compound='left',font=_default_font, label='About', command=lambda:SUPPAI_support.about_app(self.top))
 
         _style_code()
-        self.TProgressbar1 = ttk.Progressbar(self.top)
-        self.TProgressbar1.place(relx=0.025, rely=0.867, relwidth=0.95, relheight=0.0, height=19)
-        self.TProgressbar1.configure(length="760")
 
         self._set_active_heuristic("HC")
 
@@ -139,6 +141,9 @@ class MainWindow(Observer):
         self.TLabelframeHC.place_forget()
         self.TLabelframeRR.place_forget()
         self.TLabelframeACO.place_forget()
+
+        self.TProgressbar1.stop()
+        self.TProgressbar1.configure(mode="determinate", value=0)
 
         if self._active_heuristic == "RR":
             self.TLabelframeRR.place(relx=0.025, rely=0.017, relheight=0.827, relwidth=0.953)
@@ -177,10 +182,7 @@ class MainWindow(Observer):
     def _show_ACO(self):
         self.TLabelframeACO = self._new_frame("Ant Colony Optimization")
 
-        # Con letras griegas ó con palabras?
-        label_parameters = ["Alpha", "Beta", "Rho", "Q", "Tau min", "Tau max", "Production levels", "Number of ants", "Maximum iterations"]
         label_parameters = ["α", "β", "ρ", "Q", "τ min", "τ max", "Production levels", "Number of ants", "Maximum iterations"]
-
         self._render_parameters(self.TLabelframeACO, label_parameters)
         label_results = [ "X", "Z", "margin", "pStk", "pDIn", "CTf2s", "CTs2p", "Iteration number" ]
 
@@ -201,8 +203,8 @@ class MainWindow(Observer):
         num_iterations = param_values[2]
 
         self.max_iterations = num_iterations
-        self.TProgressbar1.configure(maximum=self.max_iterations)
-        self.TProgressbar1.configure(value=0)
+        self.TProgressbar1.stop()
+        self.TProgressbar1.configure(mode="determinate", maximum=self.max_iterations, value=0)
         self.optimizer.run_hc(step, epsilon, num_iterations, observer=self)
 
 
@@ -214,6 +216,9 @@ class MainWindow(Observer):
         num_loops_wo_improvement = param_values[3]
         num_restarts = param_values[4]
 
+        self.TProgressbar1.configure(mode="indeterminate")
+        self.TProgressbar1.start()
+        self.max_iterations = num_restarts
         self.optimizer.run_rr(step, epsilon, num_iterations_hc, num_loops_wo_improvement, num_restarts, observer=self)
 
 
@@ -230,8 +235,8 @@ class MainWindow(Observer):
         num_iterations = param_values[8]
 
         self.max_iterations = num_iterations
-        self.TProgressbar1.configure(maximum=self.max_iterations)
-        self.TProgressbar1.configure(value=0)
+        self.TProgressbar1.stop()
+        self.TProgressbar1.configure(mode="determinate", maximum=self.max_iterations, value=0)
         self.optimizer.run_aco(alpha, beta, rho, Q, tau_max, tau_min, num_prod_levels, num_ants, num_iterations, observer=self)
 
 

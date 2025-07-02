@@ -57,7 +57,7 @@ class Optimizer():
     def run_rr(self, step, epsilon, num_iterations_hc, num_loops_wo_improvement, num_restarts, observer=None):
         model = RandomRestart(self.F, self.S, self.P, self.E)
         model.add_observer(observer)
-        _ = model.solve(step=step, epsilon=epsilon, max_iterations_allowed=num_iterations_hc, max_loops_without_improvement=num_loops_wo_improvement, max_restarts=num_restarts)
+        _ = model.solve(step=step, epsilon=epsilon if epsilon else 1e-12, max_iterations_allowed=num_iterations_hc, max_loops_without_improvement=num_loops_wo_improvement, max_restarts=num_restarts)
 
     def run_hc(self, step, epsilon, num_iterations, observer=None):
         model = HillClimbing(self.F, self.S, self.P, self.E)
