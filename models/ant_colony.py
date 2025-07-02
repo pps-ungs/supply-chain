@@ -92,7 +92,6 @@ class AntColony(Model):
                     self.best_pDIn = details_ant['pDIn']
                     self.best_CTf2s = details_ant['CTf2s']
                     self.best_CTs2p = details_ant['CTs2p']
-                    self.notify_observers([ self.best_solution_X, self.best_solution_Z, self.best_margin, self.best_pStk, self.best_pDIn, self.best_CTf2s, self.best_CTs2p, it+1 ])
 
             # 3. Evaporación de feromonas
             self.pheromones = (1 - self.rho) * self.pheromones
@@ -114,6 +113,8 @@ class AntColony(Model):
             # Registrar la mejor solución
             history_Z.append(self.best_solution_Z)
             history_X.append(self.best_solution_X.tolist())
+            self.notify_observers([ self.best_solution_X, self.best_solution_Z, self.best_margin, self.best_pStk, self.best_pDIn, self.best_CTf2s, self.best_CTs2p, it+1 ])
+
 
             # For debugging:
             # if (iteration + 1) % 10 == 0 or iteration == 0:
