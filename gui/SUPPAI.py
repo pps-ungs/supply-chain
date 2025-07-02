@@ -220,6 +220,8 @@ class MainWindow(Observer):
         self.TProgressbar1.start()
         self.max_iterations = num_restarts
         self.optimizer.run_rr(step, epsilon, num_iterations_hc, num_loops_wo_improvement, num_restarts, observer=self)
+        self.TProgressbar1.stop()
+        self.TProgressbar1.configure(mode="determinate", value=0)
 
 
     def _run_ACO(self):
