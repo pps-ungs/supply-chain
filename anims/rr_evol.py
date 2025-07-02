@@ -46,8 +46,7 @@ objs = df["obj"].values
 labels = df["X_label"].values
 
 fig, ax = plt.subplots(figsize=(8, 3))
-ax.set_facecolor('#d1d2db')
-fig.patch.set_facecolor('#d1d2db')
+
 sc = ax.scatter([], [], c=[], cmap='viridis', vmin=objs.min(), vmax=objs.max())
 line, = ax.plot([], [], color='#0d124b', alpha=0.6)
 
