@@ -45,9 +45,8 @@ ids = df["id"].values
 objs = df["obj"].values
 labels = df["X_label"].values
 
-fig, ax = plt.subplots(figsize=(8, 3))
-ax.set_facecolor('#d1d2db')
-fig.patch.set_facecolor('#d1d2db')
+fig, ax = plt.subplots(figsize=(8, 4))
+
 sc = ax.scatter([], [], c=[], cmap='viridis', vmin=objs.min(), vmax=objs.max())
 line, = ax.plot([], [], color='#0d124b', alpha=0.6)
 
@@ -59,7 +58,7 @@ yrange = ymax - ymin
 margen = 0.20 * yrange
 ax.set_ylim(ymin - margen, ymax + margen)
 
-ax.set_xlabel("Mejora (id)")
+ax.set_xlabel("Mejora")
 ax.set_ylabel("Valor objetivo")
 title = ax.set_title("Evolución del valor objetivo por mejora (Random Restart)")
 texts = []

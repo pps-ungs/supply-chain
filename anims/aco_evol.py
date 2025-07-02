@@ -85,8 +85,6 @@ def x_label_formatter(x_solution):
 x_labels_sequence = [x_label_formatter(x_sol) for x_sol in filtered_x_full]
 
 fig, ax = plt.subplots(figsize=(10, 5))
-ax.set_facecolor('#d1d2db')
-fig.patch.set_facecolor('#d1d2db')
 
 sc = ax.scatter([], [], c=[], cmap='viridis', vmin=obj_sequence.min(), vmax=obj_sequence.max())
 line, = ax.plot([], [], color='#0d124b', alpha=0.6, linewidth=2)

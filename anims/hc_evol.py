@@ -42,9 +42,7 @@ steps = df["step"].values
 objs = df["obj"].values
 labels = df["X_label"].values
 
-fig, ax = plt.subplots(figsize=(10, 3))
-ax.set_facecolor('#d1d2db')
-fig.patch.set_facecolor('#d1d2db')
+fig, ax = plt.subplots(figsize=(10, 4))
 sc = ax.scatter([], [], c=[], cmap='winter', vmin=objs.min(), vmax=objs.max())
 
 line, = ax.plot([], [], color='#0d124b', alpha=0.6)  # Línea para unir los puntos
