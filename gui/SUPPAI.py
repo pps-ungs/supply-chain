@@ -32,7 +32,6 @@ def _style_code():
 
     style = ttk.Style()
     style.configure('.', font = _default_font)
-    print(style.theme_names())
 
     if sys.platform == "win32":
        style.theme_use('vista')
