@@ -1,6 +1,8 @@
 #! /usr/bin/env python3
 import sys
 import time
+import threading
+import queue
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.constants import *
@@ -23,6 +25,7 @@ _activebackground = _bgcolor
 _style_code_ran = 0
 
 _default_font = "-family {Segoe UI Variable} -size 10 -weight normal"
+
 
 def _style_code():
     global _style_code_ran
@@ -50,11 +53,13 @@ class MainWindow(Observer):
         self._update_heuristic_display()
         self._update_heuristic_menu_checkmark()
 
+
     def __init__(self, top=None):
         self.optimizer = SUPPAI_support.Optimizer()
         self.top = top
         self._active_heuristic = ""
         self.max_iterations = 0
+        self.success_queue = queue.Queue()
 
         top.geometry("800x600")
         top.minsize(800, 600)
@@ -163,7 +168,7 @@ class MainWindow(Observer):
         label_results = [ "X", "Z", "margin", "pStk", "pDIn", "CTf2s", "CTs2p", "Iteration number" ]
         self._render_results(self.TLabelframeRR, label_results)
         buttons = ["Abort", "Run"]
-        actions = [self._abort, self._run_RR]
+        actions = [self._abort, self._run_RR_wrapper]
         self._render_buttons(buttons, actions)
 
 
@@ -184,6 +189,7 @@ class MainWindow(Observer):
         if messagebox.askokcancel("Exit", "Are you sure you want to abort the process?"):
             os._exit(0)
 
+
     def _run_HC(self):
         if self.optimizer.is_connected is False:
             SUPPAI_support.show_database_error()
@@ -201,10 +207,6 @@ class MainWindow(Observer):
 
 
     def _run_RR(self):
-        if self.optimizer.is_connected is False:
-            SUPPAI_support.show_database_error()
-            return
-
         param_values = self._get_params_values()
         step = param_values[0]
         epsilon = param_values[1]
@@ -212,12 +214,34 @@ class MainWindow(Observer):
         num_loops_wo_improvement = param_values[3]
         num_restarts = param_values[4]
 
-        self.TProgressbar1.configure(mode="indeterminate")
-        self.TProgressbar1.start()
         self.max_iterations = num_restarts
-        self.optimizer.run_rr(step, epsilon, num_iterations_hc, num_loops_wo_improvement, num_restarts, observer=self)
-        self.TProgressbar1.stop()
-        self.TProgressbar1.configure(mode="determinate", value=0)
+        self.optimizer.run_rr(step, epsilon, num_iterations_hc, num_loops_wo_improvement, num_restarts, self)
+        self.success_queue.put(True)
+
+
+    def _run_RR_wrapper(self):
+        if self.optimizer.is_connected is False:
+            SUPPAI_support.show_database_error()
+            return
+
+        self.TProgressbar1.configure(mode="indeterminate")
+
+        self.TProgressbar1.start(10)
+
+        threading.Thread(target=self._run_RR, daemon=True).start()
+        self.top.after(100, self.check_success)
+
+
+    def check_success(self):
+        try:
+            if self.success_queue.get_nowait():
+                self.TProgressbar1.stop()
+                messagebox.showinfo(
+                    title="Success!",
+                    message=f"The optimization process has completed successfully.\n\nTime elapsed: {time.time() - self.optimizer.time_start:.2f} seconds."
+                )
+        except queue.Empty:
+            self.top.after(100, self.check_success)
 
 
     def _run_ACO(self):
@@ -267,14 +291,18 @@ class MainWindow(Observer):
                 print(f"[info] Updated output entry {i} with value: {results_data[i]}")
             else:
                 entry_widget.delete(0, tk.END)
+
         if results_data and isinstance(results_data[-1], (int, float)):
             current_iteration = int(results_data[-1])
             self.update_progressbar(current_iteration)
-            if current_iteration == self.max_iterations:
-                messagebox.showinfo(
-                    title="Success!",
-                    message=f"The optimization process has completed successfully.\n\nTime elapsed: {time.time() - self.optimizer.time_start:.2f} seconds."
-                )
+            if self._active_heuristic != "RR":
+                if current_iteration == self.max_iterations:
+                    messagebox.showinfo(
+                        title="Success!",
+                        message=f"The optimization process has completed successfully.\n\nTime elapsed: {time.time() - self.optimizer.time_start:.2f} seconds."
+                    )
+            if self._active_heuristic == "RR":
+                self.check_success()
 
 
     def _new_frame(self, title):
@@ -349,6 +377,7 @@ class MainWindow(Observer):
             self.input_entries.append(result_entry)
             initial_rely += rely_increment
 
+
     def update_progressbar(self, value):
         if self.max_iterations > 0:
             progress_value = min(value, self.max_iterations)
@@ -359,6 +388,7 @@ class MainWindow(Observer):
 
 def start_up():
     SUPPAI_support.main()
+
 
 if __name__ == '__main__':
     SUPPAI_support.main()
