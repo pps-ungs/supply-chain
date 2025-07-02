@@ -73,8 +73,8 @@ class MainWindow(Observer):
         # File menu
         self.sub_menu0 = tk.Menu(self.menubar, activebackground=_activebackground,activeforeground='black',font=_default_font,tearoff=0)
         self.menubar.add_cascade(compound='left',font=_default_font,label='File',menu=self.sub_menu0, )
-        self.sub_menu0.add_command(accelerator='CTRL+O', compound='left',font=_default_font,label='Connect to database...',command=lambda:self.optimizer.connect_to_database())
-        self.sub_menu0.add_command(accelerator='CTRL+Q', compound='left' ,font=_default_font, label='Quit', command=self.top.quit)
+        self.sub_menu0.add_command(compound='left',font=_default_font,label='Connect to database...',command=lambda:self.optimizer.connect_to_database())
+        self.sub_menu0.add_command(compound='left' ,font=_default_font, label='Quit', command=self.top.quit)
 
         # Heuristics menu
         self.sub_menu1 = tk.Menu(self.menubar, activebackground=_activebackground,activeforeground='black',font=_default_font,tearoff=0)
