@@ -65,6 +65,7 @@ class MainWindow(Observer):
         self.optimizer = SUPPAI_support.Optimizer()
         self.top = top
         self._active_heuristic = ""
+        self.max_iterations = 0
 
         top.geometry("800x600")
         top.minsize(800, 600)
@@ -197,9 +198,12 @@ class MainWindow(Observer):
         param_values = self._get_params_values()
         step = param_values[0]
         epsilon = param_values[1]
-        num_terations = param_values[2]
+        num_iterations = param_values[2]
 
-        self.optimizer.run_hc(step, epsilon, num_terations, observer=self)
+        self.max_iterations = num_iterations
+        self.TProgressbar1.configure(maximum=self.max_iterations)
+        self.TProgressbar1.configure(value=0)
+        self.optimizer.run_hc(step, epsilon, num_iterations, observer=self)
 
 
     def _run_RR(self):
@@ -225,6 +229,9 @@ class MainWindow(Observer):
         num_ants = param_values[7]
         num_iterations = param_values[8]
 
+        self.max_iterations = num_iterations
+        self.TProgressbar1.configure(maximum=self.max_iterations)
+        self.TProgressbar1.configure(value=0)
         self.optimizer.run_aco(alpha, beta, rho, Q, tau_max, tau_min, num_prod_levels, num_ants, num_iterations, observer=self)
 
 
@@ -253,6 +260,9 @@ class MainWindow(Observer):
                 print(f"[info] Updated output entry {i} with value: {results_data[i]}")
             else:
                 entry_widget.delete(0, tk.END)
+        if results_data and isinstance(results_data[-1], (int, float)):
+            current_iteration = int(results_data[-1])
+            self.update_progressbar(current_iteration)
 
 
     def _new_frame(self, title):
@@ -328,7 +338,11 @@ class MainWindow(Observer):
             initial_rely += rely_increment
 
     def update_progressbar(self, value):
-        pass
+        if self.max_iterations > 0:
+            progress_value = min(value, self.max_iterations)
+            self.TProgressbar1.configure(value=progress_value)
+        else:
+            self.TProgressbar1.configure(value=0)
 
 
 def start_up():
