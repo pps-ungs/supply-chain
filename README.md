@@ -312,6 +312,44 @@ RESULTS
              Time: 42.7
 Halting condition: Max iterations reached
 ################################################################################
+
+################################################################################
+    Experiment **HILL CLIMBING**
+--------------------------------------------------------------------------------
+PARAMETERS
+    step: 936, initial_X: [58000, 62000, 41000, 55000], max_iterations_allowed: 45
+--------------------------------------------------------------------------------
+RESULTS
+                X: [58936, 62936, 41936, 55936]
+                Z: 8801042.10
+           Margin: 9210000.00
+             pStk: 72000.00
+             pDIn: 98000.00
+            CTf2s: 130000.00
+            CTs2p: 108957.90
+       Iterations: 12
+             Time: 89.3
+Halting condition: Stuck in local optimum
+################################################################################
+
+################################################################################
+    Experiment **RANDOM RESTART**
+--------------------------------------------------------------------------------
+PARAMETERS
+    step: 936, max_iterations_allowed: 45
+--------------------------------------------------------------------------------
+RESULTS
+                X: [61000, 70000, 38000, 52000]
+                Z: 8834500.75
+           Margin: 9250000.00
+             pStk: 68000.00
+             pDIn: 91000.00
+            CTf2s: 145000.00
+            CTs2p: 110499.25
+       Iterations: 38
+             Time: 134.6
+Halting condition: Maximum loops without improvement
+################################################################################
 ```
 
 ### Generación de datos de entrada
@@ -371,6 +409,10 @@ python anims/rr_evol.py    # Evolución del Random Restart
 
 ## Autores y licencia
 
-**Autores:** Ebertz, Rondelli, Soria — UNGS, 2025.
+**Autores** — UNGS, 2025:
+
+- **Ebertz** (<a href="https://github.com/xebertz">@xebertz</a>)
+- **Rondelli** (<a href="https://github.com/rondelli">@rondelli</a>)
+- **Soria** (<a href="https://github.com/LuciaSoria5">@LuciaSoria5</a>)
 
 Este proyecto está bajo la licencia **BSD 3-Clause**. Ver el archivo [LICENSE](LICENSE) para más detalles.
