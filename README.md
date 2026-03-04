@@ -409,10 +409,6 @@ python anims/rr_evol.py    # Evolución del Random Restart
 
 ## Autores y licencia
 
-**Autores** — UNGS, 2025:
-
-- **Ebertz** (<a href="https://github.com/xebertz">@xebertz</a>)
-- **Rondelli** (<a href="https://github.com/rondelli">@rondelli</a>)
-- **Soria** (<a href="https://github.com/LuciaSoria5">@LuciaSoria5</a>)
+**Autores**: **Ebertz** (<a href="https://github.com/xebertz">@xebertz</a>), **Rondelli** (<a href="https://github.com/rondelli">@rondelli</a>), **Soria** (<a href="https://github.com/LuciaSoria5">@LuciaSoria5</a>).
 
 Este proyecto está bajo la licencia **BSD 3-Clause**. Ver el archivo [LICENSE](LICENSE) para más detalles.
